@@ -76,13 +76,13 @@ L'application sera disponible sur <!-- TODO: http://localhost:5173 -->
 
 ## 📜 Scripts disponibles
 
-| Script | Description |
-|--------|-------------|
-| `<!-- TODO: dev -->` | Lance le serveur de développement |
-| `<!-- TODO: build -->` | Build de production |
+| Script                   | Description                         |
+| ------------------------ | ----------------------------------- |
+| `<!-- TODO: dev -->`     | Lance le serveur de développement   |
+| `<!-- TODO: build -->`   | Build de production                 |
 | `<!-- TODO: preview -->` | Prévisualise le build de production |
-| `<!-- TODO: lint -->` | Vérifie le code avec ESLint |
-| `<!-- TODO: format -->` | Formate le code avec Prettier |
+| `<!-- TODO: lint -->`    | Vérifie le code avec ESLint         |
+| `<!-- TODO: format -->`  | Formate le code avec Prettier       |
 
 ## 🏗️ Structure du projet
 
