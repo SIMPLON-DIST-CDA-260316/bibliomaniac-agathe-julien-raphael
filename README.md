@@ -1,6 +1,7 @@
 # Bibliomaniac
 
-> Application web de bibliothèque numérique permettant de rechercher des livres via l'API Google Books, consulter leurs informations et explorer un catalogue sur mobile comme sur desktop.
+> Application web de bibliothèque numérique permettant de rechercher des livres via l'API Google Books, consulter leurs
+> informations et explorer un catalogue sur mobile comme sur desktop.
 
 <!-- BADGES -->
 <!-- ![Vercel](https://img.shields.io/badge/deployed-vercel-black) -->
@@ -9,7 +10,8 @@
 ## 🔗 Liens
 
 - **Application déployée :** <!-- TODO: https://... -->
-- **Maquettes Figma :** [Biblionet](https://www.figma.com/design/7RWuX61fj65aoS3PYMFm5U/Biblionet?node-id=0-1&p=f&t=BBf0EqrpcApm1lYP-0)
+- **Maquettes Figma :
+  ** [Biblionet](https://www.figma.com/design/7RWuX61fj65aoS3PYMFm5U/Biblionet?node-id=0-1&p=f&t=BBf0EqrpcApm1lYP-0)
 - **Prototype cliquable :** <!-- TODO: https://figma.com/proto/... -->
 - **GitHub Project :** <!-- TODO: https://github.com/orgs/.../projects/... -->
 
@@ -76,13 +78,13 @@ L'application sera disponible sur <!-- TODO: http://localhost:5173 -->
 
 ## 📜 Scripts disponibles
 
-| Script | Description |
-|--------|-------------|
-| `<!-- TODO: dev -->` | Lance le serveur de développement |
-| `<!-- TODO: build -->` | Build de production |
+| Script                   | Description                         |
+|--------------------------|-------------------------------------|
+| `<!-- TODO: dev -->`     | Lance le serveur de développement   |
+| `<!-- TODO: build -->`   | Build de production                 |
 | `<!-- TODO: preview -->` | Prévisualise le build de production |
-| `<!-- TODO: lint -->` | Vérifie le code avec ESLint |
-| `<!-- TODO: format -->` | Formate le code avec Prettier |
+| `<!-- TODO: lint -->`    | Vérifie le code avec ESLint         |
+| `<!-- TODO: format -->`  | Formate le code avec Prettier       |
 
 ## 🏗️ Structure du projet
 
@@ -96,20 +98,37 @@ src/
 └── ...
 ```
 
-## 🌿 Workflow Git
+## 🌿 Git & Commits
 
-- **Branche principale :** `main`
-- **Branches de fonctionnalité :** `feat/nom-feature`, `fix/nom-bug`, etc.
-- **Commits :** [Conventional Commits](https://www.conventionalcommits.org/)
-- **Pull requests** obligatoires pour toute évolution importante
+### Conventions de commit
 
-Exemples de commits :
+Ce projet utilise les **Conventional Commits** validés automatiquement par Husky et Commitlint.
+
+Format obligatoire :
 
 ```
-feat(search): add ISBN search support
-fix(book-detail): handle missing thumbnail
-chore(deps): update tailwindcss to v4
+<type>(<scope>): <sujet>
+
+<corps optionnel>
+
+<pied de page optionnel>
 ```
+
+**Types autorisés :** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`
+
+**Exemples :**
+
+```bash
+git commit -m "feat(search): ajouter support recherche ISBN"
+git commit -m "fix(navbar): corriger lien actif"
+git commit -m "docs: mettre à jour README"
+git commit -m "chore(deps): mettre à jour tailwindcss"
+```
+
+### Hooks Git automatiques
+
+- **Pre-commit :** Exécute Prettier et ESLint sur les fichiers modifiés
+- **Commit-msg :** Valide que votre message respecte Conventional Commits
 
 ## 🚢 Déploiement
 
