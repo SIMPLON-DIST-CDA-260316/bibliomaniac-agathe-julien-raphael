@@ -9,22 +9,24 @@ const links = [
 
 export default function Navbar() {
   return (
-    <ul className="flex items-center gap-4 px-4 py-3">
-      {links.map(({ to, label, end }) => (
-        <li key={to}>
-          <NavLink
-            to={to}
-            end={end}
-            className={({ isActive }) =>
-              `rounded px-3 py-1.5 text-sm transition-colors hover:bg-black/5 ${
-                isActive ? 'font-semibold underline' : ''
-              }`
-            }
-          >
-            {label}
-          </NavLink>
-        </li>
-      ))}
-    </ul>
+    <nav className="border-border bg-background fixed right-0 bottom-0 left-0 z-30 h-[var(--navbar-height)] border-t md:static md:border-t-0 md:border-b">
+      <ul className="flex h-full items-center justify-around px-4 md:justify-start md:gap-4">
+        {links.map(({ to, label, end }) => (
+          <li key={to}>
+            <NavLink
+              to={to}
+              end={end}
+              className={({ isActive }) =>
+                `rounded px-3 py-1.5 text-sm transition-colors hover:bg-black/5 ${
+                  isActive ? 'font-semibold underline' : ''
+                }`
+              }
+            >
+              {label}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </nav>
   )
 }

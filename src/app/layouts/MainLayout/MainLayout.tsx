@@ -4,11 +4,9 @@ import Navbar from './Navbar.tsx'
 
 export default function MainLayout() {
   return (
-    <div className="bg-background text-text min-h-screen">
+    <div className="bg-background text-text min-h-screen pb-[var(--navbar-height)] md:pb-0">
       <ScrollRestoration />
-      <nav className="z-30">
-        <Navbar />
-      </nav>
+      <Navbar />
       <main>
         <Outlet />
       </main>
