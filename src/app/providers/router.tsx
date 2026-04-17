@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router'
 
 import Home from '@/pages/Home.tsx'
 import MainLayout from '@/app/layouts/MainLayout'
+import { UserLibraryPage } from '@/pages/UserLibraryPage'
 
 export const router = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/library',
-        element: <h1>Library</h1>,
+        element: <UserLibraryPage />,
       },
       {
         path: '/profile',
