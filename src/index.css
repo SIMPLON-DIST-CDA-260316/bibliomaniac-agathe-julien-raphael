@@ -5,14 +5,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  --background: #ffebd6; /* Beige clair */
-  --foreground: #230903; /* Marron foncé */
-  --primary: #4f492b; /* Vert olive */
-  --secondary: #230903; /* Marron foncé */
-  --accent: #8f4c00; /* Orange foncé */
-}
-
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
