@@ -1,30 +1,23 @@
-import { NavLink } from 'react-router'
+import { Home, Library, Search, User } from 'lucide-react'
+
+import NavbarDesktop from './NavbarDesktop'
+import NavbarMobile from './NavbarMobile'
 
 const links = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/search', label: 'Search' },
-  { to: '/library', label: 'Library' },
-  { to: '/profile', label: 'Profile' },
+  { to: '/', label: 'Home', icon: Home, end: true },
+  { to: '/search', label: 'Search', icon: Search },
+  { to: '/library', label: 'Library', icon: Library },
+  { to: '/profile', label: 'Profile', icon: User },
 ]
 
 export default function Navbar() {
   return (
-    <ul className="flex items-center gap-4 px-4 py-3">
-      {links.map(({ to, label, end }) => (
-        <li key={to}>
-          <NavLink
-            to={to}
-            end={end}
-            className={({ isActive }) =>
-              `rounded px-3 py-1.5 text-sm transition-colors hover:bg-black/5 ${
-                isActive ? 'font-semibold underline' : ''
-              }`
-            }
-          >
-            {label}
-          </NavLink>
-        </li>
-      ))}
-    </ul>
+    <>
+      {/* Desktop Navigation - Hidden on mobile */}
+      <NavbarDesktop links={links} />
+
+      {/* Mobile Navigation - Hidden on desktop */}
+      <NavbarMobile links={links} />
+    </>
   )
 }

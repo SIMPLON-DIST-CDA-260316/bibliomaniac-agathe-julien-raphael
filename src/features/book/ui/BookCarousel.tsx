@@ -60,13 +60,20 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
     )
 
     return (
-      <div ref={ref} className={cn('relative w-full', className)}>
+      <div
+        ref={ref}
+        className={cn(
+          'relative w-full',
+          'mx-auto max-w-full md:max-w-[90vw] lg:max-w-[95vw]',
+          className,
+        )}
+      >
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-4 pl-4">
+          <div className="flex gap-4 pl-2 md:pl-4">
             {books.map((book) => (
               <div
                 key={book.id}
-                className="group flex-[0_0_calc(33.333%-0.75rem)] cursor-pointer sm:flex-[0_0_calc(20%-0.8rem)] lg:flex-[0_0_calc(11.111%-0.4rem)]"
+                className="group flex-[0_0_calc(33.333%-0.5rem)] cursor-pointer sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]"
                 onClick={() => onBookClick?.(book)}
               >
                 {/* Carte du livre */}
@@ -84,11 +91,11 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
 
                   {/* Titre et auteur */}
                   <div className="px-1 pb-2">
-                    <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm lg:text-base">
+                    <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
                       {book.title}
                     </h3>
                     {book.author && (
-                      <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs lg:text-sm">
+                      <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
                         {book.author}
                       </p>
                     )}

@@ -1,161 +1,32 @@
-import { type Book, BookCarousel } from '@/shared/ui/BookCarousel'
-
-const SAMPLE_BOOKS: Book[] = [
-  {
-    id: 1,
-    title: 'Le Seigneur des Anneaux',
-    author: 'J.R.R. Tolkien',
-    coverImage:
-      'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=300&h=450&fit=crop',
-  },
-  {
-    id: 2,
-    title: 'Fondation',
-    author: 'Isaac Asimov',
-    coverImage:
-      'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=450&fit=crop',
-  },
-  {
-    id: 3,
-    title: 'Dune',
-    author: 'Frank Herbert',
-    coverImage:
-      'https://images.unsplash.com/photo-1507842217343-583b8a1a21bc?w=300&h=450&fit=crop',
-  },
-  {
-    id: 4,
-    title: 'Le Hobbit',
-    author: 'J.R.R. Tolkien',
-    coverImage:
-      'https://images.unsplash.com/photo-1526243741027-444220a728bb?w=300&h=450&fit=crop',
-  },
-  {
-    id: 5,
-    title: 'Neuromancien',
-    author: 'William Gibson',
-    coverImage:
-      'https://images.unsplash.com/photo-1533212467805-e5f3d5373cf5?w=300&h=450&fit=crop',
-  },
-  {
-    id: 6,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 7,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 8,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 9,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 10,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 11,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 12,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 13,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 14,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 15,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 16,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 17,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 18,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 19,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 20,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-]
+import { Search } from 'lucide-react'
+import { BookSection } from '@/features/book/ui/BookSection.tsx'
+import { useSampleBooks } from '@/features/book/hooks/useSampleBooks.ts'
 
 export default function Home() {
-  const handleBookClick = (book: Book) => {
-    console.log('Livre cliqué:', book.title)
-  }
+  const books = useSampleBooks()
 
   return (
-    <main className="space-y-12 p-4 md:p-8">
-      <section className="mx-auto w-full max-w-7xl">
-        <h1 className="mb-2 text-4xl font-bold">BiblioManiac</h1>
-        <p className="mb-8 text-gray-600">Découvrez nos livres populaires</p>
-        <BookCarousel books={SAMPLE_BOOKS} onBookClick={handleBookClick} />
-        <p className="mb-8 text-gray-600">Découvrez nos livres populaires</p>
-        <BookCarousel books={SAMPLE_BOOKS} onBookClick={handleBookClick} />
+    <main className="bg-background flex min-h-screen flex-col items-center px-0 pb-24 sm:pb-0">
+      <section className="mx-auto flex w-full max-w-none flex-col gap-4 rounded-b-3xl bg-[#FFEBD6] px-4 pt-8 pb-6 shadow-none md:px-8 lg:px-24">
+        {/* Header et recherche */}
+        <div>
+          <h1 className="text-primary mb-1 text-2xl font-bold md:text-3xl xl:text-4xl 2xl:text-5xl">
+            Bonjour
+          </h1>
+          <p className="text-secondary mb-4 text-base md:text-lg xl:text-xl 2xl:text-2xl">
+            Qu’allez vous lire aujourd’hui
+          </p>
+          <div className="relative mb-2">
+            <input
+              type="text"
+              placeholder="Rechercher un livre, auteur…"
+              className="border-primary/30 text-primary placeholder:text-secondary focus:ring-accent w-full rounded-full border bg-white/80 py-2 pr-4 pl-12 shadow-sm focus:ring-2 focus:outline-none md:py-3 md:text-base xl:text-lg 2xl:text-xl"
+            />
+            <Search className="text-primary absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7" />
+          </div>
+        </div>
+        <BookSection title="Recommandations globale" link="#" books={books} />
+        <BookSection title="Nouveautés" link="#" books={books} />
       </section>
     </main>
   )
