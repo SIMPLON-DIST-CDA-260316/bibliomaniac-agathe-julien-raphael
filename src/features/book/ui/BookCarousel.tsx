@@ -3,13 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/shared/lib/utils.ts'
 import { Button } from '@/shared/ui/button.tsx'
 import useEmblaCarousel from 'embla-carousel-react'
-
-export interface Book {
-  id: string | number
-  title: string
-  coverImage: string
-  author?: string
-}
+import type { Book } from '../types/book.ts'
 
 interface BookCarouselProps {
   books: Book[]
@@ -94,11 +88,9 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
                     <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
                       {book.title}
                     </h3>
-                    {book.author && (
-                      <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
-                        {book.author}
-                      </p>
-                    )}
+                    <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
+                      {book.author}
+                    </p>
                   </div>
                 </div>
               </div>
