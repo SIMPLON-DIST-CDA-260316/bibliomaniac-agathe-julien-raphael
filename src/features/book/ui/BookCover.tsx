@@ -14,6 +14,7 @@ export function BookCover({ coverUrl, title, className }: BookCoverProps) {
 
   // Reset error state when navigating to a different book — React's
   // recommended "adjust state on prop change" pattern, no useEffect.
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
   if (coverUrl !== trackedCoverUrl) {
     setTrackedCoverUrl(coverUrl)
     setHasLoadError(false)
@@ -24,9 +25,7 @@ export function BookCover({ coverUrl, title, className }: BookCoverProps) {
   return (
     <div className={cn('mx-auto overflow-hidden rounded-xl', className)}>
       {showFallback ? (
-        <div className="bg-muted text-muted-foreground flex h-full w-full items-center justify-center">
-          Pas de couverture
-        </div>
+        <BookCoverFallback />
       ) : (
         <img
           src={coverUrl}
@@ -35,6 +34,14 @@ export function BookCover({ coverUrl, title, className }: BookCoverProps) {
           className="mx-auto h-full object-contain"
         />
       )}
+    </div>
+  )
+}
+
+function BookCoverFallback() {
+  return (
+    <div className="bg-muted text-muted-foreground flex h-full w-full items-center justify-center">
+      Pas de couverture
     </div>
   )
 }

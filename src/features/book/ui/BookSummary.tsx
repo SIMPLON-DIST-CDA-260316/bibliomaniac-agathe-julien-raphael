@@ -59,16 +59,7 @@ export function BookSummary({ summary }: BookSummaryProps) {
     return () => ro.disconnect()
   }, [summary])
 
-  if (!summary?.trim()) {
-    return (
-      <section className="flex h-full min-h-0 flex-col">
-        <h2 className="mb-2 shrink-0 text-base font-semibold">Résumé</h2>
-        <p className="text-muted-foreground text-sm italic">
-          Pas de résumé disponible.
-        </p>
-      </section>
-    )
-  }
+  if (!summary?.trim()) return <BookSummaryEmptyState />
 
   return (
     <section className="flex h-full min-h-0 flex-col">
@@ -113,6 +104,17 @@ export function BookSummary({ summary }: BookSummaryProps) {
           </div>
         </DrawerContent>
       </Drawer>
+    </section>
+  )
+}
+
+function BookSummaryEmptyState() {
+  return (
+    <section className="flex h-full min-h-0 flex-col">
+      <h2 className="mb-2 shrink-0 text-base font-semibold">Résumé</h2>
+      <p className="text-muted-foreground text-sm italic">
+        Pas de résumé disponible.
+      </p>
     </section>
   )
 }
