@@ -21,6 +21,6 @@ const MOCK_BOOK: Book = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function useBookDetail(id: string): Book {
+export function useBookDetail(_id: string): Book {
   return MOCK_BOOK
 }

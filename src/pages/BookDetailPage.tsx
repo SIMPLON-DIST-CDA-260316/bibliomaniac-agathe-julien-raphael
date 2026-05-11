@@ -11,8 +11,8 @@ import { BackButton } from '@/shared/ui/back-button'
 import { Button } from '@/shared/ui/button'
 
 export function BookDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const book = useBookDetail(id!)
+  const { id = '' } = useParams<{ id: string }>()
+  const book = useBookDetail(id)
   const [bookmarked, setBookmarked] = useState(false)
 
   return (
