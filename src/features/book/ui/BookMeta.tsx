@@ -34,7 +34,9 @@ export function BookMeta({
           <span className="text-muted-foreground"> · {publishedDate}</span>
         )}
       </p>
-      {genre && <p className="text-muted-foreground text-xs">{genre}</p>}
+      <p className="text-muted-foreground text-xs">
+        {genre ?? 'Genre inconnu'}
+      </p>
     </div>
   )
 }

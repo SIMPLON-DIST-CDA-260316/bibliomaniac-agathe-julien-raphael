@@ -23,6 +23,9 @@ export function BookDetailPage() {
   const { data: book, isLoading, error } = useBookDetail(id)
 
   if (isLoading) return <BookDetailLoadingState />
+  // TODO: Distinguish network errors from not-found once the real API
+  //       (Google Books) replaces the mock — different copy and a
+  //       retry action belong on the network-error branch.
   if (error || !book) return <BookDetailNotFoundState />
 
   return (
