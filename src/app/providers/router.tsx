@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 
-import Home from '@/pages/Home.tsx'
+import { Home } from '@/pages/Home'
 import { BookDetailPage } from '@/pages/BookDetailPage'
 import MainLayout from '@/app/layouts/MainLayout'
 
