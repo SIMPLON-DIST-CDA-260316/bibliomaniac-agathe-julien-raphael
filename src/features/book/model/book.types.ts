@@ -6,9 +6,10 @@ export interface BookStat {
 export interface Book {
   id: string
   title: string
-  author: string
+  author: string | null
   authorId: string | null
   genre: string | null
+  language: string | null
   publishedDate: string | null
   coverUrl: string | null
   pageCount: number | null

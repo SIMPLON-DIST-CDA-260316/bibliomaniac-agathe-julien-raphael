@@ -48,6 +48,7 @@ export function BookDetailPage() {
             author={book.author}
             authorId={book.authorId}
             genre={book.genre}
+            language={book.language}
             publishedDate={book.publishedDate}
           />
           <BookmarkButton />
