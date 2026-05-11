@@ -57,4 +57,41 @@ export const MOCK_BOOKS_BY_ID: Record<string, Book> = {
     summary:
       "Au début du XIXᵉ siècle, Jean Valjean, ancien forçat libéré après dix-neuf ans de bagne pour le vol d'un pain, peine à trouver sa place dans une société qui le rejette. Recueilli par l'évêque Myriel, dont la bonté le bouleverse, il choisit la voie de la rédemption sous une nouvelle identité, Monsieur Madeleine, et devient maire d'une petite ville où sa générosité change le destin de Fantine, ouvrière déchue contrainte à la prostitution pour nourrir sa fille Cosette. Lorsque Fantine meurt, Valjean reprend la fuite, hanté par l'inspecteur Javert, incarnation rigide de la loi, et arrache Cosette aux Thénardier, aubergistes cupides qui l'exploitaient. À Paris, Valjean élève Cosette dans la discrétion, jusqu'au jour où l'adolescente croise Marius, jeune républicain idéaliste lié aux Amis de l'ABC, un groupe d'étudiants insurgés. Le récit culmine sur les barricades du soulèvement de juin 1832, où Valjean sauve la vie de Marius et épargne celle de Javert, qui, incapable de réconcilier sa conscience avec sa loi, choisit la mort. Roman-fresque, méditation sur la justice, la misère, l'éducation et la conscience, Les Misérables suit aussi des destins secondaires — Gavroche, Éponine, Mgr Myriel — pour composer une vaste épopée de l'âme humaine, où la rédemption d'un seul homme éclaire les douleurs et les espoirs de tout un peuple. Hugo y mêle digressions philosophiques, fresques historiques (Waterloo, les égouts de Paris, le couvent du Petit-Picpus) et plaidoyer politique, faisant du roman un manifeste contre l'injustice sociale autant qu'une vaste cathédrale romanesque.",
   },
+  '4': {
+    id: '4',
+    title: 'Livre sans données',
+    author: 'Auteur Inconnu',
+    authorId: null,
+    genre: null,
+    publishedDate: null,
+    coverUrl: null,
+    pageCount: null,
+    rating: null,
+    copies: null,
+    stats: [
+      { label: 'Exemplaires', value: null },
+      { label: 'Pages', value: null },
+      { label: 'Note', value: null },
+    ],
+    summary: null,
+  },
+  '5': {
+    id: '5',
+    title: 'Cover Cassée',
+    author: 'Test Auteur',
+    authorId: 'test-auteur',
+    genre: 'Test',
+    publishedDate: '2026',
+    coverUrl: '/images/cover-inexistante.png',
+    pageCount: 100,
+    rating: 3.5,
+    copies: 1,
+    stats: [
+      { label: 'Exemplaires', value: 1 },
+      { label: 'Pages', value: 100 },
+      { label: 'Note', value: 3.5 },
+    ],
+    summary:
+      'Ce livre a une URL de couverture invalide pour tester le fallback onError.',
+  },
 }
