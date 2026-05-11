@@ -7,7 +7,7 @@ export interface Book {
   id: string
   title: string
   author: string
-  authorId: string
+  authorId: string | null
   genre: string | null
   publishedDate: string | null
   coverUrl: string | null
