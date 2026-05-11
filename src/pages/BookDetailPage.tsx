@@ -20,7 +20,7 @@ export function BookDetailPage() {
       {/* Hero section — viewport height */}
       <div className="flex h-[calc(100svh-var(--navbar-height))] flex-col gap-5 py-6">
         {/* Cover + BackButton overlay — fixed height, scales with viewport */}
-        <div className="relative h-[clamp(180px,30svh,320px)] shrink-0">
+        <div className="relative h-[clamp(180px,35svh,360px)] shrink-0">
           <div className="absolute top-0 left-0 z-10">
             <BackButton />
           </div>
