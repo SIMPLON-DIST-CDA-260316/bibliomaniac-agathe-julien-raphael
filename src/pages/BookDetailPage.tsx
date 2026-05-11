@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { Bookmark, BookX } from 'lucide-react'
+import { BookX } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
 
 import { BookCover } from '@/features/book/ui/BookCover'
 import { BookMeta } from '@/features/book/ui/BookMeta'
 import { BookSummary } from '@/features/book/ui/BookSummary'
+import { BookmarkButton } from '@/features/book/ui/BookmarkButton'
 import { StatBadge } from '@/features/book/ui/StatBadge'
 import { useBookDetail } from '@/features/book/hooks/useBookDetail'
 import { BackButton } from '@/shared/ui/back-button'
@@ -21,7 +21,6 @@ import { Skeleton } from '@/shared/ui/skeleton'
 export function BookDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data: book, isLoading, error } = useBookDetail(id)
-  const [bookmarked, setBookmarked] = useState(false)
 
   if (isLoading) return <BookDetailLoadingState />
   if (error || !book) return <BookDetailNotFoundState />
@@ -51,17 +50,7 @@ export function BookDetailPage() {
             genre={book.genre}
             publishedDate={book.publishedDate}
           />
-          <button
-            type="button"
-            className="text-foreground flex size-11 items-center justify-center"
-            aria-label="Ajouter aux favoris"
-            onClick={() => setBookmarked(!bookmarked)}
-          >
-            <Bookmark
-              className="size-6"
-              fill={bookmarked ? 'currentColor' : 'none'}
-            />
-          </button>
+          <BookmarkButton />
         </div>
 
         {/* Stats */}
