@@ -27,9 +27,7 @@ export function BookDetailPage() {
 
   return (
     <div className="mx-auto max-w-md px-4">
-      {/* Hero section — viewport height */}
       <div className="flex h-[calc(100svh-var(--navbar-height))] flex-col gap-5 py-6">
-        {/* Cover + BackButton overlay — fixed height, scales with viewport */}
         <div className="relative h-[clamp(180px,35svh,360px)] shrink-0">
           <div className="absolute top-0 left-0 z-10">
             <BackButton />
@@ -41,7 +39,6 @@ export function BookDetailPage() {
           />
         </div>
 
-        {/* Title + Bookmark */}
         <div className="flex shrink-0 items-start justify-between gap-2">
           <BookMeta
             title={book.title}
@@ -53,25 +50,22 @@ export function BookDetailPage() {
           <BookmarkButton />
         </div>
 
-        {/* Stats */}
         <div className="flex shrink-0 gap-3">
           {book.stats.map(({ label, value }) => (
             <StatBadge key={label} label={label} value={value} />
           ))}
         </div>
 
-        {/* Summary — fills remaining space */}
         <div className="min-h-0 flex-1">
           <BookSummary summary={book.summary} />
         </div>
 
-        {/* CTA slot */}
         <Button className="h-12 w-full shrink-0 text-base" size="lg">
           Réserver ce livre
         </Button>
       </div>
 
-      {/* Recommendation sections — below the fold (placeholders) */}
+      {/* TODO US7 (#16): replace placeholders with related-books carousel */}
       <div className="bg-primary/20 h-48 rounded-xl" />
       <div className="bg-accent/20 h-48 rounded-xl" />
       <div className="bg-primary/10 h-48 rounded-xl" />
