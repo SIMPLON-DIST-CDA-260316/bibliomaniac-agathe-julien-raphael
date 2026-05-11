@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ImageOff } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
 
@@ -40,8 +41,9 @@ export function BookCover({ coverUrl, title, className }: BookCoverProps) {
 
 function BookCoverFallback() {
   return (
-    <div className="bg-muted text-muted-foreground flex h-full w-full items-center justify-center">
-      Pas de couverture
+    <div className="bg-accent/15 text-muted-foreground mx-auto flex aspect-[2/3] h-full flex-col items-center justify-center gap-2 rounded-xl">
+      <ImageOff className="size-8" aria-hidden />
+      <span className="text-sm">Pas de couverture</span>
     </div>
   )
 }
