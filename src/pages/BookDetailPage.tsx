@@ -5,7 +5,7 @@ import { BookCover } from '@/features/book/ui/BookCover'
 import { BookMeta } from '@/features/book/ui/BookMeta'
 import { BookSummary } from '@/features/book/ui/BookSummary'
 import { BookmarkButton } from '@/features/book/ui/BookmarkButton'
-import { StatBadge } from '@/features/book/ui/StatBadge'
+import { StatBadgeGroup } from '@/features/book/ui/StatBadgeGroup'
 import { useBookDetail } from '@/features/book/hooks/useBookDetail'
 import { BackButton } from '@/shared/ui/back-button'
 import { Button } from '@/shared/ui/button'
@@ -54,11 +54,11 @@ export function BookDetailPage() {
           <BookmarkButton />
         </div>
 
-        <div className="flex shrink-0 gap-3">
-          {book.stats.map(({ label, value }) => (
-            <StatBadge key={label} label={label} value={value} />
-          ))}
-        </div>
+        <StatBadgeGroup
+          copies={book.copies}
+          pageCount={book.pageCount}
+          rating={book.rating}
+        />
 
         <div className="min-h-0 flex-1">
           <BookSummary summary={book.summary} />

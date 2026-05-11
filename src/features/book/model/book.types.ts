@@ -1,8 +1,3 @@
-export interface BookStat {
-  label: string
-  value: number | null
-}
-
 export interface Book {
   id: string
   title: string
@@ -16,5 +11,4 @@ export interface Book {
   rating: number | null
   copies: number | null
   summary: string | null
-  stats: BookStat[]
 }
