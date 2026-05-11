@@ -2,9 +2,20 @@ import { NavLink } from 'react-router'
 
 export default function NavbarDesktop({
   links,
+  isLoggedIn,
 }: {
-  links: { to: string; label: string; end?: boolean }[]
+  links: {
+    to: string
+    label: string
+    end?: boolean
+    loggedIn: boolean[]
+  }[]
+  isLoggedIn: boolean
 }) {
+  const filteredLinks = isLoggedIn
+    ? links.filter(({ loggedIn }) => loggedIn.includes(true))
+    : links.filter(({ loggedIn }) => loggedIn.includes(false))
+
   return (
     <nav className="border-primary/20 hidden w-full border-b bg-[#FFEBD6] px-6 py-4 md:block">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
@@ -12,7 +23,7 @@ export default function NavbarDesktop({
           <h1 className="text-primary text-xl font-bold">BiblioManiac</h1>
         </div>
         <ul className="flex items-center gap-8">
-          {links.map(({ to, label, end }) => (
+          {filteredLinks.map(({ to, label, end }) => (
             <li key={to}>
               <NavLink
                 to={to}

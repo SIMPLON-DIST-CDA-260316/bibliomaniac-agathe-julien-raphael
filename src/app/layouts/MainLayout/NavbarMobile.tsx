@@ -3,13 +3,25 @@ import type { ElementType } from 'react'
 
 export default function NavbarMobile({
   links,
+  isLoggedIn,
 }: {
-  links: { to: string; label: string; icon: ElementType; end?: boolean }[]
+  links: {
+    to: string
+    label: string
+    icon: ElementType
+    end?: boolean
+    loggedIn: boolean[]
+  }[]
+  isLoggedIn: boolean
 }) {
+  const filteredLinks = isLoggedIn
+    ? links.filter(({ loggedIn }) => loggedIn.includes(true))
+    : links.filter(({ loggedIn }) => loggedIn.includes(false))
+
   return (
     <nav className="border-primary/20 fixed right-0 bottom-0 left-0 z-50 border-t bg-[#FFEBD6] px-2 py-2 md:hidden">
       <div className="mx-auto flex max-w-md items-center justify-around">
-        {links.map(({ to, label, icon: Icon, end }) => (
+        {filteredLinks.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
