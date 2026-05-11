@@ -17,7 +17,7 @@ export function UserLibraryPage() {
           <BookSection
             key={shelf}
             title={BOOK_SHELF_LABELS[shelf]}
-            link="#"
+            link={`/library/${shelf}`}
             books={shelfBooks[shelf]}
           />
         ))}
