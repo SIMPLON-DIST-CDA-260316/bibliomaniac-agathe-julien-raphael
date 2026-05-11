@@ -19,8 +19,8 @@ export function BookDetailPage() {
     <div className="mx-auto max-w-md px-4">
       {/* Hero section — viewport height */}
       <div className="flex h-[calc(100svh-var(--navbar-height))] flex-col gap-5 py-6">
-        {/* Cover + BackButton overlay — flex-1 to fill remaining space */}
-        <div className="relative min-h-0 flex-1">
+        {/* Cover + BackButton overlay — fixed height, scales with viewport */}
+        <div className="relative h-[clamp(180px,30svh,320px)] shrink-0">
           <div className="absolute top-0 left-0 z-10">
             <BackButton />
           </div>
@@ -60,8 +60,8 @@ export function BookDetailPage() {
           ))}
         </div>
 
-        {/* Summary */}
-        <div className="shrink-0">
+        {/* Summary — fills remaining space */}
+        <div className="min-h-0 flex-1">
           <BookSummary summary={book.summary} />
         </div>
 
