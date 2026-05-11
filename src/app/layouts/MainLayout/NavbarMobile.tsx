@@ -42,12 +42,12 @@ export default function NavbarMobile({
                   aria-hidden="true"
                 />
                 <Icon
-                  className={`mb-1 h-7 w-7 transition-transform duration-200 ${
+                  className={`mb-1 h-5 w-5 transition-transform duration-200 ${
                     isActive ? 'scale-110' : ''
                   }`}
                   strokeWidth={2.2}
                 />
-                <span className="truncate font-sans text-xs font-medium">
+                <span className="truncate font-sans text-[10px] font-medium">
                   {label}
                 </span>
               </>

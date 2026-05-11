@@ -4,7 +4,7 @@ import Navbar from './Navbar.tsx'
 import { useState } from 'react'
 
 export default function MainLayout() {
-  const [isLoggedIn] = useState(false) // TODO: Replace with actual authentication check
+  const [isLoggedIn] = useState(true) // TODO: Replace with actual authentication check
 
   return (
     <div className="bg-background text-text min-h-screen">

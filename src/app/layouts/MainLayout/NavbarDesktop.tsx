@@ -20,7 +20,7 @@ export default function NavbarDesktop({
     <nav className="border-primary/20 hidden w-full border-b bg-[#FFEBD6] px-6 py-4 md:block">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-primary text-xl font-bold">BiblioManiac</h1>
+          <span className="text-primary text-xl font-bold">BiblioManiac</span>
         </div>
         <ul className="flex items-center gap-8">
           {filteredLinks.map(({ to, label, end }) => (

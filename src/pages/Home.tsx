@@ -10,9 +10,9 @@ export default function Home() {
       <section className="mx-auto flex w-full max-w-none flex-col gap-4 rounded-b-3xl bg-[#FFEBD6] px-4 pt-8 pb-6 shadow-none md:px-8 lg:px-24">
         {/* Header et recherche */}
         <div>
-          <h1 className="text-primary mb-1 text-2xl font-bold md:text-3xl xl:text-4xl 2xl:text-5xl">
+          <span className="text-primary mb-1 text-2xl font-bold md:text-3xl xl:text-4xl 2xl:text-5xl">
             Bonjour
-          </h1>
+          </span>
           <p className="text-secondary mb-4 text-base md:text-lg xl:text-xl 2xl:text-2xl">
             Qu’allez vous lire aujourd’hui
           </p>
