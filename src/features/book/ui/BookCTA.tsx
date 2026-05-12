@@ -30,11 +30,16 @@ type ButtonVariant =
   | 'destructive'
   | 'link'
   | 'warning'
+  | 'emphasis'
 
 interface VariantPresentation {
   label: string
   icon: LucideIcon
   variant: ButtonVariant
+  /** Extra Tailwind classes layered after the size classes. Used to add
+   *  semantic affordances (dashed border for "unavailable", opacity dim, ...)
+   *  without polluting the Button CVA. */
+  extraClass?: string
 }
 
 function presentationFor(state: BookCTAState): VariantPresentation {
@@ -42,11 +47,16 @@ function presentationFor(state: BookCTAState): VariantPresentation {
     case 'available':
       return { label: 'Réserver ce livre', icon: BookPlus, variant: 'default' }
     case 'unavailable':
-      return { label: 'Indisponible', icon: BookDashed, variant: 'secondary' }
+      return {
+        label: 'Indisponible',
+        icon: BookDashed,
+        variant: 'outline',
+        extraClass: 'border-2 border-dashed opacity-70',
+      }
     case 'reserved':
-      return { label: 'Réservé', icon: BookCheck, variant: 'secondary' }
+      return { label: 'Réservé', icon: BookCheck, variant: 'outline' }
     case 'ready':
-      return { label: 'À retirer', icon: BookUp, variant: 'default' }
+      return { label: 'À retirer', icon: BookUp, variant: 'emphasis' }
     case 'borrowed':
       return {
         label: `J-${state.daysLeft}`,
@@ -54,7 +64,7 @@ function presentationFor(state: BookCTAState): VariantPresentation {
         variant:
           state.daysLeft <= BOOK_CTA_ALERT_THRESHOLD_DAYS
             ? 'warning'
-            : 'default',
+            : 'outline',
       }
     case 'overdue':
       return {
@@ -84,7 +94,7 @@ export function BookCTA({
   className,
 }: BookCTAProps) {
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const { label, icon: Icon, variant } = presentationFor(state)
+  const { label, icon: Icon, variant, extraClass } = presentationFor(state)
 
   const isUnavailable = state.kind === 'unavailable'
   const isAvailable = state.kind === 'available'
@@ -108,7 +118,7 @@ export function BookCTA({
         size="lg"
         disabled={isUnavailable}
         onClick={handleClick}
-        className={cn('h-12 w-full text-base', className)}
+        className={cn('h-12 w-full text-base', extraClass, className)}
       >
         <Icon className="size-5" aria-hidden />
         {label}
