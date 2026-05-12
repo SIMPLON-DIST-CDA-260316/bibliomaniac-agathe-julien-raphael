@@ -1,6 +1,14 @@
-import { EyeOff, Eye } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
+import type { ChangeEvent } from 'react'
 import { useState } from 'react'
-import type { PasswordInputProps } from '../types/ui'
+
+interface PasswordInputProps {
+  name: string
+  value: string
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  placeholder?: string
+  label?: string
+}
 
 export default function PasswordInput({
   name,
@@ -10,16 +18,21 @@ export default function PasswordInput({
   label,
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false)
+  const inputId = `input-${name}`
 
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-primary text-sm font-medium md:text-base">
+        <label
+          htmlFor={inputId}
+          className="text-primary text-sm font-medium md:text-base"
+        >
           {label}
         </label>
       )}
       <div className="relative">
         <input
+          id={inputId}
           type={showPassword ? 'text' : 'password'}
           name={name}
           value={value}

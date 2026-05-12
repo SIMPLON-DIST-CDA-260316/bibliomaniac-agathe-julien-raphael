@@ -1,4 +1,13 @@
-import type { TextInputProps } from '../types/ui'
+import type { ChangeEvent } from 'react'
+
+interface TextInputProps {
+  name: string
+  type?: string
+  value: string
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  placeholder?: string
+  label?: string
+}
 
 export default function TextInput({
   name,
@@ -8,14 +17,20 @@ export default function TextInput({
   placeholder,
   label,
 }: TextInputProps) {
+  const inputId = `input-${name}`
+
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-primary text-sm font-medium md:text-base">
+        <label
+          htmlFor={inputId}
+          className="text-primary text-sm font-medium md:text-base"
+        >
           {label}
         </label>
       )}
       <input
+        id={inputId}
         type={type}
         name={name}
         value={value}

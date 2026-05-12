@@ -36,7 +36,10 @@ export default function Login() {
 
         <div>
           <div className="mb-1 flex items-center justify-between">
-            <label className="text-primary text-sm font-medium md:text-base">
+            <label
+              htmlFor="input-password"
+              className="text-primary text-sm font-medium md:text-base"
+            >
               Mot de passe
             </label>
             <Link

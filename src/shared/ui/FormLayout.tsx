@@ -1,5 +1,11 @@
 import { BookOpen } from 'lucide-react'
-import type { FormLayoutProps } from '../types/ui'
+import type { ReactNode } from 'react'
+
+interface FormLayoutProps {
+  title: string
+  subtitle: string
+  children: ReactNode
+}
 
 export default function FormLayout({
   title,
