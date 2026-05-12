@@ -53,6 +53,9 @@
 :root {
   /* ── Palette Bibliomaniac ── */
   --bm-cream: oklch(0.951 0.035 68.7); /* #FFEBD6 */
+  --bm-cream-dim: oklch(
+    0.91 0.04 68.7
+  ); /* subtle darker cream for muted surfaces */
   --bm-white: oklch(1 0 0); /* #FFFFFF */
   --bm-olive: oklch(0.403 0.046 98.3); /* #4F492B */
   --bm-brown: oklch(0.183 0.047 38.1); /* #230903 */
@@ -72,7 +75,7 @@
   --primary-foreground: var(--bm-white);
   --secondary: var(--bm-cream);
   --secondary-foreground: var(--bm-black);
-  --muted: var(--bm-cream);
+  --muted: var(--bm-cream-dim);
   --muted-foreground: var(--bm-brown);
   --accent: var(--bm-brown);
   --accent-foreground: var(--bm-white);
