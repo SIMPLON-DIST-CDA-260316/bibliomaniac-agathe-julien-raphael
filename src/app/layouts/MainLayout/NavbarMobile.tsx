@@ -1,15 +1,20 @@
 import { NavLink } from 'react-router'
-import type { ElementType } from 'react'
+import { useFilteredLinks } from '@/features/navigation/hooks/useFilteredLinks'
+import type { NavLink as NavLinkType } from '@/features/navigation/types/navigation'
 
 export default function NavbarMobile({
   links,
+  isLoggedIn,
 }: {
-  links: { to: string; label: string; icon: ElementType; end?: boolean }[]
+  links: NavLinkType[]
+  isLoggedIn: boolean
 }) {
+  const filteredLinks = useFilteredLinks(links, isLoggedIn)
+
   return (
     <nav className="border-primary/20 fixed right-0 bottom-0 left-0 z-50 border-t bg-[#FFEBD6] px-2 py-2 md:hidden">
       <div className="mx-auto flex max-w-md items-center justify-around">
-        {links.map(({ to, label, icon: Icon, end }) => (
+        {filteredLinks.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
@@ -30,12 +35,12 @@ export default function NavbarMobile({
                   aria-hidden="true"
                 />
                 <Icon
-                  className={`mb-1 h-7 w-7 transition-transform duration-200 ${
+                  className={`mb-1 h-5 w-5 transition-transform duration-200 ${
                     isActive ? 'scale-110' : ''
                   }`}
                   strokeWidth={2.2}
                 />
-                <span className="truncate font-sans text-xs font-medium">
+                <span className="truncate font-sans text-[10px] font-medium">
                   {label}
                 </span>
               </>
