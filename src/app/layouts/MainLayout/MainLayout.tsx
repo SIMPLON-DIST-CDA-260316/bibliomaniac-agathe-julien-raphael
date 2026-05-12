@@ -13,7 +13,7 @@ export default function MainLayout() {
         <Navbar isLoggedIn={isLoggedIn} />
       </nav>
       <main>
-        <Outlet />
+        <Outlet context={[isLoggedIn, undefined /* setIsLoggedIn */]} />
       </main>
     </div>
   )

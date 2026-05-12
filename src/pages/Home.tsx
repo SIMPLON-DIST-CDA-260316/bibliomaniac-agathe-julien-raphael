@@ -1,9 +1,11 @@
 import { Search } from 'lucide-react'
+import { useOutletContext } from 'react-router'
 import { BookSection } from '@/features/book/ui/BookSection.tsx'
 import { useSampleBooks } from '@/features/book/hooks/useSampleBooks.ts'
 
 export default function Home() {
   const books = useSampleBooks()
+  const [isLoggedIn] = useOutletContext<boolean[]>()
 
   return (
     <main className="bg-background flex min-h-screen flex-col items-center px-0 pb-24 sm:pb-0">
@@ -11,7 +13,7 @@ export default function Home() {
         {/* Header et recherche */}
         <div>
           <span className="text-primary mb-1 text-2xl font-bold md:text-3xl xl:text-4xl 2xl:text-5xl">
-            Bonjour
+            Bonjour {isLoggedIn && 'utilisateur'}
           </span>
           <p className="text-secondary mb-4 text-base md:text-lg xl:text-xl 2xl:text-2xl">
             Qu’allez vous lire aujourd’hui
@@ -25,7 +27,19 @@ export default function Home() {
             <Search className="text-primary absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7" />
           </div>
         </div>
-        <BookSection title="Recommandations globale" link="#" books={books} />
+        {isLoggedIn ? (
+          <div>
+            <BookSection title="Empruntés" link="#" books={books} />
+            <BookSection title="Recommandé pour vous" link="#" books={books} />
+          </div>
+        ) : (
+          <BookSection
+            title="Recommandations globales"
+            link="#"
+            books={books}
+          />
+        )}
+
         <BookSection title="Nouveautés" link="#" books={books} />
       </section>
     </main>
