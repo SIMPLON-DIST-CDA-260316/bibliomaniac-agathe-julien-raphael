@@ -1,18 +1,24 @@
 import { NavLink } from 'react-router'
+import { useFilteredLinks } from '@/features/navigation/hooks/useFilteredLinks'
+import type { NavLink as NavLinkType } from '@/features/navigation/types/navigation'
 
 export default function NavbarDesktop({
   links,
+  isLoggedIn,
 }: {
-  links: { to: string; label: string; end?: boolean }[]
+  links: NavLinkType[]
+  isLoggedIn: boolean
 }) {
+  const filteredLinks = useFilteredLinks(links, isLoggedIn)
+
   return (
     <nav className="border-primary/20 hidden w-full border-b bg-[#FFEBD6] px-6 py-4 md:block">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-primary text-xl font-bold">BiblioManiac</h1>
+          <span className="text-primary text-xl font-bold">BiblioManiac</span>
         </div>
         <ul className="flex items-center gap-8">
-          {links.map(({ to, label, end }) => (
+          {filteredLinks.map(({ to, label, end }) => (
             <li key={to}>
               <NavLink
                 to={to}
