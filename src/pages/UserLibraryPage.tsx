@@ -1,8 +1,9 @@
 import { useSampleBooksByShelf } from '@/features/book/hooks/useSampleBooksByShelf'
 import {
-  BOOK_SHELF_LABELS,
-  BOOK_SHELF_ORDER,
-} from '@/features/book/types/bookShelf'
+  SHELF_LABELS,
+  SHELF_ORDER,
+  shelfToSlug,
+} from '@/features/book/lib/shelf'
 import { BookSection } from '@/features/book/ui/BookSection'
 
 export function UserLibraryPage() {
@@ -13,11 +14,11 @@ export function UserLibraryPage() {
         <h1 className="text-primary py-3 text-2xl font-bold">
           Ma Bibliothèque
         </h1>
-        {BOOK_SHELF_ORDER.map((shelf) => (
+        {SHELF_ORDER.map((shelf) => (
           <BookSection
             key={shelf}
-            title={BOOK_SHELF_LABELS[shelf]}
-            link={`/library/${shelf}`}
+            title={SHELF_LABELS[shelf]}
+            link={`/library/${shelfToSlug(shelf)}`}
             books={shelfBooks[shelf]}
           />
         ))}

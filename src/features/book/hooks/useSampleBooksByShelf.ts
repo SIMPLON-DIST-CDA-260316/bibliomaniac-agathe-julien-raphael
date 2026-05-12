@@ -11,11 +11,11 @@ export function useSampleBooksByShelf(): Record<BookShelf, Book[]> {
     () => ({
       favorites: books,
       borrowed: books,
-      to_read: books,
-      reading_now: books,
-      have_read: books,
+      toRead: books,
+      readingNow: books,
+      haveRead: books,
       reviewed: books,
-      recently_viewed: books,
+      recentlyViewed: books,
     }),
     [books],
   )
