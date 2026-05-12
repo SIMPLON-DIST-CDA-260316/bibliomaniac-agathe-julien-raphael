@@ -1,10 +1,11 @@
 import { Search } from 'lucide-react'
 import { useOutletContext } from 'react-router'
 import { BookSection } from '@/features/book/ui/BookSection.tsx'
-import { useSampleBooks } from '@/features/book/hooks/useSampleBooks.ts'
+import { useDiscoveryBooks } from '@/features/book/hooks/useDiscoveryBooks'
+import { discoveryToSlug } from '@/features/book/lib/categories'
 
 export default function Home() {
-  const books = useSampleBooks()
+  const discoveryBooks = useDiscoveryBooks()
   const [isLoggedIn] = useOutletContext<boolean[]>()
 
   return (
@@ -13,7 +14,7 @@ export default function Home() {
         {/* Header et recherche */}
         <div>
           <span className="text-primary mb-1 text-2xl font-bold md:text-3xl xl:text-4xl 2xl:text-5xl">
-            Bonjour {isLoggedIn && 'utilisateur'}
+            Bonjour {isLoggedIn && '%utilisateur%'}
           </span>
           <p className="text-secondary mb-4 text-base md:text-lg xl:text-xl 2xl:text-2xl">
             Qu’allez vous lire aujourd’hui
@@ -28,19 +29,30 @@ export default function Home() {
           </div>
         </div>
         {isLoggedIn ? (
-          <div>
-            <BookSection title="Empruntés" link="#" books={books} />
-            <BookSection title="Recommandé pour vous" link="#" books={books} />
+          <div className="flex flex-col gap-4">
+            <BookSection
+              title="Empruntés"
+              link={`/discover/${discoveryToSlug('borrowed')}`}
+              books={discoveryBooks.borrowed}
+            />
+            <BookSection
+              title="Recommandés pour vous"
+              link={`/discover/${discoveryToSlug('recommended_for_you')}`}
+              books={discoveryBooks.recommended_for_you}
+            />
           </div>
         ) : (
           <BookSection
             title="Recommandations globales"
-            link="#"
-            books={books}
+            link={`/discover/${discoveryToSlug('global_recommendations')}`}
+            books={discoveryBooks.global_recommendations}
           />
         )}
-
-        <BookSection title="Nouveautés" link="#" books={books} />
+        <BookSection
+          title="Nouveautés"
+          link={`/discover/${discoveryToSlug('new_releases')}`}
+          books={discoveryBooks.new_releases}
+        />
       </section>
     </main>
   )
