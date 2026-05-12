@@ -1,21 +1,17 @@
 import { useSampleBooksByShelf } from '@/features/book/hooks/useSampleBooksByShelf'
-import {
-  BOOK_SHELF_LABELS,
-  BOOK_SHELF_ORDER,
-  type BookShelf,
-} from '@/features/book/types/bookShelf'
+import { SHELF_LABELS, slugToShelf } from '@/features/book/lib/shelf'
 import { BookGrid } from '@/features/book/ui/BookGrid'
 import { Navigate, useParams } from 'react-router'
 
 export function UserShelfPage() {
-  const { shelf } = useParams<{ shelf: BookShelf }>()
+  const { shelfSlug } = useParams<{ shelfSlug: string }>()
   const shelfBooks = useSampleBooksByShelf()
-  if (!shelf || !BOOK_SHELF_ORDER.includes(shelf))
-    return <Navigate to="/library" replace />
+  const shelf = shelfSlug ? slugToShelf(shelfSlug) : undefined
+  if (!shelf) return <Navigate to="/library" replace />
   return (
     <section className="px-4 pt-4 pb-24">
       <h1 className="text-primary py-3 text-2xl font-bold">
-        {BOOK_SHELF_LABELS[shelf]}
+        {SHELF_LABELS[shelf]}
       </h1>
       <BookGrid books={shelfBooks[shelf]} />
     </section>

@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
         element: <UserLibraryPage />,
       },
       {
-        path: '/library/:shelf',
+        path: '/library/:shelfSlug',
         element: <UserShelfPage />,
       },
       {
