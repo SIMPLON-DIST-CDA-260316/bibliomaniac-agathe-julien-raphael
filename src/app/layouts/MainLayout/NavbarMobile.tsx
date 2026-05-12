@@ -21,7 +21,9 @@ export default function NavbarMobile({
             end={end}
             className={({ isActive }: { isActive: boolean }) =>
               `group relative flex min-w-0 flex-1 flex-col items-center justify-center rounded-lg p-2 transition-all duration-200 ${
-                isActive ? 'text-primary' : 'text-secondary hover:text-accent'
+                isActive
+                  ? 'text-primary'
+                  : 'text-muted-foreground hover:text-accent'
               }`
             }
           >
@@ -40,7 +42,7 @@ export default function NavbarMobile({
                   }`}
                   strokeWidth={2.2}
                 />
-                <span className="truncate font-sans text-[10px] font-medium">
+                <span className="truncate text-[10px] font-medium">
                   {label}
                 </span>
               </>
