@@ -63,20 +63,21 @@ function presentationFor(state: BookCTAState): VariantPresentation {
       return { label: 'Réservé', icon: BookCheck, variant: 'outline' }
     case 'ready':
       return { label: 'À retirer', icon: BookUp, variant: 'emphasis' }
-    case 'borrowed':
+    case 'borrowed': {
+      const alert = state.daysLeft <= BOOK_CTA_ALERT_THRESHOLD_DAYS
       return {
         label: borrowedLabel(state.daysLeft),
         icon: ClockFading,
-        variant:
-          state.daysLeft <= BOOK_CTA_ALERT_THRESHOLD_DAYS
-            ? 'warning'
-            : 'outline',
+        variant: alert ? 'warning' : 'outline',
+        extraClass: alert ? 'border-2 border-warning' : undefined,
       }
+    }
     case 'overdue':
       return {
         label: 'Retour en retard',
         icon: BookAlert,
         variant: 'destructive',
+        extraClass: 'border-2 border-destructive text-foreground',
       }
   }
 }
