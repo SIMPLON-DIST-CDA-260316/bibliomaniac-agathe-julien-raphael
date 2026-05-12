@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <main className="bg-background flex min-h-screen flex-col items-center px-0 pb-24 sm:pb-0">
-      <section className="mx-auto flex w-full max-w-none flex-col gap-4 rounded-b-3xl bg-[#FFEBD6] px-4 pt-8 pb-6 shadow-none md:px-8 lg:px-24">
+      <section className="mx-auto flex w-full max-w-none flex-col gap-4 rounded-b-3xl px-4 pt-8 pb-6 shadow-none md:px-8 lg:px-24">
         {/* Header et recherche */}
         <div>
           <h1 className="text-primary mb-1 text-2xl font-bold md:text-3xl xl:text-4xl 2xl:text-5xl">

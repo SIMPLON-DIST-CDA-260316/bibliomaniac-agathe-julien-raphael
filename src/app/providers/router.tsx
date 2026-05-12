@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router'
 
 import Home from '@/pages/Home.tsx'
 import MainLayout from '@/app/layouts/MainLayout'
+import Login from '@/pages/Login.tsx'
+import Register from '@/pages/Register.tsx'
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ export const router = createBrowserRouter([
       {
         path: '/profile',
         element: <h1>Profile</h1>,
+      },
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
+        path: 'register',
+        element: <Register />,
       },
     ],
   },
