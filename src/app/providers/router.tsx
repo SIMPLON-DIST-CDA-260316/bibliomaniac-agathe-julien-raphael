@@ -3,6 +3,8 @@ import { createBrowserRouter } from 'react-router'
 import { Home } from '@/pages/Home'
 import { BookDetailPage } from '@/pages/BookDetailPage'
 import MainLayout from '@/app/layouts/MainLayout'
+import Login from '@/pages/Login.tsx'
+import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
 
@@ -37,11 +39,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/login',
-        element: <h1>Login</h1>,
+        element: <Login />,
       },
       {
-        path: '/register',
-        element: <h1>Register</h1>,
+        path: 'register',
+        element: <Register />,
       },
     ],
   },
