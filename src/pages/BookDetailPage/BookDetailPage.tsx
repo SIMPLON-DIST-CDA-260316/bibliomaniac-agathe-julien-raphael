@@ -2,6 +2,7 @@ import { BookX } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
 
 import { BookCover } from '@/features/book/ui/BookCover'
+import { BookCTA } from '@/features/book/ui/BookCTA'
 import { BookMeta } from '@/features/book/ui/BookMeta'
 import { BookSummary } from '@/features/book/ui/BookSummary'
 import { BookmarkButton } from '@/features/book/ui/BookmarkButton'
@@ -63,9 +64,19 @@ export function BookDetailPage() {
           <BookSummary summary={book.summary} />
         </div>
 
-        <Button className="h-12 w-full shrink-0 text-base" size="lg">
-          Réserver ce livre
-        </Button>
+        <BookCTA
+          state={{ kind: 'available' }}
+          bookTitle={book.title}
+          onReserveConfirm={() => {
+            // TODO #33 — wire to reservation mutation
+            console.log('[BookCTA] reserve confirmed for', book.id)
+          }}
+          onActiveStateClick={() => {
+            // TODO #33 — wire to navigation
+            console.log('[BookCTA] active state click', book.id)
+          }}
+          className="shrink-0"
+        />
       </div>
 
       {/* TODO US7 (#16): replace placeholders with related-books carousel */}
