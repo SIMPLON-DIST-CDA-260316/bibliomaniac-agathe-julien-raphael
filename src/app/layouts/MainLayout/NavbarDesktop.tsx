@@ -1,8 +1,6 @@
 import { NavLink } from 'react-router'
-import {
-  useFilteredLinks,
-  type NavLink as NavLinkType,
-} from '@/features/navigation/hooks/useFilteredLinks'
+import { useFilteredLinks } from '@/features/navigation/hooks/useFilteredLinks'
+import type { NavLink as NavLinkType } from '@/features/navigation/types/navigation'
 
 export default function NavbarDesktop({
   links,

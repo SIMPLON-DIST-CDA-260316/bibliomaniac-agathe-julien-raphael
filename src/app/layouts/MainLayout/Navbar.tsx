@@ -2,7 +2,7 @@ import { Home, Library, Search, User } from 'lucide-react'
 
 import NavbarDesktop from './NavbarDesktop'
 import NavbarMobile from './NavbarMobile'
-import type { NavLink } from '@/features/navigation/hooks/useFilteredLinks'
+import type { NavLink } from '@/features/navigation/types/navigation'
 
 const links: NavLink[] = [
   {

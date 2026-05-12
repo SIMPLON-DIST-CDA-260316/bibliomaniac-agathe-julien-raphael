@@ -1,13 +1,5 @@
-import type { ComponentType, SVGProps } from 'react'
 import { useMemo } from 'react'
-
-export interface NavLink {
-  to: string
-  label: string
-  icon: ComponentType<SVGProps<SVGSVGElement>>
-  end?: boolean
-  requiresAuth: boolean[]
-}
+import type { NavLink } from '../types/navigation'
 
 export function useFilteredLinks(links: NavLink[], isLoggedIn: boolean) {
   return useMemo(() => {
