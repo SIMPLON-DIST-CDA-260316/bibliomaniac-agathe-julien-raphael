@@ -1,4 +1,6 @@
 export type { Book } from './model/book.types'
+export type { BookCTAState, BookCTAKind } from './model/bookCta.types'
+export { BOOK_CTA_ALERT_THRESHOLD_DAYS } from './model/bookCta.types'
 export { useBookDetail } from './hooks/useBookDetail'
 export { BookCover } from './ui/BookCover'
 export { BookMeta } from './ui/BookMeta'
