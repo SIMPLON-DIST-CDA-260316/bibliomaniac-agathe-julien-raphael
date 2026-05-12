@@ -104,10 +104,10 @@ Inside the `variant: { ... }` block, after the `destructive: ...` line, add the 
 
 ```ts
         warning:
-          'bg-warning/15 text-warning-foreground hover:bg-warning/25 focus-visible:border-warning/40 focus-visible:ring-warning/30 dark:bg-warning/20 dark:hover:bg-warning/30',
+          'bg-warning/15 text-warning-foreground hover:bg-warning/25 focus-visible:border-warning/40 focus-visible:ring-warning/30 dark:bg-warning/20 dark:hover:bg-warning/30 dark:focus-visible:ring-warning/40',
 ```
 
-The exact classes mirror the pattern of `destructive` so the styling stays consistent (background-tinted, accessible contrast).
+Pattern note: this is **not** a 1:1 mirror of `destructive`. `destructive` uses the same color for both background tint and foreground text (red-on-red-tint stays readable). Amber-on-amber-tint would be illegible, so `warning` uses a dedicated `--warning-foreground` token (neutral black/dark) and slightly higher tint opacities (`/15` / `/25`) for visual weight on the cream background. The `dark:focus-visible:ring-warning/40` mirrors the equivalent line on `destructive` for ring-color parity in dark mode.
 
 - [ ] **Step 2 — Type-check**
 
@@ -384,11 +384,10 @@ export function BookCTA({
         variant={variant}
         size="lg"
         disabled={isUnavailable}
-        aria-disabled={isUnavailable}
         onClick={handleClick}
         className={cn('h-12 w-full text-base', className)}
       >
-        <Icon className="mr-2 size-5" aria-hidden />
+        <Icon className="size-5" aria-hidden />
         {label}
       </Button>
 
@@ -407,7 +406,8 @@ export function BookCTA({
 
 Notes:
 - The `switch` over `state.kind` has no `default`; TypeScript's exhaustiveness checking guarantees future kinds force a compile error here.
-- `aria-disabled` is passed explicitly (defensive: do not rely on shadcn `Button` forwarding it from `disabled`).
+- The native `disabled` attribute is enough for assistive tech: the browser exposes the disabled state automatically, and the AC `aria-disabled` requirement is satisfied by the native attribute. A separate `aria-disabled` prop would be redundant.
+- `Icon` is laid out by the `Button` CVA's `gap-1.5` flex spacing (size `lg`); no manual right-margin needed.
 - `LucideIcon` type imported for the variant table; `as` casts avoided.
 
 - [ ] **Step 2 — Type-check**
@@ -426,17 +426,18 @@ git commit -m "feat(book): add BookCTA component with 6 variants"
 
 ---
 
-## Task 6: Re-export from the feature barrel
+## Task 6: Re-export shared types from the feature barrel
 
 **Files:**
 - Modify: `src/features/book/index.ts`
 
+**Convention note:** Existing files in this codebase (e.g. `BookDetailPage`) import UI components via **deep paths** (`@/features/book/ui/BookCover`) even when the barrel exists. We keep that convention — only types/constants needed by sibling features (#33 will import `BookCTAState`) go through the barrel. The `BookCTA` component itself stays deep-pathed.
+
 - [ ] **Step 1 — Edit the file**
 
-Append these lines:
+Append these lines (no component re-export):
 
 ```ts
-export { BookCTA } from './ui/BookCTA'
 export type { BookCTAState, BookCTAKind } from './model/bookCta.types'
 export { BOOK_CTA_ALERT_THRESHOLD_DAYS } from './model/bookCta.types'
 ```
@@ -452,7 +453,7 @@ Expected: passes.
 
 ```bash
 git add src/features/book/index.ts
-git commit -m "feat(book): re-export BookCTA + types from feature barrel"
+git commit -m "feat(book): re-export BookCTAState + alert threshold from barrel"
 ```
 
 ---
@@ -689,7 +690,7 @@ Expected output: the 9 task commits below, plus the 3 pre-existing `docs(...)` c
 <sha> feat(router): register /dev/book-cta sandbox route (DEV only)
 <sha> feat(dev): add BookCTA sandbox page
 <sha> feat(book-detail): wire BookCTA on the detail page (available variant)
-<sha> feat(book): re-export BookCTA + types from feature barrel
+<sha> feat(book): re-export BookCTAState + alert threshold from barrel
 <sha> feat(book): add BookCTA component with 6 variants
 <sha> feat(book): add BookReserveConfirmDrawer
 <sha> feat(book): add BookCTAState discriminated union + alert threshold
