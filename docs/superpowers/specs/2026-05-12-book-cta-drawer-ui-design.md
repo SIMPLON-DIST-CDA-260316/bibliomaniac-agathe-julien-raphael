@@ -120,7 +120,7 @@ L'analyse des actions futures montre que chaque variante interactive aura probab
 
 1. Chaque drawer futur sera un composant séparé dans `src/features/book/ui/cta-drawers/`. Le dossier est créé dès #32 avec `BookReserveConfirmDrawer.tsx` comme seul fichier.
 2. `BookCTA` reste léger : switch sur `state.kind` qui dérive la présentation (label/icône/variant) d'un tableau de mapping et la behavior (drawer interne pour `available`, callback pour le reste).
-3. Quand une variante "en cours" recevra son drawer, l'API évoluera : remplacement de `onActiveStateClick` par des props spécifiques (`onReservedClick`, `onReadyClick`,...) ou pattern slot/render-prop. La discriminated union force TS à valider la migration.
+3. Quand une variante "en cours" recevra son drawer, l'API évoluera : remplacement de `onActiveStateClick` par des props spécifiques (`onReservedClick`, `onReadyClick`,...) ou pattern slot/render-prop. La discriminated union force TS à valider la migration. **#32 accepte sciemment ce breaking change futur plutôt que de pré-concevoir une API extensible spéculative — YAGNI.**
 4. Commentaires `// TODO US5/US6 — variant-specific drawer` posés sur les 4 variantes nav pour signaler les points d'extension.
 
 ## Arborescence
@@ -169,7 +169,7 @@ Remplace les lignes 66-68 de `src/pages/BookDetailPage/BookDetailPage.tsx` :
 
 ## Sandbox `/dev/book-cta`
 
-Page non-linkée, montée derrière `import.meta.env.DEV`. Affiche les 6 variantes (et la variante `borrowed` en deux échantillons : `daysLeft: 7` normal + `daysLeft: 2` alert) avec leur libellé descriptif. Handlers branchés sur `console.log` pour vérifier visuellement les interactions.
+Page non-linkée, montée derrière `import.meta.env.DEV`. Affiche les 6 variantes — note : la variante `borrowed` est représentée par **deux échantillons** (`daysLeft: 7` normal + `daysLeft: 2` alert) pour vérifier visuellement la bascule warning, ce qui porte le total à 7 entrées dans la liste, toutes basées sur 6 `kind` distincts. Handlers branchés sur `console.log` pour vérifier visuellement les interactions.
 
 ```tsx
 const SAMPLES: { label: string; state: BookCTAState }[] = [
@@ -195,9 +195,14 @@ Route :
 
 ## Accessibilité
 
-- `unavailable` : `disabled` + `aria-disabled="true"` (communiqué aux technologies d'assistance ; AC #10).
+- `unavailable` : `disabled` + `aria-disabled="true"` (communiqué aux technologies d'assistance ; AC #10). À vérifier en début d'implémentation : si le `Button` shadcn ne forwarde pas automatiquement `aria-disabled` quand `disabled` est posé, le passer explicitement sur la balise.
 - Drawer : focus trap, fermeture clavier (Échap), swipe-down et clic-outside fournis nativement par vaul (`shared/ui/drawer.tsx` déjà en place).
 - CTA activable au clavier : composant `Button` shadcn — comportement clavier par défaut (Enter/Espace) conservé.
+
+## Comportement de fermeture du Drawer
+
+- Le Drawer se ferme automatiquement après la confirmation : `BookReserveConfirmDrawer` appelle `onOpenChange(false)` *puis* `onConfirm()`. Cela évite que le composant parent ait à savoir gérer la fermeture pour pouvoir réagir à la confirmation.
+- Les autres routes de fermeture (Annuler, Échap, swipe-down, clic-outside) sont gérées par vaul via `onOpenChange` et n'invoquent pas `onConfirm`.
 
 ## Décisions tranchées (récap brainstorming)
 
