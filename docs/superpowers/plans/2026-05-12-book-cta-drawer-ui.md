@@ -116,16 +116,14 @@ npm run type-check
 ```
 Expected: passes. `Button` now accepts `variant="warning"` thanks to `VariantProps<typeof buttonVariants>`.
 
-- [ ] **Step 3 — Visual sanity check**
-
-Temporarily edit `src/pages/Home.tsx` to render `<Button variant="warning">Test warning</Button>` somewhere visible, run `npm run dev`, open `/`, confirm the warning style displays (amber background, dark foreground). Revert the temporary edit before committing.
-
-- [ ] **Step 4 — Commit**
+- [ ] **Step 3 — Commit**
 
 ```bash
 git add src/shared/ui/button.tsx
 git commit -m "feat(ui): add warning variant to Button CVA"
 ```
+
+> Visual verification of the `warning` variant happens later in Task 9 via the sandbox's `borrowed (J-2, alert)` sample — no need for a throwaway probe here.
 
 ---
 
@@ -297,6 +295,10 @@ import {
 } from '@/features/book/model/bookCta.types'
 import { BookReserveConfirmDrawer } from '@/features/book/ui/cta-drawers/BookReserveConfirmDrawer'
 
+// Local enum mirrors the variants declared in `src/shared/ui/button.tsx` CVA.
+// Kept duplicated (instead of `VariantProps<typeof buttonVariants>`) to avoid
+// coupling to the Button file. If new variants are added to the CVA, also
+// reflect them here so the presentation table stays well-typed.
 type ButtonVariant =
   | 'default'
   | 'outline'
@@ -639,7 +641,7 @@ Then, simulate a production build to confirm the route disappears:
 ```bash
 npm run build
 ```
-Open `dist/index.html` is not necessary; just confirm the build succeeds without warnings. (The conditional ensures `/dev/book-cta` returns to the not-found path in prod.)
+Confirm the build succeeds and **introduces no new warnings compared to a baseline build on `origin/develop`**. Pre-existing warnings unrelated to this work are not a blocker; only ones traceable to the new files matter. (The DEV-only spread ensures `/dev/book-cta` is absent from the prod bundle anyway.)
 
 - [ ] **Step 4 — Type-check + lint**
 
@@ -681,7 +683,7 @@ Walk through:
 ```bash
 git log --oneline origin/develop..HEAD
 ```
-Expected output (10 commits, one per task):
+Expected output: the 9 task commits below, plus the 3 pre-existing `docs(...)` commits that were created on this branch *before* execution starts (spec brainstorm output, spec revisions after reviewer, and this very implementation plan).
 
 ```
 <sha> feat(router): register /dev/book-cta sandbox route (DEV only)
@@ -693,8 +695,9 @@ Expected output (10 commits, one per task):
 <sha> feat(book): add BookCTAState discriminated union + alert threshold
 <sha> feat(ui): add warning variant to Button CVA
 <sha> feat(theme): add warning semantic color tokens
-<sha> docs(spec): fold reviewer recommendations into #32 spec
-<sha> docs(spec): brainstorm output for #32 BookCTA + Drawer UI
+<sha> docs(plan): implementation plan for #32 BookCTA + Drawer UI           ← pre-existing
+<sha> docs(spec): fold reviewer recommendations into #32 spec               ← pre-existing
+<sha> docs(spec): brainstorm output for #32 BookCTA + Drawer UI             ← pre-existing
 ```
 
 - [ ] **Step 4 — Ready for PR**
