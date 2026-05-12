@@ -42,6 +42,12 @@ interface VariantPresentation {
   extraClass?: string
 }
 
+function borrowedLabel(daysLeft: number): string {
+  if (daysLeft <= 0) return 'À rendre aujourd’hui'
+  if (daysLeft === 1) return 'À rendre demain'
+  return `À rendre dans ${daysLeft} jours`
+}
+
 function presentationFor(state: BookCTAState): VariantPresentation {
   switch (state.kind) {
     case 'available':
@@ -59,7 +65,7 @@ function presentationFor(state: BookCTAState): VariantPresentation {
       return { label: 'À retirer', icon: BookUp, variant: 'emphasis' }
     case 'borrowed':
       return {
-        label: `J-${state.daysLeft}`,
+        label: borrowedLabel(state.daysLeft),
         icon: ClockFading,
         variant:
           state.daysLeft <= BOOK_CTA_ALERT_THRESHOLD_DAYS
