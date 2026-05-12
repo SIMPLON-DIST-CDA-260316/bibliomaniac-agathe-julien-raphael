@@ -1,13 +1,6 @@
 import { EyeOff, Eye } from 'lucide-react'
-import { useState, type ChangeEvent } from 'react'
-
-interface PasswordInputProps {
-  name: string
-  value: string
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
-  placeholder?: string
-  label?: string
-}
+import { useState } from 'react'
+import type { PasswordInputProps } from '../types/ui'
 
 export default function PasswordInput({
   name,

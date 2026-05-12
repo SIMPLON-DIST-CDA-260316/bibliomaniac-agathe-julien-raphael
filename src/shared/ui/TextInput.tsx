@@ -1,13 +1,4 @@
-import type { ChangeEvent } from 'react'
-
-interface TextInputProps {
-  name: string
-  type?: string
-  value: string
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
-  placeholder?: string
-  label?: string
-}
+import type { TextInputProps } from '../types/ui'
 
 export default function TextInput({
   name,
