@@ -58,7 +58,9 @@
   --bm-cream-dim: oklch(
     0.91 0.04 68.7
   ); /* subtle darker cream for muted surfaces */
-  --bm-white: oklch(1 0 0); /* #FFFFFF */
+  --bm-white: oklch(
+    0.98 0.012 80
+  ); /* warm off-white tuned to match cream palette */
   --bm-olive: oklch(0.403 0.046 98.3); /* #4F492B */
   --bm-brown: oklch(0.183 0.047 38.1); /* #230903 */
   --bm-black: oklch(0.14 0 0); /* #090909 */
