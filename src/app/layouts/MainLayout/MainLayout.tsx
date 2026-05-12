@@ -7,11 +7,9 @@ export default function MainLayout() {
   const [isLoggedIn] = useState(true) // TODO: Replace with actual authentication check
 
   return (
-    <div className="bg-background text-text min-h-screen">
+    <div className="bg-background text-text min-h-screen pb-[var(--navbar-height)] md:pb-0">
       <ScrollRestoration />
-      <nav className="z-30">
-        <Navbar isLoggedIn={isLoggedIn} />
-      </nav>
+      <Navbar isLoggedIn={isLoggedIn} />
       <main>
         <Outlet />
       </main>

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 
-import Home from '@/pages/Home.tsx'
+import { Home } from '@/pages/Home'
+import { BookDetailPage } from '@/pages/BookDetailPage'
 import MainLayout from '@/app/layouts/MainLayout'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/book/:id',
-        element: <h1>Book Details</h1>,
+        element: <BookDetailPage />,
       },
       {
         path: '/library',

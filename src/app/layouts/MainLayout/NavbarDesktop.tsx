@@ -27,7 +27,7 @@ export default function NavbarDesktop({
                   `rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? 'text-primary underline underline-offset-4'
-                      : 'text-secondary hover:text-accent'
+                      : 'text-muted-foreground hover:text-accent'
                   }`
                 }
               >
