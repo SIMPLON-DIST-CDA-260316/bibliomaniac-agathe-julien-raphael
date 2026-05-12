@@ -74,15 +74,15 @@
   --popover: var(--bm-white);
   --popover-foreground: var(--bm-black);
   --primary: var(--bm-black);
-  --primary-foreground: var(--bm-white);
+  --primary-foreground: var(--bm-cream);
   --secondary: var(--bm-cream);
   --secondary-foreground: var(--bm-black);
   --muted: var(--bm-cream-dim);
   --muted-foreground: var(--bm-brown);
   --accent: var(--bm-brown);
-  --accent-foreground: var(--bm-white);
+  --accent-foreground: var(--bm-cream);
   --emphasis: var(--bm-olive);
-  --emphasis-foreground: var(--bm-white);
+  --emphasis-foreground: var(--bm-cream);
   --destructive: oklch(0.577 0.245 27.325);
   --warning: oklch(0.72 0.16 60);
   --warning-foreground: var(--bm-black);
