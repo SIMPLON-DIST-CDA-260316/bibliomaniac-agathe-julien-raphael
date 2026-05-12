@@ -4,6 +4,7 @@ import { cn } from '@/shared/lib/utils.ts'
 import { Button } from '@/shared/ui/button.tsx'
 import useEmblaCarousel from 'embla-carousel-react'
 import type { Book } from '../types/book.ts'
+import { BookCard } from './BookCard.tsx'
 
 interface BookCarouselProps {
   books: Book[]
@@ -67,32 +68,10 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
             {books.map((book) => (
               <div
                 key={book.id}
-                className="group flex-[0_0_calc(33.333%-0.5rem)] cursor-pointer sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]"
-                onClick={() => onBookClick?.(book)}
+                className="flex-[0_0_calc(33.333%-0.5rem)] sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]"
               >
                 {/* Carte du livre */}
-                <div className="flex flex-col gap-3">
-                  {/* Image de couverture */}
-                  <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-gray-200">
-                    <img
-                      src={book.coverImage}
-                      alt={book.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    {/* Overlay au survol */}
-                    <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
-                  </div>
-
-                  {/* Titre et auteur */}
-                  <div className="px-1 pb-2">
-                    <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
-                      {book.title}
-                    </h3>
-                    <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
-                      {book.author}
-                    </p>
-                  </div>
-                </div>
+                <BookCard book={book} onClick={() => onBookClick?.(book)} />
               </div>
             ))}
           </div>

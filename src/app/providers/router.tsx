@@ -4,6 +4,8 @@ import Home from '@/pages/Home.tsx'
 import MainLayout from '@/app/layouts/MainLayout'
 import Login from '@/pages/Login.tsx'
 import Register from '@/pages/Register.tsx'
+import { UserLibraryPage } from '@/pages/UserLibraryPage'
+import { UserShelfPage } from '@/pages/UserShelfPage'
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +26,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/library',
-        element: <h1>Library</h1>,
+        element: <UserLibraryPage />,
+      },
+      {
+        path: '/library/:shelf',
+        element: <UserShelfPage />,
       },
       {
         path: '/profile',
