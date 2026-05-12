@@ -1,20 +1,17 @@
 import { NavLink } from 'react-router'
+import {
+  useFilteredLinks,
+  type NavLink as NavLinkType,
+} from '@/features/navigation/hooks/useFilteredLinks'
 
 export default function NavbarDesktop({
   links,
   isLoggedIn,
 }: {
-  links: {
-    to: string
-    label: string
-    end?: boolean
-    loggedIn: boolean[]
-  }[]
+  links: NavLinkType[]
   isLoggedIn: boolean
 }) {
-  const filteredLinks = isLoggedIn
-    ? links.filter(({ loggedIn }) => loggedIn.includes(true))
-    : links.filter(({ loggedIn }) => loggedIn.includes(false))
+  const filteredLinks = useFilteredLinks(links, isLoggedIn)
 
   return (
     <nav className="border-primary/20 hidden w-full border-b bg-[#FFEBD6] px-6 py-4 md:block">

@@ -1,22 +1,17 @@
 import { NavLink } from 'react-router'
-import type { ElementType } from 'react'
+import {
+  type NavLink as NavLinkType,
+  useFilteredLinks,
+} from '@/features/navigation/hooks/useFilteredLinks'
 
 export default function NavbarMobile({
   links,
   isLoggedIn,
 }: {
-  links: {
-    to: string
-    label: string
-    icon: ElementType
-    end?: boolean
-    loggedIn: boolean[]
-  }[]
+  links: NavLinkType[]
   isLoggedIn: boolean
 }) {
-  const filteredLinks = isLoggedIn
-    ? links.filter(({ loggedIn }) => loggedIn.includes(true))
-    : links.filter(({ loggedIn }) => loggedIn.includes(false))
+  const filteredLinks = useFilteredLinks(links, isLoggedIn)
 
   return (
     <nav className="border-primary/20 fixed right-0 bottom-0 left-0 z-50 border-t bg-[#FFEBD6] px-2 py-2 md:hidden">
