@@ -3,144 +3,94 @@ import type { Book } from '../types/book.ts'
 
 const SAMPLE_BOOKS: Book[] = [
   {
-    id: 1,
+    id: '1',
     title: 'Le Seigneur des Anneaux',
     author: 'J.R.R. Tolkien',
-    coverImage:
+    authorId: 'jrr-tolkien',
+    genre: 'Fantasy',
+    language: 'Français',
+    publishedDate: '1954',
+    coverUrl:
       'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=300&h=450&fit=crop',
+    pageCount: 1000,
+    rating: 4.9,
+    copies: 3,
+    summary: 'Un épique voyage pour détruire un anneau magique.',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Fondation',
     author: 'Isaac Asimov',
-    coverImage:
+    authorId: 'isaac-asimov',
+    genre: 'Science-Fiction',
+    language: 'Français',
+    publishedDate: '1951',
+    coverUrl:
       'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=450&fit=crop',
+    pageCount: 255,
+    rating: 4.7,
+    copies: 2,
+    summary: 'Un cycle fondamental de la science-fiction.',
   },
   {
-    id: 3,
+    id: '3',
     title: 'Dune',
     author: 'Frank Herbert',
-    coverImage:
+    authorId: 'frank-herbert',
+    genre: 'Science-Fiction',
+    language: 'Français',
+    publishedDate: '1965',
+    coverUrl:
       'https://images.unsplash.com/photo-1507842217343-583b8a1a21bc?w=300&h=450&fit=crop',
+    pageCount: 680,
+    rating: 4.8,
+    copies: 2,
+    summary: 'Une épopée sur la planète Arrakis.',
   },
   {
-    id: 4,
+    id: '4',
     title: 'Le Hobbit',
     author: 'J.R.R. Tolkien',
-    coverImage:
+    authorId: 'jrr-tolkien',
+    genre: 'Fantasy',
+    language: 'Français',
+    publishedDate: '1937',
+    coverUrl:
       'https://images.unsplash.com/photo-1526243741027-444220a728bb?w=300&h=450&fit=crop',
+    pageCount: 310,
+    rating: 4.8,
+    copies: 4,
+    summary: "L'aventure de Bilbo Sacquet.",
   },
   {
-    id: 5,
+    id: '5',
     title: 'Neuromancien',
     author: 'William Gibson',
-    coverImage:
+    authorId: 'william-gibson',
+    genre: 'Science-Fiction',
+    language: 'Français',
+    publishedDate: '1984',
+    coverUrl:
       'https://images.unsplash.com/photo-1533212467805-e5f3d5373cf5?w=300&h=450&fit=crop',
+    pageCount: 271,
+    rating: 4.6,
+    copies: 1,
+    summary: 'Un classique du cyberpunk.',
   },
   {
-    id: 6,
+    id: '6',
     title: 'Le Nom du Vent',
     author: 'Patrick Rothfuss',
-    coverImage:
+    authorId: 'patrick-rothfuss',
+    genre: 'Fantasy',
+    language: 'Français',
+    publishedDate: '2007',
+    coverUrl:
       'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 7,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 8,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 9,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 10,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 11,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 12,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 13,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 14,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 15,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 16,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 17,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 18,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 19,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
-  },
-  {
-    id: 20,
-    title: 'Le Nom du Vent',
-    author: 'Patrick Rothfuss',
-    coverImage:
-      'https://images.unsplash.com/photo-1543002588-d83cea6d0b06?w=300&h=450&fit=crop',
+    pageCount: 662,
+    rating: 4.7,
+    copies: 3,
+    summary: 'Les chroniques de Kvothe, un magicien légendaire.',
   },
 ]
 

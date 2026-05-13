@@ -8,6 +8,7 @@ import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
 import { DiscoveryPage } from '@/pages/DiscoveryPage'
+import { SearchPage } from '@/pages/SearchPage'
 import Profile from '@/pages/Profile.tsx'
 
 export const router = createBrowserRouter([
@@ -21,7 +22,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/search',
-        element: <h1>Search</h1>,
+        element: <SearchPage />,
       },
       {
         path: '/book/:id',

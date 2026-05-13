@@ -10,11 +10,17 @@ export function BookCard({ book, onClick }: BookCardProps) {
     <div className="group flex cursor-pointer flex-col gap-3" onClick={onClick}>
       {/* Image de couverture */}
       <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-gray-200">
-        <img
-          src={book.coverImage}
-          alt={book.title}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+        {book.coverUrl ? (
+          <img
+            src={book.coverUrl}
+            alt={book.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-gray-300 text-gray-500">
+            <span className="text-xs">Pas de couverture</span>
+          </div>
+        )}
         {/* Overlay au survol */}
         <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
       </div>
