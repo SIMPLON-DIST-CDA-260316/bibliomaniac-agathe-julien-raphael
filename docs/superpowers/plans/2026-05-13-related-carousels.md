@@ -122,6 +122,8 @@ git commit -m "feat(book): add optional tomeNumber + ariaLabel to minimal Book (
 
 This task does two things : (a) backfill the 5 new fields on entries `1` to `5`, (b) add 9 new entries (`6`-`14`) to make 4 non-empty sections demo-able on `/book/1`.
 
+> ⚠️ **Behavioral change beyond field-add** : entry id `3` (Les Misérables) currently has `genre: 'Roman historique'`. The rewrite below normalizes it to `genre: 'Roman'` so that section "Dans le même genre" on `/book/3` matches Flaubert/Camus/Orwell entries. Intentional, aligned with spec §4.3 and §4.6.
+
 - [ ] **Step 1 — Rewrite `books.mock.ts` with enriched data.**
 
 Replace the entire file contents with:
@@ -967,7 +969,11 @@ Navigate to `/book/4`. Expected :
 
 - Aucune section.
 
-- [ ] **Step 6 — A11y inspector check.**
+- [ ] **Step 6 — BookGrid visual regression check.**
+
+The `BookCard` rewrite removes `cursor-pointer` when no `onClick` is provided. Visit any page consuming `BookGrid` without click handlers (e.g. home / discovery / shelves) and visually confirm cards still look acceptable (no broken layout, no missing affordance for navigable contexts).
+
+- [ ] **Step 7 — A11y inspector check.**
 
 Ouvrir DevTools Chrome → onglet "Lighthouse" ou extension "axe DevTools" → run accessibility audit sur `/book/1`. Expected :
 
@@ -975,25 +981,25 @@ Ouvrir DevTools Chrome → onglet "Lighthouse" ou extension "axe DevTools" → r
 - 0 erreur "heading order".
 - `aria-label` annoncé sur chaque vignette (vérifier via inspecteur "Accessibility").
 
-- [ ] **Step 7 — Production build.**
+- [ ] **Step 8 — Production build.**
 
 Run: `npm run build`
 
 Expected: succès sans warnings TS.
 
-- [ ] **Step 8 — Lint final.**
+- [ ] **Step 9 — Lint final.**
 
 Run: `npm run lint`
 
 Expected: pass.
 
-- [ ] **Step 9 — Push branch.**
+- [ ] **Step 10 — Push branch.**
 
 ```bash
 git push -u origin feat/book-US7-ui-related-carousels
 ```
 
-- [ ] **Step 10 — Open PR.**
+- [ ] **Step 11 — Open PR.**
 
 Run :
 
