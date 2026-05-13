@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import {
   Drawer,
   DrawerClose,
@@ -26,20 +24,6 @@ export function BookReserveConfirmDrawer({
   bookTitle,
   onConfirm,
 }: BookReserveConfirmDrawerProps) {
-  // Vaul applies `aria-hidden="true"` on #root when the drawer opens but
-  // leaves it focusable, so Tab still walks the page behind. Force `inert`
-  // to enforce the focus trap. Remove when more drawers exist — promote
-  // to a shared hook in @/shared/ui/drawer at that point.
-  useEffect(() => {
-    if (!open) return
-    const root = document.getElementById('root')
-    if (!root) return
-    root.setAttribute('inert', '')
-    return () => {
-      root.removeAttribute('inert')
-    }
-  }, [open])
-
   function handleConfirm() {
     onOpenChange(false)
     onConfirm()
