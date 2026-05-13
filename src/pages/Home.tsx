@@ -6,8 +6,7 @@ import { discoveryToSlug } from '@/features/book/lib/categories'
 
 export default function Home() {
   const discoveryBooks = useDiscoveryBooks()
-  const [isLoggedIn] = useOutletContext<boolean[]>()
-
+  const [isLoggedIn] = useOutletContext<[boolean, (value: boolean) => void]>()
 
   return (
     <main className="bg-background flex min-h-screen flex-col items-center px-0 pb-24 sm:pb-0">
@@ -15,10 +14,9 @@ export default function Home() {
         {/* Header et recherche */}
         <div>
           <span className="text-primary mb-1 text-2xl font-bold md:text-3xl xl:text-4xl 2xl:text-5xl">
-            Bonjour {isLoggedIn && '%utilisateur%'}
+            Bonjour {isLoggedIn && localStorage.getItem('username')}
           </span>
           <p className="text-secondary mb-4 text-base md:text-lg xl:text-xl 2xl:text-2xl">
-
             Qu’allez vous lire aujourd’hui
           </p>
           <div className="relative mb-2">

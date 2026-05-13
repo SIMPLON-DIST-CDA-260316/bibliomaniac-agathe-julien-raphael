@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 
-import { Home } from '@/pages/Home'
+import Home from '@/pages/Home'
 import { BookDetailPage } from '@/pages/BookDetailPage'
 import MainLayout from '@/app/layouts/MainLayout'
 import Login from '@/pages/Login.tsx'
@@ -8,6 +8,7 @@ import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
 import { DiscoveryPage } from '@/pages/DiscoveryPage'
+import Profile from '@/pages/Profile.tsx'
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <h1>Profile</h1>,
+        element: <Profile />,
       },
       {
         path: '/login',

@@ -66,7 +66,7 @@ export default function Register() {
         </button>
       </form>
 
-      <p className="text-secondary mt-6 text-center text-xs md:text-sm">
+      <p className="text-muted-foreground mt-6 text-center text-xs md:text-sm">
         Déjà un compte ?{' '}
         <Link
           to="/login"
