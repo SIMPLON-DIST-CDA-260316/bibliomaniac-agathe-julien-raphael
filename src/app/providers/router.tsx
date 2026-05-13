@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 
-import { Home } from '@/pages/Home'
+import Home from '@/pages/Home'
 import { BookDetailPage } from '@/pages/BookDetailPage'
 import MainLayout from '@/app/layouts/MainLayout'
 import Login from '@/pages/Login.tsx'
@@ -8,6 +8,7 @@ import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
 import { DiscoveryPage } from '@/pages/DiscoveryPage'
+import { BookCTASandbox } from '@/pages/dev/BookCTASandbox'
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +51,14 @@ export const router = createBrowserRouter([
         path: 'register',
         element: <Register />,
       },
+      ...(import.meta.env.DEV
+        ? [
+            {
+              path: '/dev/book-cta',
+              element: <BookCTASandbox />,
+            },
+          ]
+        : []),
     ],
   },
 ])

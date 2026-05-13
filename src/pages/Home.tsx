@@ -8,7 +8,6 @@ export default function Home() {
   const discoveryBooks = useDiscoveryBooks()
   const [isLoggedIn] = useOutletContext<boolean[]>()
 
-
   return (
     <main className="bg-background flex min-h-screen flex-col items-center px-0 pb-24 sm:pb-0">
       <section className="mx-auto flex w-full max-w-none flex-col gap-4 rounded-b-3xl px-4 pt-8 pb-6 shadow-none md:px-8 lg:px-24">
@@ -18,7 +17,6 @@ export default function Home() {
             Bonjour {isLoggedIn && '%utilisateur%'}
           </span>
           <p className="text-secondary mb-4 text-base md:text-lg xl:text-xl 2xl:text-2xl">
-
             Qu’allez vous lire aujourd’hui
           </p>
           <div className="relative mb-2">
