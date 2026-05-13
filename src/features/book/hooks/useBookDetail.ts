@@ -1,5 +1,5 @@
 import { MOCK_BOOKS_BY_ID } from '../mocks/books.mock'
-import type { Book } from '../model/book.types'
+import type { Book } from '@/features/book'
 
 export interface BookDetailResult {
   data: Book | null

@@ -7,6 +7,8 @@ import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
 import { DiscoveryPage } from '@/pages/DiscoveryPage'
+import { SearchPage } from '@/pages/SearchPage'
+import Profile from '@/pages/Profile.tsx'
 import { BookCTASandbox } from '@/pages/dev/BookCTASandbox'
 import { UserLibrarySearchPage } from '@/pages/UserLibrarySearchPage'
 
@@ -21,7 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/search',
-        element: <h1>Search</h1>,
+        element: <SearchPage />,
       },
       {
         path: '/book/:id',
@@ -45,7 +47,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <h1>Profile</h1>,
+        element: <Profile />,
       },
       {
         path: '/login',

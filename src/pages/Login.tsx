@@ -1,14 +1,18 @@
-import { useState, type ChangeEvent, type SyntheticEvent } from 'react'
-import { Link } from 'react-router'
+import { type ChangeEvent, type SyntheticEvent, useState } from 'react'
+import { Link, useNavigate, useOutletContext } from 'react-router'
 import FormLayout from '@/shared/ui/FormLayout'
 import TextInput from '@/shared/ui/TextInput'
 import PasswordInput from '@/shared/ui/PasswordInput'
 
 export default function Login() {
   const [form, setForm] = useState({
-    email: '',
+    username: '',
     password: '',
   })
+
+  const [, setIsLoggedIn] =
+    useOutletContext<[boolean, (value: boolean) => void]>()
+  const navigate = useNavigate()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -16,7 +20,9 @@ export default function Login() {
 
   const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // TODO: handle login logic
+    localStorage.setItem('username', form.username)
+    setIsLoggedIn(true)
+    void navigate('/')
   }
 
   return (
@@ -26,12 +32,12 @@ export default function Login() {
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <TextInput
-          name="email"
-          type="email"
-          value={form.email}
+          name="username"
+          type="username"
+          value={form.username}
           onChange={handleChange}
-          placeholder="vous@exemple.com"
-          label="Adresse e-mail"
+          placeholder="johndoe123"
+          label="Nom d'utilisateur"
         />
 
         <div>
@@ -64,7 +70,7 @@ export default function Login() {
         </button>
       </form>
 
-      <p className="text-secondary mt-6 text-center text-xs md:text-sm">
+      <p className="text-muted-foreground mt-6 text-center text-xs md:text-sm">
         Pas encore de compte ?{' '}
         <Link
           to="/register"
