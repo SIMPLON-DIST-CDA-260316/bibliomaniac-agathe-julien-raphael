@@ -22,7 +22,7 @@ export function SearchBar({ books, placeholder }: SearchBarProps) {
       }}
     >
       <PopoverAnchor asChild>
-        <div className="relative mb-2">
+        <div className="relative mb-4">
           <input
             type="text"
             placeholder={placeholder}
