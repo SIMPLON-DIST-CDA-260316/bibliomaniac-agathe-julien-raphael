@@ -4,14 +4,14 @@ import Navbar from './Navbar.tsx'
 import { useState } from 'react'
 
 export default function MainLayout() {
-  const [isLoggedIn] = useState(true) // TODO: Replace with actual authentication check
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   return (
     <div className="bg-background text-text min-h-screen pb-[var(--navbar-height)] md:pb-0">
       <ScrollRestoration />
       <Navbar isLoggedIn={isLoggedIn} />
       <main>
-        <Outlet context={[isLoggedIn, undefined /* setIsLoggedIn */]} />
+        <Outlet context={[isLoggedIn, setIsLoggedIn]} />
       </main>
     </div>
   )
