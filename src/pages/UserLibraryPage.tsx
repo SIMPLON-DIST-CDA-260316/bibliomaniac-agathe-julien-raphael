@@ -1,12 +1,12 @@
-import { useUserLibrary } from '@/features/book/api/useUserLibrary'
-import { useUserShelves } from '@/features/book/api/useUserShelves'
 import {
+  BookSection,
+  SearchBar,
   SHELF_LABELS,
   SHELF_ORDER,
   shelfToSlug,
-} from '@/features/book/lib/shelf'
-import { BookSection } from '@/features/book/ui/BookSection'
-import { SearchBar } from '@/features/book/ui/SearchBar'
+  useUserLibrary,
+  useUserShelves,
+} from '@/features/book'
 
 export function UserLibraryPage() {
   const { data: shelfBooks } = useUserShelves()

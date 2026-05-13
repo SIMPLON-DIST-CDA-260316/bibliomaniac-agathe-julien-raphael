@@ -1,10 +1,10 @@
 import { Navigate, useParams } from 'react-router'
 import {
+  BookGrid,
   DISCOVERY_LABELS,
   slugToDiscovery,
-} from '@/features/book/lib/categories'
-import { useDiscoveryBooks } from '@/features/book/model/useDiscoveryBooks'
-import { BookGrid } from '@/features/book/ui/BookGrid'
+  useDiscoveryBooks,
+} from '@/features/book'
 
 export function DiscoveryPage() {
   const { categorySlug } = useParams<{ categorySlug: string }>()

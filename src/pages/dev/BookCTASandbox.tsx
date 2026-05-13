@@ -1,5 +1,4 @@
-import { BookCTA } from '@/features/book/ui/BookCTA'
-import type { BookCTAState } from '@/features/book/model/bookCta.types'
+import { BookCTA, type BookCTAState } from '@/features/book'
 
 const SAMPLES: { label: string; state: BookCTAState }[] = [
   { label: 'available', state: { kind: 'available' } },

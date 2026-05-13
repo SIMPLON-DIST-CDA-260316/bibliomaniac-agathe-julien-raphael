@@ -1,7 +1,10 @@
-import { useUserShelves } from '@/features/book/api/useUserShelves'
-import { SHELF_LABELS, slugToShelf } from '@/features/book/lib/shelf'
-import { BookGrid } from '@/features/book/ui/BookGrid'
 import { Navigate, useParams } from 'react-router'
+import {
+  BookGrid,
+  SHELF_LABELS,
+  slugToShelf,
+  useUserShelves,
+} from '@/features/book'
 
 export function UserShelfPage() {
   const { shelfSlug } = useParams<{ shelfSlug: string }>()

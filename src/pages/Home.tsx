@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Search } from 'lucide-react'
 import { useNavigate, useOutletContext } from 'react-router'
-import { BookSection } from '@/features/book/ui/BookSection.tsx'
-import { useDiscoveryBooks } from '@/features/book/model/useDiscoveryBooks'
-import { discoveryToSlug } from '@/features/book/lib/categories'
+import {
+  BookSection,
+  discoveryToSlug,
+  useDiscoveryBooks,
+} from '@/features/book'
 
 export default function Home() {
   const { data: discoveryBooks } = useDiscoveryBooks()

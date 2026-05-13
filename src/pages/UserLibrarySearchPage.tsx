@@ -1,9 +1,7 @@
 import { useMemo } from 'react'
-import { useUserLibrary } from '@/features/book/api/useUserLibrary'
-import { filterBooksByQuery } from '@/features/book/lib/filterBooksByQuery'
-import { BookGrid } from '@/features/book/ui/BookGrid'
-import { BackButton } from '@/shared/ui/back-button'
 import { useSearchParams } from 'react-router'
+import { BookGrid, filterBooksByQuery, useUserLibrary } from '@/features/book'
+import { BackButton } from '@/shared/ui/back-button'
 
 export function UserLibrarySearchPage() {
   const [searchParams] = useSearchParams()

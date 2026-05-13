@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
 import { NavLink } from 'react-router'
-import { filterLinksByAuth } from '@/features/navigation/lib/filterLinksByAuth'
-import type { NavLink as NavLinkType } from '@/features/navigation/model/navigation.types'
+import {
+  filterLinksByAuth,
+  type NavLink as NavLinkType,
+} from '@/features/navigation'
 
 export default function NavbarDesktop({
   links,

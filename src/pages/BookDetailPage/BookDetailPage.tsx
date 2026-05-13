@@ -1,14 +1,7 @@
 import { BookX } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
 
-import { BookCover } from '@/features/book/ui/BookCover'
-import { BookCTA } from '@/features/book/ui/BookCTA'
-import { BookMeta } from '@/features/book/ui/BookMeta'
-import { BookSummary } from '@/features/book/ui/BookSummary'
-import { BookmarkButton } from '@/features/book/ui/BookmarkButton'
-import { StatBadgeGroup } from '@/features/book/ui/StatBadgeGroup'
-import { useBookDetail } from '@/features/book/api/useBookDetail'
-import { BookRelatedSections } from '@/features/book/ui/BookRelatedSections'
+import { BookDetail, BookRelatedSections, useBookDetail } from '@/features/book'
 import { BackButton } from '@/shared/ui/back-button'
 import { Button } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -32,54 +25,18 @@ export function BookDetailPage() {
   return (
     <>
       <div className="mx-auto max-w-md px-4">
-        <div className="flex h-[calc(100svh-var(--navbar-height))] flex-col gap-5 py-6">
-          <div className="relative h-[clamp(180px,35svh,360px)] shrink-0">
-            <div className="absolute top-0 left-0 z-10">
-              <BackButton />
-            </div>
-            <BookCover
-              coverUrl={book.coverUrl}
-              title={book.title}
-              className="h-full w-auto"
-            />
-          </div>
-
-          <div className="flex shrink-0 items-start justify-between gap-2">
-            <BookMeta
-              title={book.title}
-              author={book.author}
-              authorId={book.authorId}
-              genre={book.genre}
-              language={book.language}
-              publishedDate={book.publishedDate}
-            />
-            <BookmarkButton />
-          </div>
-
-          <StatBadgeGroup
-            copies={book.copies}
-            pageCount={book.pageCount}
-            rating={book.rating}
-          />
-
-          <div className="min-h-0 flex-1">
-            <BookSummary summary={book.summary} />
-          </div>
-
-          <BookCTA
-            state={{ kind: 'available' }}
-            bookTitle={book.title}
-            onReserveConfirm={() => {
-              // TODO #33 — wire to reservation mutation
-              console.log('[BookCTA] reserve confirmed for', book.id)
-            }}
-            onActiveStateClick={() => {
-              // TODO #33 — wire to navigation
-              console.log('[BookCTA] active state click', book.id)
-            }}
-            className="shrink-0"
-          />
-        </div>
+        <BookDetail
+          book={book}
+          leadingSlot={<BackButton />}
+          onReserveConfirm={() => {
+            // TODO #33 — wire to reservation mutation
+            console.log('[BookCTA] reserve confirmed for', book.id)
+          }}
+          onActiveStateClick={() => {
+            // TODO #33 — wire to navigation
+            console.log('[BookCTA] active state click', book.id)
+          }}
+        />
       </div>
 
       <div className="mx-auto max-w-screen-xl px-4">

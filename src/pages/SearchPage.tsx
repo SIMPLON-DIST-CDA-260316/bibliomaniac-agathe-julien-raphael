@@ -1,9 +1,8 @@
+import { useEffect } from 'react'
 import { useSearchParams } from 'react-router'
-import { useBookSearch } from '@/features/book/api/useBookSearch'
-import { BookGrid } from '@/features/book/ui/BookGrid'
+import { BookGrid, useBookSearch } from '@/features/book'
 import { Spinner } from '@/shared/ui/spinner.tsx'
 import { BackButton } from '@/shared/ui/back-button.tsx'
-import { useEffect } from 'react'
 
 export function SearchPage() {
   const [searchParams] = useSearchParams()
