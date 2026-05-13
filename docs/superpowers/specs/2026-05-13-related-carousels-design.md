@@ -53,7 +53,7 @@ export interface Book {
 
 ### 3.2 Type minimal (`src/features/book/types/book.ts`)
 
-Ajout d'un champ optionnel pour l'affichage tome :
+Ajout de deux champs optionnels pour l'affichage :
 
 ```ts
 export interface Book {
@@ -61,7 +61,8 @@ export interface Book {
   title: string
   author: string
   coverImage: string
-  tomeNumber?: number  // nouveau, optionnel
+  tomeNumber?: number  // nouveau, optionnel (affiché en section série)
+  ariaLabel?: string   // nouveau, optionnel (annonce a11y de la vignette)
 }
 ```
 
@@ -168,7 +169,9 @@ function useRelatedBooks(currentBook: RichBook): RelatedSection[]
 | `collection` | "Dans la même collection" | `true` |
 | `genre` | "Dans le même genre" | `true` |
 
-**Mémoïsation** : `useMemo` keyé sur `currentBook.id` pour stabilité de référence.
+**Mémoïsation** : `useMemo` avec deps array sur les champs effectivement lus (`currentBook.id`, `seriesId`, `authorId`, `collectionId`, `genre`). Évite que la recomposition du parent ne re-déclenche la transformation si `currentBook` est recréé en référence mais inchangé sur ces champs.
+
+**Construction des `aria-label` par livre** : dans la transformation `rich → minimal` du hook, attacher pour chaque livre un `ariaLabel` calculé (`series` : `\`${title}, tome ${n}, par ${author}\``, `author` : `${title}`, `collection`/`genre` : `\`${title} par ${author}\``). Le label est donc transporté soit comme champ optionnel du minimal Book (`ariaLabel?: string`), soit comme tableau parallèle dans `RelatedSection`. Décision : ajouter un champ optionnel `ariaLabel?: string` au minimal Book pour cohérence avec le pattern "données d'affichage portées par le Book" (cf. `tomeNumber`).
 
 **Pas de side effects** : hook pur de transformation, pas d'effet ni fetch.
 
@@ -207,7 +210,7 @@ export function BookRelatedSections({ book }: Props) {
 
 ### 6.2 Modif : `BookCarousel`
 
-Ajout prop optionnelle :
+**⚠️ Préserver le `React.forwardRef<HTMLDivElement, BookCarouselProps>` existant**. La modif est purement additive sur l'interface props :
 
 ```ts
 interface BookCarouselProps {
@@ -226,10 +229,9 @@ Props ajoutées :
 
 ```ts
 interface BookCardProps {
-  book: Book                  // minimal Book, inclut tomeNumber optionnel
+  book: Book                  // minimal Book, inclut tomeNumber + ariaLabel optionnels
   onClick?: () => void
   showAuthor?: boolean        // default true
-  ariaLabel?: string          // override sinon construit depuis title/author
 }
 ```
 
@@ -240,10 +242,7 @@ Comportements :
 - A11y conditionnel sur présence de `onClick` :
   - présent → ajoute `role="button"`, `tabIndex={0}`, `onKeyDown` (Enter/Space → `onClick()`), `aria-label`
   - absent → aucun attribut interactif (BookGrid sans onClick reste non-tabable)
-- `aria-label` construit dans `BookRelatedSections` au mapping :
-  - série : `\`${title}, tome ${n}, par ${author}\``
-  - auteur : `${title}`
-  - collection / genre : `\`${title} par ${author}\``
+- `aria-label` lu depuis `book.ariaLabel` (préparé par `useRelatedBooks` lors du mapping rich → minimal). Fallback si `book.ariaLabel` undefined : `\`${book.title} par ${book.author}\`` (cas BookCard utilisé hors contexte related).
 
 ### 6.4 Modif : `BookDetailPage`
 
