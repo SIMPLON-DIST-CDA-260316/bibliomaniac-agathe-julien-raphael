@@ -11,4 +11,9 @@ export interface Book {
   rating: number | null
   copies: number | null
   summary: string | null
+  seriesId: string | null
+  seriesTitle: string | null
+  tomeNumber: number | null
+  collectionId: string | null
+  collectionLabel: string | null
 }
