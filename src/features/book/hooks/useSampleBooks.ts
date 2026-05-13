@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { Book } from '../types/book.ts'
+import type { Book } from '../model/book.types'
 
 const SAMPLE_BOOKS: Book[] = [
   {
@@ -16,6 +16,11 @@ const SAMPLE_BOOKS: Book[] = [
     rating: 4.9,
     copies: 3,
     summary: 'Un épique voyage pour détruire un anneau magique.',
+    seriesId: null,
+    seriesTitle: null,
+    tomeNumber: null,
+    collectionId: null,
+    collectionLabel: null,
   },
   {
     id: '2',
@@ -31,6 +36,11 @@ const SAMPLE_BOOKS: Book[] = [
     rating: 4.7,
     copies: 2,
     summary: 'Un cycle fondamental de la science-fiction.',
+    seriesId: null,
+    seriesTitle: null,
+    tomeNumber: null,
+    collectionId: null,
+    collectionLabel: null,
   },
   {
     id: '3',
@@ -46,6 +56,11 @@ const SAMPLE_BOOKS: Book[] = [
     rating: 4.8,
     copies: 2,
     summary: 'Une épopée sur la planète Arrakis.',
+    seriesId: null,
+    seriesTitle: null,
+    tomeNumber: null,
+    collectionId: null,
+    collectionLabel: null,
   },
   {
     id: '4',
@@ -61,6 +76,11 @@ const SAMPLE_BOOKS: Book[] = [
     rating: 4.8,
     copies: 4,
     summary: "L'aventure de Bilbo Sacquet.",
+    seriesId: null,
+    seriesTitle: null,
+    tomeNumber: null,
+    collectionId: null,
+    collectionLabel: null,
   },
   {
     id: '5',
@@ -76,6 +96,11 @@ const SAMPLE_BOOKS: Book[] = [
     rating: 4.6,
     copies: 1,
     summary: 'Un classique du cyberpunk.',
+    seriesId: null,
+    seriesTitle: null,
+    tomeNumber: null,
+    collectionId: null,
+    collectionLabel: null,
   },
   {
     id: '6',
@@ -91,6 +116,11 @@ const SAMPLE_BOOKS: Book[] = [
     rating: 4.7,
     copies: 3,
     summary: 'Les chroniques de Kvothe, un magicien légendaire.',
+    seriesId: null,
+    seriesTitle: null,
+    tomeNumber: null,
+    collectionId: null,
+    collectionLabel: null,
   },
 ]
 
