@@ -11,7 +11,7 @@ export default function MainLayout() {
       <ScrollRestoration />
       <Navbar isLoggedIn={isLoggedIn} />
       <main>
-        <Outlet />
+        <Outlet context={[isLoggedIn, undefined /* setIsLoggedIn */]} />
       </main>
     </div>
   )
