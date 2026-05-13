@@ -5,6 +5,30 @@
 > **Date** : 2026-05-13
 > **Pour qui** : Agathe, Raphaël (et toute personne qui arrive sur la branche)
 
+## Contexte et déclencheurs
+
+### Pourquoi cette branche, à ce moment du projet
+
+Deux signaux concrets ont déclenché le refacto, avant toute exploration approfondie :
+
+1. **Duplications observées entre les implémentations de Raphaël et Agathe.** En relisant le code, Julien a noté que des concepts identiques étaient implémentés en parallèle avec des conventions divergentes (cf. memory PR52 : `BookShelf` côté Agathe vs `BookShelfCategory` côté Raphaël ; mêmes responsabilités, deux nommages). Signal clair qu'il fallait unifier les schémas de types et les responsabilités avant que la divergence ne s'enracine.
+
+2. **Lecture de la doc FSD officielle qui condamne le pattern `hooks/`.** Le projet centralisait tous les hooks dans des dossiers `features/<slice>/hooks/`. La doc FSD est explicite : *« components, hooks, and types are bad segment names »*. Premier item à corriger, racine du refacto.
+
+Le reste (anti-corruption layer, public API minimaliste, harmonisation des contrats de hooks, segmentation de `app/`, ESLint plugin) a **émergé pendant l'exploration collaborative** sur la branche, en pull-fil sur ces deux signaux initiaux.
+
+### Cadre pédagogique — précision importante
+
+**Ce projet n'a pas de backend prod prévu.** C'est un projet pédagogique. La seule exigence d'intégration externe (API OpenLibrary pour les livres) est déjà branchée via un proxy Express local (`server.mjs`).
+
+Conséquence pour ce doc et pour la prise en main :
+
+- Le pattern *« boundary-swap »* (contrat `{ data, isLoading, error }` partout) n'est **pas une préparation à un backend de prod**. C'est une **démonstration de bonne pratique** appliquée au projet pour que tout le monde voie comment on structurerait un vrai code de prod.
+- Idem pour l'anti-corruption layer : la source externe ne va pas changer du jour au lendemain, mais le pattern est là pour démontrer comment on isole les couches.
+- Les follow-ups listés plus bas (extraction widgets, store global, etc.) sont **théoriques** : ils ne s'activeront que si une feature future les justifie.
+
+Le refacto est une **mise en conformité méthodologique** sur un projet d'apprentissage, pas un sprint de durcissement avant mise en prod.
+
 ## Comment lire ce document
 
 Cette branche **ne change rien au comportement de l'app**. Aucune feature ajoutée, aucun bug fixé, le rendu visuel est strictement identique. Tout le diff est de la **réorganisation** : déplacer, renommer, dédupliquer pour aligner le code sur l'architecture Feature-Sliced Design (FSD).
@@ -47,6 +71,30 @@ c31c7f8  chore(book): add API/lib primitives for refactor
 ```
 
 Chaque commit passe `tsc`, `eslint` et `vite build`. Les commits sont **atomiques par intent** : tu peux lire un commit à la fois pour comprendre une intention isolée.
+
+## En chiffres
+
+| Métrique | Valeur |
+|---|---|
+| Commits sur la branche | **9** (dont 1 doc final) |
+| Fichiers touchés | ~50 |
+| Lignes ajoutées / supprimées | +700 / -750 (net négatif) |
+| Hooks reclassés depuis `hooks/` | **8** dans `features/book` + **1** dans `features/navigation` |
+| Dossiers `hooks/` et `types/` supprimés | 4 (2 par slice) |
+| Violations FSD détectées par ESLint plugin | **47** au moment de l'install → **0** à la fin |
+| Items exposés via `features/book` public API | **15** (vs export ad-hoc + imports directs avant) |
+| Items exposés via `features/navigation` public API | 2 |
+| Mappers / configs dédupliqués | 3 (`mapOpenLibraryToBook`, `BOOK_API_BASE`, cache localStorage) |
+| Changements fonctionnels visibles côté utilisateur | **0** |
+| Bundle JS (after build) | 480 kB / 152 kB gzipped (stable) |
+
+## Ce que ça résout pour notre équipe
+
+- **Divergence de conventions Raphaël ↔ Agathe** : la mise au propre du concept `BookShelf` (déplacé dans `model/bookShelf.types.ts`) crée un point unique de vérité. La duplication `BookShelf` vs `BookShelfCategory` reste à trancher dans un refacto ciblé séparé, mais le terrain est préparé.
+- **Hook placement = sujet réglé pour tous les prochains PR**. Plus de débat sur "où ranger ce hook" : la règle est dans le doc + enforced par ESLint.
+- **Imports cross-slice = règles mécaniques**. Plus besoin de relire mentalement les PR pour vérifier qu'on n'a pas tapé directement dans `@/features/book/ui/Foo`. Le plugin bloque au commit (husky/lint-staged).
+- **Onboarding accéléré**. Ce doc + la structure FSD = une nouvelle personne sait en 20 minutes où trouver quoi et où ranger ses contributions.
+- **Lecture du code de l'autre simplifiée**. Quand Agathe ouvre du code de Raphaël (ou inversement), les conventions sont les mêmes, l'arborescence aussi.
 
 ## Pourquoi FSD — rappel court
 
@@ -485,6 +533,171 @@ Le projet n'a pas de store global (pas de Redux/Zustand/etc.). Règle réactivab
 | Dupliquer un mapper externe entre deux hooks | Divergence silencieuse au moindre changement de schéma | Centralise dans `api/mappers/<source>.ts` |
 | Nommer un hook d'après sa source (`useOpenLibraryBooks`) | Couplage à une implémentation transitoire | Nomme d'après son purpose (`useDiscoveryCategoryBooks`) |
 | Retourner `Book[]` direct depuis un hook data-fetching | Shape ne survit pas au swap mock → fetch | Retourne `{ data, isLoading, error }` dès le départ |
+
+## Avant / après en code (exemples concrets)
+
+### Exemple 1 — Imports d'une page (`UserLibraryPage.tsx`)
+
+**Avant** : 6 imports vers des sous-fichiers internes de la slice.
+
+```tsx
+import { useSampleBooks } from '@/features/book/hooks/useSampleBooks'
+import { useSampleBooksByShelf } from '@/features/book/hooks/useSampleBooksByShelf'
+import {
+  SHELF_LABELS,
+  SHELF_ORDER,
+  shelfToSlug,
+} from '@/features/book/lib/shelf'
+import { BookSection } from '@/features/book/ui/BookSection'
+import { SearchBar } from '@/features/book/ui/SearchBar'
+```
+
+**Après** : 1 import via le public API.
+
+```tsx
+import {
+  BookSection,
+  SearchBar,
+  SHELF_LABELS,
+  SHELF_ORDER,
+  shelfToSlug,
+  useUserLibrary,
+  useUserShelves,
+} from '@/features/book'
+```
+
+Et côté usage des hooks, le shape unifié `{ data, ... }` rend la consommation explicite :
+
+```tsx
+const { data: shelfBooks } = useUserShelves()
+const { data: allBooks }   = useUserLibrary()
+```
+
+### Exemple 2 — Hook fetch (avant : `useOpenLibraryBooks`, après : `useDiscoveryCategoryBooks`)
+
+**Avant** (raccourci) :
+
+```ts
+export function useOpenLibraryBooks(category: keyof typeof CATEGORIES): Book[] {
+  // mapOpenLibraryToBook redéfini ici (dupliqué)
+  // cache localStorage inline
+  // fetch hardcodé sur 'http://localhost:3001/books'
+  // pas de isLoading/error exposés
+  // ...
+  return books // Book[] direct
+}
+```
+
+**Après** (raccourci) :
+
+```ts
+import { BOOK_API_BASE } from './client'
+import { mapOpenLibraryToBook } from './mappers/openLibrary'
+import { getCachedBooks, setCachedBooks } from '../lib/discoveryCache'
+
+export function useDiscoveryCategoryBooks(
+  category: DiscoveryCategory,
+): DiscoveryCategoryBooksResult {
+  // mapper réutilisé (dédup)
+  // cache extrait (réutilisable)
+  // URL constante (un seul endroit à changer)
+  // shape { data, isLoading, error } exposée
+  // cancellation cleanup sur unmount
+  // ...
+}
+```
+
+### Exemple 3 — Composition d'une page (`BookDetailPage.tsx`)
+
+**Avant** : page assemble 6 atomes UI + layout custom.
+
+```tsx
+import { BookCover }       from '@/features/book/ui/BookCover'
+import { BookCTA }         from '@/features/book/ui/BookCTA'
+import { BookMeta }        from '@/features/book/ui/BookMeta'
+import { BookSummary }     from '@/features/book/ui/BookSummary'
+import { BookmarkButton }  from '@/features/book/ui/BookmarkButton'
+import { StatBadgeGroup }  from '@/features/book/ui/StatBadgeGroup'
+// + 50 lignes de JSX qui les composent
+```
+
+**Après** : page consomme un composite.
+
+```tsx
+import {
+  BookDetail,
+  BookRelatedSections,
+  useBookDetail,
+} from '@/features/book'
+
+// ...
+<BookDetail
+  book={book}
+  leadingSlot={<BackButton />}
+  onReserveConfirm={...}
+  onActiveStateClick={...}
+/>
+```
+
+Le layout fait désormais partie de la slice `book` (composite `BookDetail`), pas de la page.
+
+### Exemple 4 — Hook pur (avant : faux hook, après : pure function)
+
+**Avant** :
+
+```ts
+// features/book/hooks/useBookSearch.ts
+export function useBookSearch(books: Book[], query: string): Book[] {
+  return useMemo(() => {
+    const cleanQuery = query.trim().toLowerCase()
+    if (!cleanQuery) return []
+    return books.filter(b => b.title.toLowerCase().includes(cleanQuery))
+  }, [books, query])
+}
+```
+
+**Après** : c'est une fonction pure, plus un hook.
+
+```ts
+// features/book/lib/filterBooksByQuery.ts
+export function filterBooksByQuery(books: Book[], query: string): Book[] {
+  const cleanQuery = query.trim().toLowerCase()
+  if (!cleanQuery) return []
+  return books.filter(b => b.title.toLowerCase().includes(cleanQuery))
+}
+```
+
+Caller :
+
+```tsx
+const results = useMemo(() => filterBooksByQuery(books, query), [books, query])
+```
+
+Le `useMemo` est désormais une **décision du caller**, pas une encombrure du helper.
+
+## Roadmap — follow-ups identifiés (hors scope de cette branche)
+
+Triés par déclencheur (quand activer chaque item) :
+
+| Follow-up | Déclencheur | Effort estimé |
+|---|---|---|
+| Extraire `Navbar` vers `widgets/navbar/` | Quand un 2ᵉ layout consomme la Navbar | Faible |
+| Promouvoir `discoveryCache` vers `shared/lib/cache/` avec API générique | Quand un 2ᵉ consommateur de cache localStorage apparaît | Faible-moyen |
+| Recréer `src/app/providers/` | Quand le 1er Provider React entre (Theme/Auth/Query) | Faible |
+| Créer `MOCK_DISCOVERY_FALLBACK` séparé de `MOCK_USER_LIBRARY` | Quand un dataset de fallback discovery distinct est nécessaire | Faible |
+| Activer la règle `fsd/no-global-store-imports` | Quand un store global (Redux/Zustand/etc.) entre | Trivial |
+| Migrer vers TanStack Query | Si décision pédagogique d'introduire une lib de data-fetching | Moyen — terrain prêt (shape `{data, isLoading, error}` déjà partout) |
+| Passer `tsconfig.app.json` en `"strict": true` | Quand on veut éliminer les bugs typés silencieux (cf. mapper qui omettait des champs requis sans erreur tsc) | Moyen — implique de fixer les erreurs latentes |
+| Unifier `BookShelf` (Agathe, PR51) vs `BookShelfCategory` (Raphaël, PR52) | Refacto domain séparé, prioritaire vu duplication observée | Moyen |
+| Réduire la surface du public API si certains exports s'avèrent inutilisés | Quand des features matures réduisent la surface réellement consommée | Continu |
+
+## 3 choses à retenir
+
+1. **Un hook a une intention, et son intention dit où il vit.** Plus de dossier `hooks/`. Si c'est du fetch → `api/`. Si c'est de la business logic → `model/`. Si c'est un helper pur → considère une fonction (pas un hook) dans `lib/`.
+
+2. **Une slice expose ses composites, pas ses atomes.** Le public API d'une slice (`features/<slice>/index.ts`) est **minimaliste** : composites haut-niveau + hooks + types + utilities. Les atomes UI restent privés. Si tu veux importer un atome depuis l'extérieur, c'est probablement qu'il manque un composite.
+
+3. **Les règles d'import FSD sont enforcées mécaniquement.** `eslint-plugin-fsd-lint` te dira au commit ce qui viole les règles. Tu n'as plus à les mémoriser : tu apprends en réagissant aux messages.
 
 ## Sources
 
