@@ -25,6 +25,8 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -56,7 +58,9 @@
   --bm-cream-dim: oklch(
     0.91 0.04 68.7
   ); /* subtle darker cream for muted surfaces */
-  --bm-white: oklch(1 0 0); /* #FFFFFF */
+  --bm-white: oklch(
+    0.98 0.012 80
+  ); /* warm off-white tuned to match cream palette */
   --bm-olive: oklch(0.403 0.046 98.3); /* #4F492B */
   --bm-brown: oklch(0.183 0.047 38.1); /* #230903 */
   --bm-black: oklch(0.14 0 0); /* #090909 */
@@ -82,6 +86,8 @@
   --emphasis: var(--bm-olive);
   --emphasis-foreground: var(--bm-white);
   --destructive: oklch(0.577 0.245 27.325);
+  --warning: oklch(0.72 0.16 60);
+  --warning-foreground: var(--bm-black);
   --border: var(--bm-brown);
   --input: var(--bm-brown);
   --ring: var(--bm-olive);
@@ -117,6 +123,8 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
+  --warning: oklch(0.78 0.16 70);
+  --warning-foreground: oklch(0.145 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);

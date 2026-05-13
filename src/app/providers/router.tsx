@@ -10,6 +10,7 @@ import { UserShelfPage } from '@/pages/UserShelfPage'
 import { DiscoveryPage } from '@/pages/DiscoveryPage'
 import { SearchPage } from '@/pages/SearchPage'
 import Profile from '@/pages/Profile.tsx'
+import { BookCTASandbox } from '@/pages/dev/BookCTASandbox'
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +53,14 @@ export const router = createBrowserRouter([
         path: 'register',
         element: <Register />,
       },
+      ...(import.meta.env.DEV
+        ? [
+            {
+              path: '/dev/book-cta',
+              element: <BookCTASandbox />,
+            },
+          ]
+        : []),
     ],
   },
 ])
