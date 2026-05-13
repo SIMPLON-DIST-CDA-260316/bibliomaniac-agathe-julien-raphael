@@ -1,0 +1,1797 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Refactor FSD — Bibliomaniac</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('fsd-doc-theme');
+        var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --bg-card: #121214;
+      --bg-card-hover: #16171a;
+      --border: #25262b;
+      --border-strong: #34353c;
+      --text: #e7e9ec;
+      --text-dim: #9aa0a8;
+      --text-faint: #6b7079;
+      --accent: #34d399;
+      --accent-dim: #065f46;
+      --warn: #fb7185;
+      --warn-dim: #881337;
+      --info: #38bdf8;
+      --info-dim: #075985;
+      --violet: #a78bfa;
+      --amber: #fbbf24;
+      color-scheme: dark;
+    }
+    [data-theme="light"] {
+      --bg: #fafafa;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f4f4f5;
+      --border: #e4e4e7;
+      --border-strong: #c4c4c8;
+      --text: #18181b;
+      --text-dim: #52525b;
+      --text-faint: #71717a;
+      --accent: #059669;
+      --accent-dim: #a7f3d0;
+      --warn: #e11d48;
+      --warn-dim: #fecdd3;
+      --info: #0284c7;
+      --info-dim: #bae6fd;
+      --violet: #7c3aed;
+      --amber: #d97706;
+      color-scheme: light;
+    }
+    [data-theme="light"] nav#topnav { background: rgba(255,255,255,0.72); }
+    [data-theme="light"] .grain::before { opacity: 0.18; mix-blend-mode: multiply; }
+    [data-theme="light"] .glow-emerald,
+    [data-theme="light"] .glow-rose,
+    [data-theme="light"] .glow-sky { box-shadow: 0 0 0 1px var(--border-strong); }
+    [data-theme="light"] .chip { background: rgba(0,0,0,0.025); }
+    [data-theme="light"] .chip-emerald { color: var(--accent); border-color: rgba(5,150,105,0.4); background: rgba(5,150,105,0.08); }
+    [data-theme="light"] .chip-rose { color: var(--warn); border-color: rgba(225,29,72,0.4); background: rgba(225,29,72,0.08); }
+    [data-theme="light"] .chip-sky { color: var(--info); border-color: rgba(2,132,199,0.4); background: rgba(2,132,199,0.08); }
+    [data-theme="light"] .chip-violet { color: var(--violet); border-color: rgba(124,58,237,0.4); background: rgba(124,58,237,0.08); }
+    [data-theme="light"] .chip-amber { color: var(--amber); border-color: rgba(217,119,6,0.4); background: rgba(217,119,6,0.08); }
+    [data-theme="light"] .quiz-option.correct { background: rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.4); }
+    [data-theme="light"] .quiz-option.wrong { background: rgba(225,29,72,0.08); border-color: rgba(225,29,72,0.4); }
+    [data-theme="light"] .quiz-option.selected.correct { background: rgba(5,150,105,0.12); box-shadow: 0 0 0 2px rgba(5,150,105,0.45), 0 0 24px -6px rgba(5,150,105,0.3); }
+    [data-theme="light"] .quiz-option.selected.wrong { background: rgba(225,29,72,0.12); box-shadow: 0 0 0 2px rgba(225,29,72,0.45), 0 0 24px -6px rgba(225,29,72,0.3); }
+    [data-theme="light"] .quiz-option.selected { box-shadow: 0 0 0 2px rgba(0,0,0,0.12); }
+    [data-theme="light"] .commit-number[data-color="emerald"] { background: rgba(5,150,105,0.12); color: var(--accent); }
+    [data-theme="light"] .commit-number[data-color="sky"] { background: rgba(2,132,199,0.12); color: var(--info); }
+    [data-theme="light"] .commit-number[data-color="violet"] { background: rgba(124,58,237,0.12); color: var(--violet); }
+    [data-theme="light"] .commit-number[data-color="amber"] { background: rgba(217,119,6,0.12); color: var(--amber); }
+    [data-theme="light"] .force-dark {
+      background: #121214 !important;
+      border-color: #25262b !important;
+      color: #e7e9ec !important;
+      color-scheme: dark;
+    }
+    [data-theme="light"] .force-dark .chip { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
+    .theme-icon-sun { display: none; }
+    [data-theme="light"] .theme-icon-sun { display: inline-block; }
+    [data-theme="light"] .theme-icon-moon { display: none; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    }
+    code, pre, .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+    .grain::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.025 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      opacity: 0.6;
+    }
+    .glow-emerald { box-shadow: 0 0 0 1px rgba(52,211,153,0.18), 0 0 80px -20px rgba(52,211,153,0.35); }
+    .glow-rose { box-shadow: 0 0 0 1px rgba(251,113,133,0.18), 0 0 80px -20px rgba(251,113,133,0.35); }
+    .glow-sky { box-shadow: 0 0 0 1px rgba(56,189,248,0.18), 0 0 80px -20px rgba(56,189,248,0.35); }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .card-hover:hover { background: var(--bg-card-hover); border-color: var(--border-strong); }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .chip-emerald { color: var(--accent); border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.06); }
+    .chip-rose { color: var(--warn); border-color: rgba(251,113,133,0.3); background: rgba(251,113,133,0.06); }
+    .chip-sky { color: var(--info); border-color: rgba(56,189,248,0.3); background: rgba(56,189,248,0.06); }
+    .chip-violet { color: var(--violet); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+    .chip-amber { color: var(--amber); border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.06); }
+    .grad-text { background: linear-gradient(135deg, #34d399 0%, #38bdf8 50%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .grad-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border-strong), transparent); }
+    .number-stat { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+    pre[class*="language-"] {
+      background: #08090c !important;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 0;
+    }
+    code[class*="language-"] { font-size: 13px; }
+    .nav-link { position: relative; transition: color 0.15s; }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--accent); }
+    .nav-link.active::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+      background: var(--accent); border-radius: 1px;
+    }
+    .tab-btn { transition: all 0.15s; }
+    .tab-btn[aria-selected="true"] {
+      background: rgba(52,211,153,0.1);
+      color: var(--accent);
+      border-color: rgba(52,211,153,0.3);
+    }
+    .tab-btn[aria-selected="false"]:hover { background: var(--bg-card-hover); color: var(--text); }
+    .quiz-option {
+      cursor: pointer; transition: all 0.15s;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      position: relative;
+    }
+    .quiz-option:hover:not(.disabled) { border-color: var(--border-strong); background: var(--bg-card-hover); }
+    .quiz-option.correct { border-color: rgba(52,211,153,0.5); background: rgba(52,211,153,0.08); }
+    .quiz-option.wrong { border-color: rgba(251,113,133,0.5); background: rgba(251,113,133,0.08); }
+    .quiz-option.disabled { cursor: default; }
+    .quiz-option.disabled:not(.selected):not(.correct) { opacity: 0.5; }
+    .quiz-option.selected { box-shadow: 0 0 0 2px rgba(255,255,255,0.18); }
+    .quiz-option.selected.correct {
+      box-shadow: 0 0 0 2px rgba(52,211,153,0.5), 0 0 24px -6px rgba(52,211,153,0.4);
+      background: rgba(52,211,153,0.14);
+    }
+    .quiz-option.selected.wrong {
+      box-shadow: 0 0 0 2px rgba(251,113,133,0.5), 0 0 24px -6px rgba(251,113,133,0.4);
+      background: rgba(251,113,133,0.14);
+    }
+    .quiz-badge {
+      display: none;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .quiz-option.selected .quiz-badge-selected {
+      display: inline-flex;
+      color: var(--text);
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.06);
+    }
+    .quiz-option.selected.correct .quiz-badge-selected {
+      color: var(--accent);
+      border-color: rgba(52,211,153,0.5);
+      background: rgba(52,211,153,0.12);
+    }
+    .quiz-option.selected.wrong .quiz-badge-selected {
+      color: var(--warn);
+      border-color: rgba(251,113,133,0.5);
+      background: rgba(251,113,133,0.12);
+    }
+    .quiz-option.correct:not(.selected) .quiz-badge-correct {
+      display: inline-flex;
+      color: var(--accent);
+      border-color: rgba(52,211,153,0.4);
+      background: rgba(52,211,153,0.08);
+    }
+    .quiz-icon { display: none; width: 16px; height: 16px; flex-shrink: 0; }
+    .quiz-option.selected.correct .quiz-icon-check,
+    .quiz-option.correct:not(.selected) .quiz-icon-check { display: inline-block; color: var(--accent); }
+    .quiz-option.selected.wrong .quiz-icon-cross { display: inline-block; color: var(--warn); }
+    .arrow-pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] .chevron { transform: rotate(90deg); }
+    .chevron { transition: transform 0.2s; }
+    .scroll-fade {
+      mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+    }
+    .tree-line {
+      border-left: 1px solid var(--border-strong);
+      padding-left: 16px;
+      position: relative;
+    }
+    .tree-line::before {
+      content: ''; position: absolute; left: 0; top: 12px; width: 12px; height: 1px;
+      background: var(--border-strong);
+    }
+    table.diff td { vertical-align: top; }
+    .strikethrough { text-decoration: line-through; opacity: 0.55; }
+    .ring-emerald-focus:focus { outline: none; box-shadow: 0 0 0 2px rgba(52,211,153,0.5); }
+    .axis-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    }
+    .commit-card {
+      display: flex; gap: 20px; padding: 20px;
+      border: 1px solid var(--border);
+      border-left-width: 4px;
+      border-radius: 14px;
+      background: var(--bg-card);
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .commit-card:hover { background: var(--bg-card-hover); border-color: var(--border-strong); }
+    .commit-card:hover .commit-link-icon { opacity: 1; }
+    .commit-link-icon { opacity: 0.3; transition: opacity 0.15s; }
+    .commit-card[data-color="emerald"] { border-left-color: var(--accent); }
+    .commit-card[data-color="sky"] { border-left-color: var(--info); }
+    .commit-card[data-color="violet"] { border-left-color: var(--violet); }
+    .commit-card[data-color="amber"] { border-left-color: var(--amber); }
+    .commit-number {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 16px;
+      flex-shrink: 0; font-variant-numeric: tabular-nums;
+    }
+    .commit-number[data-color="emerald"] { background: rgba(52,211,153,0.12); color: var(--accent); }
+    .commit-number[data-color="sky"] { background: rgba(56,189,248,0.12); color: var(--info); }
+    .commit-number[data-color="violet"] { background: rgba(167,139,250,0.12); color: var(--violet); }
+    .commit-number[data-color="amber"] { background: rgba(251,191,36,0.12); color: var(--amber); }
+  </style>
+</head>
+<body class="grain">
+
+<!-- ============ NAV ============ -->
+<nav id="topnav" class="sticky top-0 z-50 backdrop-blur-xl bg-[rgba(10,10,11,0.7)] border-b border-[var(--border)]">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-2 font-bold tracking-tight">
+      <span class="inline-block w-7 h-7 rounded-md bg-gradient-to-br from-emerald-400 to-sky-400 grid place-items-center text-black text-xs font-black">FSD</span>
+      <span>Refactor — Bibliomaniac</span>
+    </a>
+    <div class="hidden lg:flex items-center gap-7 text-sm text-[var(--text-dim)]">
+      <a href="#vocab" class="nav-link">Vocabulaire</a>
+      <a href="#tree" class="nav-link">Arborescence</a>
+      <a href="#mapping" class="nav-link">Correspondance</a>
+      <a href="#axes" class="nav-link">5 axes</a>
+      <a href="#diffs" class="nav-link">Diffs</a>
+      <a href="#acl" class="nav-link">ACL</a>
+      <a href="#quiz" class="nav-link">Quiz</a>
+      <a href="#timeline" class="nav-link">Timeline</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="theme-toggle" type="button" aria-label="Changer de thème" class="chip cursor-pointer hover:opacity-80 transition-opacity" style="padding: 6px 10px;">
+        <svg class="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+      </button>
+      <a href="refactor-fsd-migration.md" class="chip chip-sky">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        doc source
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="relative max-w-7xl mx-auto px-6 pt-20 pb-16">
+  <div class="flex flex-wrap gap-2 mb-6">
+    <a href="https://github.com/SIMPLON-DIST-CDA-260316/bibliomaniac-agathe-julien-raphael/tree/chore/refactor-cleanup" target="_blank" rel="noopener noreferrer" class="chip chip-emerald hover:opacity-80 transition-opacity">
+      chore/refactor-cleanup
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+    <a href="https://github.com/SIMPLON-DIST-CDA-260316/bibliomaniac-agathe-julien-raphael/commit/16285e9" target="_blank" rel="noopener noreferrer" class="chip hover:opacity-80 transition-opacity">depuis <code class="mono">develop@16285e9</code></a>
+    <span class="chip chip-sky">Julien</span>
+    <span class="chip">2026-05-13</span>
+    <span class="chip chip-amber">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      ~15 min de lecture · ~5 min en skim
+    </span>
+  </div>
+  <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
+    Mise en conformité <span class="grad-text">Feature-Sliced Design</span><br />
+    sans changer un pixel de l'app.
+  </h1>
+  <p class="text-lg md:text-xl text-[var(--text-dim)] max-w-3xl mb-12">
+    8 commits, ~50 fichiers, +700 / -750 lignes. Aucune feature, aucun bug fix, aucun changement visuel.
+    Tout le diff est réorganisation : déplacer, renommer, dédupliquer pour aligner le code sur FSD.
+  </p>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+    <div class="card p-5">
+      <div class="text-xs uppercase tracking-wider text-[var(--text-faint)] mb-2">Fichiers touchés</div>
+      <div class="text-3xl font-bold number-stat" data-counter="50">0</div>
+    </div>
+    <div class="card p-5">
+      <div class="text-xs uppercase tracking-wider text-[var(--text-faint)] mb-2">Commits</div>
+      <div class="text-3xl font-bold number-stat" data-counter="8">0</div>
+    </div>
+    <div class="card p-5 glow-emerald">
+      <div class="text-xs uppercase tracking-wider text-[var(--text-faint)] mb-2">Violations FSD</div>
+      <div class="text-3xl font-bold number-stat">
+        <span class="text-[var(--warn)]" data-counter="47">0</span>
+        <span class="text-[var(--text-faint)] text-xl mx-1">→</span>
+        <span class="text-[var(--accent)]">0</span>
+      </div>
+    </div>
+    <div class="card p-5">
+      <div class="text-xs uppercase tracking-wider text-[var(--text-faint)] mb-2">Lignes nettes</div>
+      <div class="text-3xl font-bold number-stat text-[var(--accent)]">−50</div>
+    </div>
+    <div class="card p-5">
+      <div class="text-xs uppercase tracking-wider text-[var(--text-faint)] mb-2">Bug introduits</div>
+      <div class="text-3xl font-bold number-stat text-[var(--accent)]">0</div>
+    </div>
+    <div class="card p-5">
+      <div class="text-xs uppercase tracking-wider text-[var(--text-faint)] mb-2">Public API <code class="mono text-xs">features/book</code></div>
+      <div class="text-3xl font-bold number-stat" data-counter="15">0</div>
+    </div>
+  </div>
+
+  <div class="mt-12 card p-6">
+    <div class="flex items-start gap-4">
+      <div class="text-2xl shrink-0">💡</div>
+      <div>
+        <div class="font-semibold mb-2">À lire en 90 secondes — les 5 idées-clé</div>
+        <ol class="space-y-2.5 text-[var(--text-dim)] text-sm md:text-base list-decimal pl-5">
+          <li><b class="text-[var(--text)]">Un hook a une intention</b>, et son intention dit où il vit. Les dossiers <code class="mono text-[var(--warn)]">hooks/</code> et <code class="mono text-[var(--warn)]">types/</code> disparaissent (FSD les nomme « bad segment names »). Fetch → <code class="mono text-[var(--accent)]">api/</code>. Logique métier → <code class="mono text-[var(--accent)]">model/</code>. Helper pur sans state → fonction (pas hook) dans <code class="mono text-[var(--accent)]">lib/</code>. Types → <code class="mono text-[var(--accent)]">model/&lt;entity&gt;.types.ts</code>.</li>
+          <li><b class="text-[var(--text)]">Une slice expose ses composites</b>, pas ses atomes. Le public API <code class="mono">features/&lt;slice&gt;/index.ts</code> est minimaliste : composites haut-niveau + hooks + types + utilities. Les atomes UI (<code class="mono">BookCover</code>, <code class="mono">BookMeta</code>…) restent privés. Si tu veux en importer un depuis l'extérieur, c'est qu'il manque un composite — ouvre une discussion plutôt que d'éroder le public API.</li>
+          <li><b class="text-[var(--text)]">Une source externe ne contamine qu'un seul fichier</b>. OpenLibrary (et toute API tierce future) vit dans <code class="mono">api/mappers/&lt;source&gt;.ts</code> — c'est le seul endroit autorisé à nommer la source. Le modèle <code class="mono">Book</code> reste stable, l'app ignore d'où viennent les données. Pattern anti-corruption layer.</li>
+          <li><b class="text-[var(--text)]">Tous les hooks data-fetching exposent <code class="mono">{ data, isLoading, error }</code></b>, même quand la donnée est synchrone (mock). Convention TanStack Query / SWR. Le jour où un vrai fetch arrive, les consumers ne bougent pas — c'est le pattern « boundary-swap ».</li>
+          <li><b class="text-[var(--text)]">Les règles d'import FSD sont enforcées mécaniquement</b>. <code class="mono">eslint-plugin-fsd-lint</code> bloque au commit (via husky/lint-staged) les imports cross-slice directs et les sidesteps de public API. Tu n'as plus à mémoriser les règles : tu apprends en réagissant aux messages d'erreur.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 0 — VOCABULAIRE ============ -->
+<section id="vocab" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§0 Vocabulaire FSD</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Layer, slice, segment — 3 mots à savoir avant tout le reste.</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">
+      FSD organise le code en <b>3 niveaux d'imbrication</b>. Tout le refactor agit au niveau le plus profond (segments). Comprendre cette hiérarchie débloque l'ensemble du document.
+    </p>
+  </div>
+
+  <div class="card force-dark p-4 md:p-8 mb-6">
+    <svg viewBox="0 0 920 380" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagramme FSD : layers contiennent des slices, slices contiennent des segments">
+      <!-- ===== COL 1: LAYERS ===== -->
+      <text x="20" y="20" fill="#9aa0a8" font-family="Inter" font-size="11" font-weight="700" letter-spacing="1.5">1. LAYERS</text>
+      <text x="20" y="36" fill="#6b7079" font-family="Inter" font-size="10">niveau d'abstraction (6 prédéfinis)</text>
+
+      <rect x="20" y="48" width="260" height="34" rx="6" fill="rgba(167,139,250,0.10)" stroke="#a78bfa" stroke-opacity="0.4"/>
+      <text x="36" y="70" fill="#a78bfa" font-family="JetBrains Mono" font-size="13" font-weight="700">app</text>
+      <text x="266" y="70" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">racine, transversal</text>
+
+      <rect x="20" y="88" width="260" height="34" rx="6" fill="rgba(255,255,255,0.02)" stroke="#34353c"/>
+      <text x="36" y="110" fill="#e7e9ec" font-family="JetBrains Mono" font-size="13" font-weight="600">pages</text>
+      <text x="266" y="110" text-anchor="end" fill="#6b7079" font-family="Inter" font-size="10">écrans / routes</text>
+
+      <rect x="20" y="128" width="260" height="34" rx="6" fill="rgba(255,255,255,0.02)" stroke="#34353c"/>
+      <text x="36" y="150" fill="#e7e9ec" font-family="JetBrains Mono" font-size="13" font-weight="600">widgets</text>
+      <text x="266" y="150" text-anchor="end" fill="#6b7079" font-family="Inter" font-size="10">blocs UI composites</text>
+
+      <rect x="20" y="168" width="260" height="34" rx="6" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="2"/>
+      <text x="36" y="190" fill="#34d399" font-family="JetBrains Mono" font-size="13" font-weight="700">features</text>
+      <text x="266" y="190" text-anchor="end" fill="#34d399" font-family="Inter" font-size="10">← on est ici</text>
+
+      <rect x="20" y="208" width="260" height="34" rx="6" fill="rgba(255,255,255,0.02)" stroke="#34353c" stroke-dasharray="3 3"/>
+      <text x="36" y="230" fill="#6b7079" font-family="JetBrains Mono" font-size="13" font-weight="600">entities</text>
+      <text x="266" y="230" text-anchor="end" fill="#6b7079" font-family="Inter" font-size="10">non utilisé ici</text>
+
+      <rect x="20" y="248" width="260" height="34" rx="6" fill="rgba(56,189,248,0.08)" stroke="#38bdf8" stroke-opacity="0.4"/>
+      <text x="36" y="270" fill="#38bdf8" font-family="JetBrains Mono" font-size="13" font-weight="600">shared</text>
+      <text x="266" y="270" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">ui, lib transverses</text>
+
+      <!-- Arrow direction -->
+      <path d="M 296 56 L 296 274" stroke="#34d399" stroke-width="1.5" stroke-dasharray="2 4" opacity="0.5"/>
+      <path d="M 292 270 L 296 280 L 300 270" stroke="#34d399" stroke-width="1.5" fill="none"/>
+      <text x="304" y="170" fill="#9aa0a8" font-family="Inter" font-size="10" font-style="italic">les imports</text>
+      <text x="304" y="184" fill="#9aa0a8" font-family="Inter" font-size="10" font-style="italic">descendent</text>
+      <text x="304" y="198" fill="#9aa0a8" font-family="Inter" font-size="10" font-style="italic">uniquement</text>
+
+      <!-- Zoom 1→2 connector -->
+      <path d="M 280 168 L 360 50 L 360 280 L 280 202 Z" fill="rgba(52,211,153,0.04)" stroke="#34d399" stroke-opacity="0.25" stroke-dasharray="2 4"/>
+
+      <!-- ===== COL 2: SLICES ===== -->
+      <text x="370" y="20" fill="#9aa0a8" font-family="Inter" font-size="11" font-weight="700" letter-spacing="1.5">2. SLICES</text>
+      <text x="370" y="36" fill="#6b7079" font-family="Inter" font-size="10">découpage métier dans le layer features</text>
+
+      <rect x="370" y="60" width="220" height="100" rx="8" fill="rgba(52,211,153,0.08)" stroke="#34d399" stroke-width="2"/>
+      <text x="480" y="92" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono" font-size="14" font-weight="700">book</text>
+      <text x="480" y="112" text-anchor="middle" fill="#9aa0a8" font-family="Inter" font-size="11">tout ce qui touche un livre</text>
+      <text x="480" y="130" text-anchor="middle" fill="#6b7079" font-family="Inter" font-size="10">fetch · types · UI · mocks</text>
+      <text x="480" y="148" text-anchor="middle" fill="#34d399" font-family="Inter" font-size="10">← on zoome ici</text>
+
+      <rect x="370" y="180" width="220" height="100" rx="8" fill="rgba(56,189,248,0.06)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="480" y="212" text-anchor="middle" fill="#38bdf8" font-family="JetBrains Mono" font-size="14" font-weight="700">navigation</text>
+      <text x="480" y="232" text-anchor="middle" fill="#9aa0a8" font-family="Inter" font-size="11">menus, liens, NavLink</text>
+      <text x="480" y="250" text-anchor="middle" fill="#6b7079" font-family="Inter" font-size="10">filterLinksByAuth</text>
+
+      <text x="370" y="310" fill="#9aa0a8" font-family="Inter" font-size="11" font-style="italic">isolation horizontale</text>
+      <text x="370" y="326" fill="#6b7079" font-family="Inter" font-size="10">une slice ne peut pas en importer une autre directement</text>
+
+      <!-- Zoom 2→3 connector -->
+      <path d="M 590 60 L 640 50 L 640 320 L 590 160 Z" fill="rgba(52,211,153,0.04)" stroke="#34d399" stroke-opacity="0.25" stroke-dasharray="2 4"/>
+
+      <!-- ===== COL 3: SEGMENTS ===== -->
+      <text x="650" y="20" fill="#9aa0a8" font-family="Inter" font-size="11" font-weight="700" letter-spacing="1.5">3. SEGMENTS</text>
+      <text x="650" y="36" fill="#6b7079" font-family="Inter" font-size="10">découpage technique dans features/book</text>
+
+      <rect x="650" y="48" width="250" height="32" rx="6" fill="rgba(56,189,248,0.10)" stroke="#38bdf8" stroke-opacity="0.45"/>
+      <text x="666" y="68" fill="#38bdf8" font-family="JetBrains Mono" font-size="13" font-weight="700">api/</text>
+      <text x="886" y="68" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">data-fetching + mappers</text>
+
+      <rect x="650" y="86" width="250" height="32" rx="6" fill="rgba(167,139,250,0.10)" stroke="#a78bfa" stroke-opacity="0.45"/>
+      <text x="666" y="106" fill="#a78bfa" font-family="JetBrains Mono" font-size="13" font-weight="700">model/</text>
+      <text x="886" y="106" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">types + business logic</text>
+
+      <rect x="650" y="124" width="250" height="32" rx="6" fill="rgba(251,191,36,0.10)" stroke="#fbbf24" stroke-opacity="0.45"/>
+      <text x="666" y="144" fill="#fbbf24" font-family="JetBrains Mono" font-size="13" font-weight="700">lib/</text>
+      <text x="886" y="144" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">helpers purs internes</text>
+
+      <rect x="650" y="162" width="250" height="32" rx="6" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-opacity="0.45"/>
+      <text x="666" y="182" fill="#34d399" font-family="JetBrains Mono" font-size="13" font-weight="700">ui/</text>
+      <text x="886" y="182" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">composants (atomes + composites)</text>
+
+      <rect x="650" y="200" width="250" height="32" rx="6" fill="rgba(251,113,133,0.10)" stroke="#fb7185" stroke-opacity="0.45"/>
+      <text x="666" y="220" fill="#fb7185" font-family="JetBrains Mono" font-size="13" font-weight="700">mocks/</text>
+      <text x="886" y="220" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">fixtures dev sans backend</text>
+
+      <rect x="650" y="238" width="250" height="32" rx="6" fill="rgba(255,255,255,0.04)" stroke="#34353c"/>
+      <text x="666" y="258" fill="#e7e9ec" font-family="JetBrains Mono" font-size="13" font-weight="600">config/</text>
+      <text x="886" y="258" text-anchor="end" fill="#9aa0a8" font-family="Inter" font-size="10">flags / sections</text>
+
+      <text x="650" y="296" fill="#34d399" font-family="Inter" font-size="11" font-weight="600" font-style="italic">c'est ici que ce refactor agit</text>
+      <text x="650" y="312" fill="#6b7079" font-family="Inter" font-size="10">on déplace des fichiers entre segments, sans toucher</text>
+      <text x="650" y="326" fill="#6b7079" font-family="Inter" font-size="10">aux layers ni aux slices existantes</text>
+    </svg>
+  </div>
+
+  <!-- 3 cards définitions -->
+  <div class="grid md:grid-cols-3 gap-4 mb-6">
+    <div class="card p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="chip chip-violet">niveau 1</span>
+        <span class="font-bold">Layer</span>
+      </div>
+      <p class="text-sm text-[var(--text-dim)] mb-3">
+        Niveau d'abstraction. FSD en définit <b>6 prédéfinis</b> (on ne crée pas les siens) : <code class="mono text-xs">app</code>, <code class="mono text-xs">pages</code>, <code class="mono text-xs">widgets</code>, <code class="mono text-xs">features</code>, <code class="mono text-xs">entities</code>, <code class="mono text-xs">shared</code>.
+      </p>
+      <div class="text-xs text-[var(--text-faint)] border-t border-[var(--border)] pt-3">
+        <b class="text-[var(--text-dim)]">Règle clé :</b> les imports descendent uniquement. <code class="mono">features/</code> peut importer <code class="mono">shared/</code>, jamais l'inverse.
+      </div>
+      <div class="text-xs text-[var(--text-faint)] mt-3">
+        <b class="text-[var(--text-dim)]">Dans notre projet :</b> <code class="mono">app</code>, <code class="mono">pages</code>, <code class="mono">features</code>, <code class="mono">shared</code> (pas d'<code class="mono">entities</code> ni <code class="mono">widgets</code>).
+      </div>
+    </div>
+
+    <div class="card p-5 glow-emerald">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="chip chip-emerald">niveau 2</span>
+        <span class="font-bold">Slice</span>
+      </div>
+      <p class="text-sm text-[var(--text-dim)] mb-3">
+        Découpage <b>métier</b> à l'intérieur d'un layer. Tu en crées autant que tu veux. Chaque slice représente un domaine isolé.
+      </p>
+      <div class="text-xs text-[var(--text-faint)] border-t border-[var(--border)] pt-3">
+        <b class="text-[var(--text-dim)]">Règle clé :</b> deux slices d'un même layer ne peuvent pas s'importer directement (isolation horizontale, enforcée par <code class="mono">fsd/no-cross-slice-dependency</code>).
+      </div>
+      <div class="text-xs text-[var(--text-faint)] mt-3">
+        <b class="text-[var(--text-dim)]">Dans notre projet :</b> <code class="mono">features/book</code>, <code class="mono">features/navigation</code>. Note : <code class="mono">app</code> et <code class="mono">shared</code> n'ont <i>pas</i> de slices.
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="chip chip-sky">niveau 3</span>
+        <span class="font-bold">Segment</span>
+      </div>
+      <p class="text-sm text-[var(--text-dim)] mb-3">
+        Découpage <b>technique</b> à l'intérieur d'une slice (ou d'un layer sans slices). Décrit l'<b>intention</b> du code : où il interagit, ce qu'il fait.
+      </p>
+      <div class="text-xs text-[var(--text-faint)] border-t border-[var(--border)] pt-3">
+        <b class="text-[var(--text-dim)]">Règle clé :</b> les noms standards sont <code class="mono">api</code>, <code class="mono">model</code>, <code class="mono">lib</code>, <code class="mono">ui</code>, <code class="mono">config</code>. Bannis : <code class="mono text-[var(--warn)]">hooks</code>, <code class="mono text-[var(--warn)]">types</code>, <code class="mono text-[var(--warn)]">components</code>.
+      </div>
+      <div class="text-xs text-[var(--text-faint)] mt-3">
+        <b class="text-[var(--text-dim)]">Dans notre projet :</b> tout le refactor déplace des fichiers <b>entre segments</b> sans toucher aux layers ni aux slices.
+      </div>
+    </div>
+  </div>
+
+  <!-- Callout récapitulatif -->
+  <div class="card p-5 md:p-6" style="background: linear-gradient(135deg, rgba(52,211,153,0.06), rgba(56,189,248,0.04));">
+    <div class="flex items-start gap-4">
+      <div class="text-2xl shrink-0">🎯</div>
+      <div class="text-sm">
+        <div class="font-bold mb-2 text-[var(--text)]">À retenir pour lire le reste du document</div>
+        <ul class="space-y-1.5 text-[var(--text-dim)] list-disc pl-5">
+          <li><b class="text-[var(--text)]">Layer ⊃ Slice ⊃ Segment</b>. Chemin complet : <code class="mono text-xs">{layer}/{slice}/{segment}/fichier.ts</code> — ex : <code class="mono text-xs text-[var(--accent)]">features/book/api/useBookDetail.ts</code>.</li>
+          <li><b class="text-[var(--text)]">Le layer <code class="mono">app</code> n'a pas de slices</b> — il a directement des segments. C'est la subtilité derrière l'<a href="#axes" class="text-[var(--accent)] underline decoration-dotted">axe 3</a> : on a ajouté les segments <code class="mono">routes/</code> et <code class="mono">styles/</code> dans <code class="mono">app/</code>.</li>
+          <li><b class="text-[var(--text)]">Ce refactor n'a créé ni layer ni slice.</b> Les 9 hooks de <code class="mono">features/book</code> ont été reclassés entre les segments <code class="mono">api/</code>, <code class="mono">model/</code>, <code class="mono">lib/</code>, <code class="mono">mocks/</code> selon leur intention.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+<!-- ============ SECTION 2 — TREE BEFORE / AFTER ============ -->
+<section id="tree" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§1 Arborescence</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Ce qui disparaît, ce qui apparaît.</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">
+      Tous les <code class="mono text-[var(--warn)]">hooks/</code> et <code class="mono text-[var(--warn)]">types/</code> ont disparu de <code class="mono">features/book</code>. Chaque hook est désormais dans le segment qui matche son intention.
+    </p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+    <!-- AVANT -->
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold flex items-center gap-2"><span class="chip chip-rose">avant</span> features/book/</h3>
+        <span class="text-xs text-[var(--text-faint)]">segments techniques</span>
+      </div>
+<pre class="mono text-sm leading-relaxed text-[var(--text-dim)]">
+features/book/
+├── <span class="text-[var(--warn)]">hooks/</span>            <span class="text-[var(--text-faint)]">← « bad segment name »</span>
+│   ├── useBookDetail.ts
+│   ├── useBookSearch.ts        <span class="text-[var(--text-faint)]">← filter local (faux hook)</span>
+│   ├── useSearchBooks.ts       <span class="text-[var(--text-faint)]">← fetch distant</span>
+│   ├── useOpenLibraryBooks.ts  <span class="text-[var(--text-faint)]">← couplé à la source</span>
+│   ├── useRelatedBooks.ts
+│   ├── useDiscoveryBooks.ts
+│   ├── useSampleBooks.ts       <span class="text-[var(--text-faint)]">← wrap useMemo(CONST,[])</span>
+│   └── useSampleBooksByShelf.ts
+├── <span class="text-[var(--warn)]">types/</span>
+│   └── bookShelf.ts
+├── lib/
+├── ui/
+└── (pas de public API claire)
+</pre>
+      <div class="mt-4 text-xs text-[var(--text-faint)]">
+        <span class="chip chip-rose">⚠</span>
+        <span class="ml-2"><code class="mono">mapOpenLibraryToBook</code> dupliqué dans 2 hooks, schéma divergent.</span>
+      </div>
+    </div>
+
+    <!-- APRES -->
+    <div class="card p-6 glow-emerald">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold flex items-center gap-2"><span class="chip chip-emerald">après</span> features/book/</h3>
+        <span class="text-xs text-[var(--text-faint)]">segments FSD par intention</span>
+      </div>
+<pre class="mono text-sm leading-relaxed text-[var(--text-dim)]">
+features/book/
+├── <span class="text-[var(--accent)]">api/</span>             <span class="text-[var(--text-faint)]">← data-fetching + boundary externe</span>
+│   ├── client.ts
+│   ├── <span class="text-[var(--accent)]">mappers/openLibrary.ts</span>  <span class="text-[var(--text-faint)]">← ACL (dédup)</span>
+│   ├── useBookDetail.ts
+│   ├── useBookSearch.ts
+│   ├── useDiscoveryCategoryBooks.ts
+│   ├── useUserLibrary.ts
+│   └── useUserShelves.ts
+├── <span class="text-[var(--accent)]">model/</span>           <span class="text-[var(--text-faint)]">← business logic + types</span>
+│   ├── book.types.ts
+│   ├── bookShelf.types.ts
+│   ├── useDiscoveryBooks.ts
+│   └── useRelatedBooks.ts
+├── <span class="text-[var(--accent)]">lib/</span>             <span class="text-[var(--text-faint)]">← pure helpers internes</span>
+│   ├── filterBooksByQuery.ts
+│   ├── discoveryCache.ts
+│   └── categories.ts
+├── <span class="text-[var(--accent)]">mocks/</span>           <span class="text-[var(--text-faint)]">← fixtures dev</span>
+│   ├── userLibrary.mock.ts
+│   └── userShelves.mock.ts
+├── ui/             <span class="text-[var(--text-faint)]">← atomes privés + composites publics</span>
+├── config/
+└── <span class="text-[var(--accent)]">index.ts</span>         <span class="text-[var(--text-faint)]">← public API (15 exports)</span>
+</pre>
+      <div class="mt-4 grid grid-cols-2 gap-3 text-xs">
+        <div class="flex items-center gap-2 text-[var(--text-dim)]"><span class="chip chip-emerald">+</span> 4 segments idiomatiques</div>
+        <div class="flex items-center gap-2 text-[var(--text-dim)]"><span class="chip chip-rose">−</span> 2 dossiers « bad names »</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App layer -->
+  <div class="mt-6 card p-6">
+    <h3 class="font-semibold mb-4 flex items-center gap-2"><span class="chip chip-sky">app/</span> couche transversale segmentée</h3>
+    <div class="grid md:grid-cols-2 gap-6">
+<pre class="mono text-sm text-[var(--text-dim)]">
+<span class="chip chip-rose mb-2 inline-block">avant</span>
+src/
+├── index.css                <span class="text-[var(--text-faint)]">← orphelin</span>
+└── app/
+    ├── App.tsx
+    └── providers/
+        └── router.tsx       <span class="text-[var(--text-faint)]">← faux "provider"</span>
+</pre>
+<pre class="mono text-sm text-[var(--text-dim)]">
+<span class="chip chip-emerald mb-2 inline-block">après</span>
+src/
+├── main.tsx                 <span class="text-[var(--text-faint)]">← reste racine (Vite)</span>
+└── app/
+    ├── App.tsx
+    ├── <span class="text-[var(--accent)]">routes/</span>router.tsx     <span class="text-[var(--text-faint)]">← config inerte</span>
+    ├── <span class="text-[var(--accent)]">styles/</span>index.css
+    └── layouts/MainLayout/
+</pre>
+    </div>
+    <div class="mt-4 text-sm text-[var(--text-dim)]">
+      <b class="text-[var(--text)]">Pourquoi <code class="mono">routes/</code> et pas <code class="mono">providers/</code> ?</b>
+      L'ancien fichier ne contenait aucun Provider React — juste un <code class="mono">createBrowserRouter([...])</code>. <code class="mono">routes/</code> = config inerte. <code class="mono">providers/</code> = wrappers React Context. Quand le 1ᵉʳ Provider arrivera (Theme, Auth, Query), on recréera <code class="mono">providers/</code> à côté.
+    </div>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+<!-- ============ SECTION 3 — MAPPING TABLE ============ -->
+<section id="mapping" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§2 Correspondance</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Tu cherches un hook que tu connaissais sous un autre nom ?</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">
+      Tape son nom, filtre par slice. Chaque ligne explique le type de changement et le motif.
+    </p>
+  </div>
+
+  <div class="card p-4 mb-4">
+    <div class="flex flex-wrap gap-3 items-center">
+      <div class="relative flex-1 min-w-[240px]">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-faint)]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="map-search" type="search" placeholder="ex: useSampleBooks, OpenLibrary, BookShelf…" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-lg pl-9 pr-3 py-2.5 text-sm ring-emerald-focus" />
+      </div>
+      <div id="map-filters" class="flex gap-2 flex-wrap">
+        <button data-slice="all" class="tab-btn px-3 py-1.5 rounded-lg border border-[var(--border)] text-sm" aria-selected="true">Tous</button>
+        <button data-slice="book" class="tab-btn px-3 py-1.5 rounded-lg border border-[var(--border)] text-sm" aria-selected="false">features/book</button>
+        <button data-slice="navigation" class="tab-btn px-3 py-1.5 rounded-lg border border-[var(--border)] text-sm" aria-selected="false">features/navigation</button>
+        <button data-slice="app" class="tab-btn px-3 py-1.5 rounded-lg border border-[var(--border)] text-sm" aria-selected="false">app/</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-[var(--text-faint)] text-xs uppercase tracking-wider">
+          <tr class="border-b border-[var(--border)]">
+            <th class="text-left px-4 py-3 font-semibold">Slice</th>
+            <th class="text-left px-4 py-3 font-semibold">Avant</th>
+            <th class="text-left px-4 py-3 font-semibold">Après</th>
+            <th class="text-left px-4 py-3 font-semibold">Type</th>
+            <th class="text-left px-4 py-3 font-semibold">Motif</th>
+          </tr>
+        </thead>
+        <tbody id="map-tbody"></tbody>
+      </table>
+    </div>
+    <div id="map-empty" class="hidden p-8 text-center text-[var(--text-faint)] text-sm">Aucun résultat — essaie un autre terme.</div>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+<!-- ============ SECTION 4 — 5 AXES ============ -->
+<section id="axes" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§3 Les 5 axes du refactor</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Cinq décisions, cinq règles.</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">Chaque axe est isolé. Tu peux lire celui qui te concerne et ignorer les autres.</p>
+  </div>
+
+  <div id="axis-tabs" role="tablist" class="flex flex-wrap gap-2 mb-6 scroll-fade">
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="true" data-axis="1">1 · Hooks reclassés</button>
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="false" data-axis="2">2 · Anti-corruption layer</button>
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="false" data-axis="3">3 · Couche app/</button>
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="false" data-axis="4">4 · BookDetail + Public API</button>
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="false" data-axis="5">5 · ESLint enforcement</button>
+  </div>
+
+  <!-- AXIS 1 -->
+  <div class="axis-panel card p-6 md:p-8 axis-card" data-axis="1">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="chip chip-violet">Axe 1</span>
+      <h3 class="text-xl font-semibold">Hooks et types reclassés dans des segments idiomatiques</h3>
+    </div>
+    <p class="text-[var(--text-dim)] mb-4">
+      Citation officielle FSD : <i>« <code class="mono">components</code>, <code class="mono">hooks</code>, and <code class="mono">types</code> are bad segment names because they aren't that helpful when you're looking for code. »</i>
+    </p>
+    <div class="grid md:grid-cols-2 gap-4 text-sm">
+      <div class="card p-4">
+        <div class="font-semibold mb-2"><code class="mono text-[var(--accent)]">api/</code></div>
+        <p class="text-[var(--text-dim)]">Data-fetching, request functions, data types, <b>mappers</b>.</p>
+        <div class="mt-2 mono text-xs text-[var(--text-faint)]">useBookDetail · useBookSearch · useUserLibrary…</div>
+      </div>
+      <div class="card p-4">
+        <div class="font-semibold mb-2"><code class="mono text-[var(--accent)]">model/</code></div>
+        <p class="text-[var(--text-dim)]">Schémas, interfaces, stores, <b>business logic</b>.</p>
+        <div class="mt-2 mono text-xs text-[var(--text-faint)]">book.types · useDiscoveryBooks · useRelatedBooks</div>
+      </div>
+      <div class="card p-4">
+        <div class="font-semibold mb-2"><code class="mono text-[var(--accent)]">lib/</code></div>
+        <p class="text-[var(--text-dim)]">Helpers internes purs (pas de state, pas de side-effect).</p>
+        <div class="mt-2 mono text-xs text-[var(--text-faint)]">filterBooksByQuery · discoveryCache · categories</div>
+      </div>
+      <div class="card p-4">
+        <div class="font-semibold mb-2"><code class="mono text-[var(--accent)]">mocks/</code></div>
+        <p class="text-[var(--text-dim)]">Fixtures statiques pour développer sans backend.</p>
+        <div class="mt-2 mono text-xs text-[var(--text-faint)]">MOCK_USER_LIBRARY · MOCK_USER_SHELVES…</div>
+      </div>
+    </div>
+
+    <details class="mt-6 card p-4">
+      <summary class="font-semibold flex items-center gap-2"><span class="chevron">›</span> Pourquoi <code class="mono">useBookSearch</code> est devenu une fonction pure ?</summary>
+      <div class="mt-4 text-sm text-[var(--text-dim)] space-y-3">
+        <p>L'ancien <code class="mono">useBookSearch</code> faisait <code class="mono">useMemo(() =&gt; books.filter(...), [books, query])</code>. Opération cheap (substring), pas de side-effect, pas de state. Le <code class="mono">useMemo</code> est un détail de performance du caller, pas une responsabilité du hook.</p>
+        <p>Convertir en fonction pure : plus de règle des hooks, utilisable hors composant React. Les callers appliquent <code class="mono">useMemo</code> eux-mêmes quand pertinent.</p>
+      </div>
+    </details>
+
+    <details class="mt-3 card p-4">
+      <summary class="font-semibold flex items-center gap-2"><span class="chevron">›</span> Pourquoi <code class="mono">useSampleBooks</code> a été supprimé ?</summary>
+      <div class="mt-4 text-sm text-[var(--text-dim)] space-y-3">
+        <p><code class="mono">useSampleBooks</code> faisait <code class="mono">useMemo(() =&gt; SAMPLE_BOOKS, [])</code> autour d'une constante top-level. La constante est déjà stable → <code class="mono">useMemo</code> no-op. Le hook ne fait rien.</p>
+        <p>Le refactor sépare deux préoccupations qui étaient mélangées :</p>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><b>Fixture statique</b> : <code class="mono">MOCK_USER_LIBRARY</code> dans <code class="mono">mocks/userLibrary.mock.ts</code>.</li>
+          <li><b>Contrat data-fetching</b> : <code class="mono">useUserLibrary()</code> dans <code class="mono">api/</code>, qui retourne <code class="mono">{ data, isLoading, error }</code>.</li>
+        </ol>
+        <p>C'est le pattern <b>« boundary-swap »</b> : on figure dès aujourd'hui la shape asynchrone réelle, même quand la data est synchrone. Demain on branche un vrai fetch, les composants ne bougent pas.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- AXIS 2 -->
+  <div class="axis-panel card p-6 md:p-8 axis-card hidden" data-axis="2">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="chip chip-violet">Axe 2</span>
+      <h3 class="text-xl font-semibold">Anti-corruption layer pour les sources externes</h3>
+    </div>
+
+    <!-- Étape 1 : le problème observé -->
+    <div class="card p-5 mb-4" style="border-left: 4px solid var(--warn);">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="chip chip-rose">étape 1 — le problème</span>
+      </div>
+      <h4 class="font-semibold mb-2 text-sm">Le même mapper, écrit deux fois (avant ce refactor)</h4>
+      <p class="text-sm text-[var(--text-dim)] mb-3">
+        Deux hooks du dossier <code class="mono text-[var(--warn)]">features/book/hooks/</code> faisaient appel à OpenLibrary :
+        <code class="mono">useOpenLibraryBooks</code> et <code class="mono">useSearchBooks</code>. Chacun redéfinissait
+        <b>en interne</b> l'interface du Doc OpenLibrary <b>et</b> la fonction de conversion vers <code class="mono">Book</code>.
+      </p>
+<pre class="language-ts"><code class="language-ts">// features/book/hooks/useOpenLibraryBooks.ts
+interface OpenLibraryBook { /* version A */ author_name?: string[]; cover_i?: number; key: string; first_publish_year?: number }
+function mapToBook(d: OpenLibraryBook): Book | null { /* logique de mapping */ }
+
+// features/book/hooks/useSearchBooks.ts
+interface OpenLibraryBook { /* version B */ author_name?: string[]; cover_i?: number; key: string; first_publish_year?: number; isbn?: string[] }
+function mapToBook(d: OpenLibraryBook): Book | null { /* logique de mapping (presque) identique */ }</code></pre>
+      <p class="text-sm text-[var(--text-dim)] mt-3">
+        Différence subtile : le second a un champ <code class="mono">isbn</code> en plus, <b>jamais consommé</b>. Mais surtout : si OpenLibrary change son schéma, il faut le corriger à <b>deux endroits</b> en restant cohérent — divergence silencieuse garantie.
+      </p>
+    </div>
+
+    <!-- Étape 2 : la solution -->
+    <div class="card p-5 mb-6" style="border-left: 4px solid var(--accent);">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="chip chip-emerald">étape 2 — la solution</span>
+      </div>
+      <h4 class="font-semibold mb-2 text-sm">Un nouveau fichier dédié, posé au commit <code class="mono">c31c7f8</code></h4>
+      <p class="text-sm text-[var(--text-dim)] mb-3">
+        Le refactor crée <code class="mono text-[var(--accent)]">features/book/api/mappers/openLibrary.ts</code> — fichier qui <b>n'existait pas avant</b>. Il devient le seul endroit du projet autorisé à nommer OpenLibrary. Il exporte trois choses :
+      </p>
+<pre class="language-ts"><code class="language-ts">// features/book/api/mappers/openLibrary.ts — NOUVEAU FICHIER
+
+export interface OpenLibraryDoc {
+  author_name?: string[]
+  cover_i?: number
+  key: string
+  first_publish_year?: number
+  // ...shape brut OpenLibrary (snake_case, optionnels)
+}
+
+export interface OpenLibraryResponse {
+  docs: OpenLibraryDoc[]
+  // enveloppe HTTP
+}
+
+export function mapOpenLibraryToBook(doc: OpenLibraryDoc): Book | null {
+  if (!doc.cover_i) return null            // règle métier UI : pas de livre sans couverture
+  return {
+    id: doc.key,
+    title: doc.title ?? '',
+    author: doc.author_name?.[0] ?? '',
+    coverUrl: `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`,
+    publishedDate: doc.first_publish_year ?? null,
+    // tous les champs manquants comblés en null
+    genre: null, language: null, pageCount: null, rating: null,
+    copies: null, summary: null, series: null, seriesOrder: null,
+    collection: null, collectionOrder: null,
+  }
+}</code></pre>
+      <p class="text-sm text-[var(--text-dim)] mt-3">
+        Les deux hooks (renommés en <code class="mono">useDiscoveryCategoryBooks</code> et <code class="mono">useBookSearch</code>) <b>importent ce mapper</b> au lieu de redéfinir le leur. Plus de duplication, source de vérité unique.
+      </p>
+    </div>
+
+    <!-- Étape 3 : le pattern général -->
+    <div class="mb-4">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="chip chip-sky">étape 3 — le pattern</span>
+        <h4 class="font-semibold text-sm">Anti-corruption layer (ACL)</h4>
+      </div>
+      <p class="text-[var(--text-dim)] text-sm mb-4">
+        Pattern d'architecture : isoler le format <b>externe</b> (snake_case OpenLibrary, schéma Google Books, REST de ton backend prod…) du modèle <b>interne</b> stable. Trois rôles, trois fichiers, une seule traversée autorisée :
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-4 mb-6">
+      <div class="card p-4">
+        <div class="chip chip-amber mb-2">externe</div>
+        <div class="font-semibold mono text-sm mb-1">OpenLibraryDoc</div>
+        <p class="text-xs text-[var(--text-dim)]">Shape brut côté OpenLibrary. <code class="mono">author_name</code>, <code class="mono">first_publish_year</code>, <code class="mono">cover_i</code>. snake_case, champs optionnels. Leur schéma, pas le nôtre.</p>
+      </div>
+      <div class="card p-4 glow-sky">
+        <div class="chip chip-sky mb-2">conversion</div>
+        <div class="font-semibold mono text-sm mb-1">mapOpenLibraryToBook(doc) → Book | null</div>
+        <p class="text-xs text-[var(--text-dim)]">Filtre (pas de cover → null), renomme (<code class="mono">cover_i → coverUrl</code>), comble en <code class="mono">null</code> les champs absents. Seul endroit qui « parle leur langage ».</p>
+      </div>
+      <div class="card p-4">
+        <div class="chip chip-emerald mb-2">interne</div>
+        <div class="font-semibold mono text-sm mb-1">Book</div>
+        <p class="text-xs text-[var(--text-dim)]">Modèle stable du projet. <code class="mono">id</code>, <code class="mono">title</code>, <code class="mono">author</code>, <code class="mono">coverUrl</code>… Connu de toute l'app, ignore d'où viennent les données.</p>
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <h4 class="font-semibold mb-3 text-sm">Conséquence — règle pour une nouvelle source externe (Google Books, ISBN-DB…)</h4>
+      <ol class="text-sm text-[var(--text-dim)] space-y-2 list-decimal pl-5">
+        <li>Créer <code class="mono">features/book/api/mappers/googleBooks.ts</code> avec interface <code class="mono">GoogleBooksVolume</code>, interface <code class="mono">GoogleBooksResponse</code> et fonction <code class="mono">mapGoogleBooksToBook(volume) → Book | null</code>.</li>
+        <li>Le nouveau hook (<code class="mono">api/useBookSummary.ts</code> par exemple) importe <b>uniquement</b> ce mapper.</li>
+        <li><b>Aucun autre fichier ne change.</b> Modèle <code class="mono">Book</code> figé, composants n'apprennent rien sur Google Books. La diff dans la PR est strictement contenue à <code class="mono">api/</code>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- AXIS 3 -->
+  <div class="axis-panel card p-6 md:p-8 axis-card hidden" data-axis="3">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="chip chip-violet">Axe 3</span>
+      <h3 class="text-xl font-semibold">Couche <code class="mono">app/</code> segmentée</h3>
+    </div>
+    <p class="text-[var(--text-dim)] mb-6">Sommet de la hiérarchie FSD : tout ce qui est transversal (routes, providers, styles globaux, point d'entrée). Se découpe en <b>segments</b>, pas en slices.</p>
+
+    <div class="grid lg:grid-cols-3 gap-4 mb-6">
+      <div class="card p-4">
+        <div class="chip chip-emerald mb-2">routes/</div>
+        <div class="font-semibold mb-1 text-sm">Config inerte de routes</div>
+        <code class="mono text-xs text-[var(--text-faint)]">createBrowserRouter([...])</code>
+      </div>
+      <div class="card p-4">
+        <div class="chip chip-sky mb-2">styles/</div>
+        <div class="font-semibold mb-1 text-sm">Styles globaux</div>
+        <code class="mono text-xs text-[var(--text-faint)]">Tailwind layers + tokens + resets</code>
+      </div>
+      <div class="card p-4">
+        <div class="chip chip-violet mb-2">layouts/</div>
+        <div class="font-semibold mb-1 text-sm">Layouts d'app</div>
+        <code class="mono text-xs text-[var(--text-faint)]">MainLayout, Navbar (compose widgets)</code>
+      </div>
+    </div>
+
+    <details class="card p-4">
+      <summary class="font-semibold flex items-center gap-2"><span class="chevron">›</span> Pourquoi <code class="mono">main.tsx</code> reste à la racine ?</summary>
+      <div class="mt-4 text-sm text-[var(--text-dim)] space-y-2">
+        <p><b>Convention Vite</b> : <code class="mono">index.html</code> référence <code class="mono">/src/main.tsx</code>.</p>
+        <p><b>Discoverabilité</b> : c'est l'endroit où un nouveau contributeur s'attend à trouver le bootstrap.</p>
+        <p><b>Communauté</b> : <i>« main.tsx file typically remains in the src/ directory root »</i> — FSD Tutorial.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- AXIS 4 -->
+  <div class="axis-panel card p-6 md:p-8 axis-card hidden" data-axis="4">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="chip chip-violet">Axe 4</span>
+      <h3 class="text-xl font-semibold">Composite <code class="mono">BookDetail</code> + Public API minimaliste</h3>
+    </div>
+    <p class="text-[var(--text-dim)] mb-6">
+      Chaque slice expose un <code class="mono">index.ts</code> racine qui est le <b>seul point d'entrée</b> légitime depuis l'extérieur. Tout import direct vers un fichier interne (<code class="mono">@/features/book/ui/BookCover</code>) est interdit.
+    </p>
+
+    <div class="grid lg:grid-cols-2 gap-4 mb-6">
+      <div class="card p-5 glow-emerald">
+        <h4 class="font-semibold mb-3 flex items-center gap-2"><span class="chip chip-emerald">exposé</span> 15 items</h4>
+        <ul class="text-xs space-y-1.5 mono text-[var(--text-dim)]">
+          <li><span class="text-[var(--text-faint)]">type</span> Book</li>
+          <li><span class="text-[var(--text-faint)]">type</span> BookShelf, BookShelfSlug</li>
+          <li><span class="text-[var(--text-faint)]">type</span> BookCTAState, BookCTAKind</li>
+          <li><span class="text-[var(--text-faint)]">type</span> DiscoveryCategory</li>
+          <li class="pt-2 border-t border-[var(--border)] mt-2"><span class="text-[var(--accent)]">composite</span> BookDetail</li>
+          <li><span class="text-[var(--accent)]">composite</span> BookRelatedSections</li>
+          <li><span class="text-[var(--accent)]">composite</span> BookGrid, BookSection, SearchBar, BookCTA</li>
+          <li class="pt-2 border-t border-[var(--border)] mt-2"><span class="text-[var(--info)]">hook</span> useBookDetail, useBookSearch</li>
+          <li><span class="text-[var(--info)]">hook</span> useUserLibrary, useUserShelves</li>
+          <li><span class="text-[var(--info)]">hook</span> useDiscoveryBooks</li>
+          <li class="pt-2 border-t border-[var(--border)] mt-2"><span class="text-[var(--violet)]">util</span> filterBooksByQuery</li>
+          <li><span class="text-[var(--violet)]">util</span> DISCOVERY_LABELS, DISCOVERY_ORDER, discoveryToSlug, slugToDiscovery</li>
+          <li><span class="text-[var(--violet)]">util</span> SHELF_LABELS, SHELF_ORDER, shelfToSlug, slugToShelf</li>
+        </ul>
+      </div>
+      <div class="card p-5">
+        <h4 class="font-semibold mb-3 flex items-center gap-2"><span class="chip chip-rose">privé</span> internes non exposés</h4>
+        <ul class="text-xs space-y-1.5 mono text-[var(--text-dim)]">
+          <li><span class="text-[var(--text-faint)]">atomes</span> BookCover, BookMeta, BookSummary</li>
+          <li><span class="text-[var(--text-faint)]">atomes</span> BookmarkButton, StatBadge, StatBadgeGroup</li>
+          <li><span class="text-[var(--text-faint)]">atomes</span> BookCard, BookCarousel</li>
+          <li class="pt-2 border-t border-[var(--border)] mt-2"><span class="text-[var(--text-faint)]">hooks internes</span> useRelatedBooks</li>
+          <li><span class="text-[var(--text-faint)]">hooks internes</span> useDiscoveryCategoryBooks</li>
+          <li class="pt-2 border-t border-[var(--border)] mt-2"><span class="text-[var(--text-faint)]">boundary</span> OpenLibraryDoc, mapOpenLibraryToBook</li>
+          <li><span class="text-[var(--text-faint)]">boundary</span> BOOK_API_BASE, discoveryCache</li>
+          <li class="pt-2 border-t border-[var(--border)] mt-2"><span class="text-[var(--text-faint)]">fixtures</span> MOCK_USER_LIBRARY</li>
+          <li><span class="text-[var(--text-faint)]">fixtures</span> MOCK_USER_SHELVES, MOCK_BOOKS_BY_ID</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h4 class="font-semibold mb-3 text-sm">Contrat unifié des hooks data-fetching</h4>
+      <pre class="language-ts"><code class="language-ts">interface QueryResult&lt;T&gt; {
+  data: T
+  isLoading: boolean
+  error: Error | null
+}</code></pre>
+      <p class="text-sm text-[var(--text-dim)] mt-3">
+        Convention TanStack Query / SWR. Si on adopte une de ces libs plus tard, <b>les composants n'ont rien à toucher</b>. Pourquoi <code class="mono">data</code> (générique) plutôt que <code class="mono">books</code> / <code class="mono">shelves</code> (domaine) ? Le shape n'est pas couplé au nom du domaine — si demain le hook renvoie un résultat paginé, le nom <code class="mono">data</code> reste valide. Côté caller, on rename à la destructuration quand besoin de clarté locale : <code class="mono">const { data: books } = useUserLibrary()</code>.
+      </p>
+    </div>
+  </div>
+
+  <!-- AXIS 5 -->
+  <div class="axis-panel card p-6 md:p-8 axis-card hidden" data-axis="5">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="chip chip-violet">Axe 5</span>
+      <h3 class="text-xl font-semibold">ESLint plugin pour enforcer les règles FSD</h3>
+    </div>
+    <p class="text-[var(--text-dim)] mb-6">
+      <code class="mono">eslint-plugin-fsd-lint@1.2.1</code> installé et configuré dans <code class="mono">eslint.config.js</code>. Six règles actives. Le plugin a détecté <b class="text-[var(--warn)]">47 violations</b> à l'install — toutes résolues, <b class="text-[var(--accent)]">0 à la fin</b>.
+    </p>
+    <div class="overflow-x-auto card">
+      <table class="w-full text-sm">
+        <thead class="text-xs uppercase tracking-wider text-[var(--text-faint)]">
+          <tr class="border-b border-[var(--border)]">
+            <th class="text-left px-4 py-3">Règle</th>
+            <th class="text-left px-4 py-3">Sévérité</th>
+            <th class="text-left px-4 py-3">Ce qu'elle bloque</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[var(--border)]">
+          <tr><td class="px-4 py-3 mono text-xs">fsd/forbidden-imports</td><td class="px-4 py-3"><span class="chip chip-rose">error</span></td><td class="px-4 py-3 text-[var(--text-dim)]">Import qui viole la direction des layers (ex : <code class="mono">entities</code> importe <code class="mono">features</code>)</td></tr>
+          <tr><td class="px-4 py-3 mono text-xs">fsd/no-cross-slice-dependency</td><td class="px-4 py-3"><span class="chip chip-rose">error</span></td><td class="px-4 py-3 text-[var(--text-dim)]">Import direct d'une slice depuis une autre slice du même layer</td></tr>
+          <tr><td class="px-4 py-3 mono text-xs">fsd/no-public-api-sidestep</td><td class="px-4 py-3"><span class="chip chip-rose">error</span></td><td class="px-4 py-3 text-[var(--text-dim)]">Import direct vers un sous-fichier (<code class="mono">@/features/book/ui/Foo</code>) au lieu du <code class="mono">index.ts</code></td></tr>
+          <tr><td class="px-4 py-3 mono text-xs">fsd/no-relative-imports</td><td class="px-4 py-3"><span class="chip chip-rose">error</span></td><td class="px-4 py-3 text-[var(--text-dim)]">Import relatif cross-slice (avec <code class="mono">allowSameSlice: true</code> + ignore CSS)</td></tr>
+          <tr><td class="px-4 py-3 mono text-xs">fsd/no-ui-in-business-logic</td><td class="px-4 py-3"><span class="chip chip-rose">error</span></td><td class="px-4 py-3 text-[var(--text-dim)]">Composants UI importés dans <code class="mono">model/</code> ou <code class="mono">api/</code></td></tr>
+          <tr><td class="px-4 py-3 mono text-xs">fsd/ordered-imports</td><td class="px-4 py-3"><span class="chip chip-amber">warning</span></td><td class="px-4 py-3 text-[var(--text-dim)]">Ordre des imports (auto-fix)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Philosophie -->
+    <div class="card p-5 mt-6 mb-4" style="border-left: 4px solid var(--info);">
+      <h4 class="font-semibold mb-3 text-sm flex items-center gap-2">
+        <span class="chip chip-sky">philosophie</span>
+        Chaque règle protège un invariant d'architecture
+      </h4>
+      <p class="text-sm text-[var(--text-dim)] mb-3">
+        ESLint n'est pas un garde-fou aléatoire. Chaque règle FSD correspond à une <b>garantie</b> que l'architecture promet — si la règle saute, la garantie aussi. Comprendre la garantie = ne plus se prendre un mur quand tu écris du nouveau code.
+      </p>
+      <ul class="text-sm text-[var(--text-dim)] space-y-2 list-disc pl-5">
+        <li><code class="mono text-xs">no-public-api-sidestep</code> protège la <b>liberté de refactor interne</b> d'une slice. Le mainteneur peut réorganiser <code class="mono">ui/</code>, <code class="mono">model/</code>, <code class="mono">lib/</code> sans casser les pages, tant qu'il préserve son <code class="mono">index.ts</code>.</li>
+        <li><code class="mono text-xs">no-cross-slice-dependency</code> protège l'<b>isolation métier</b>. Une slice doit pouvoir évoluer (ou être supprimée) sans casser les autres slices du même layer.</li>
+        <li><code class="mono text-xs">forbidden-imports</code> protège la <b>direction des imports</b> (descendante uniquement). Sans ça, on retombe en spaghetti circulaire.</li>
+        <li><code class="mono text-xs">no-ui-in-business-logic</code> protège la <b>séparation UI / logique</b>. Le model/ et l'api/ doivent rester testables sans React.</li>
+      </ul>
+    </div>
+
+    <!-- Cas concrets -->
+    <h4 class="font-semibold mb-3 mt-6 text-sm flex items-center gap-2">
+      <span class="chip chip-amber">cas concrets</span>
+      Trois des 47 violations résolues sur cette branche
+    </h4>
+
+    <details class="card p-4 mt-3" open>
+      <summary class="font-semibold flex items-center gap-2"><span class="chevron">›</span> Cas 1 — <code class="mono">no-public-api-sidestep</code> (le plus fréquent)</summary>
+      <div class="mt-4 text-sm text-[var(--text-dim)] space-y-3">
+        <p><b class="text-[var(--text)]">Symptôme</b> — une page importait directement un composant interne :</p>
+<pre class="language-tsx"><code class="language-tsx">// ❌ BookDetailPage.tsx (avant)
+import { BookCover } from '@/features/book/ui/BookCover'
+import { BookCTA }   from '@/features/book/ui/BookCTA'
+import { BookMeta }  from '@/features/book/ui/BookMeta'
+// ...6 imports vers des fichiers internes de la slice</code></pre>
+        <p><b class="text-[var(--text)]">Erreur ESLint</b> :</p>
+<pre class="language-bash"><code class="language-bash">error  Direct import from '@/features/book/ui/BookCover' is not allowed.
+       Use the public API (index file) instead.   fsd/no-public-api-sidestep</code></pre>
+        <p><b class="text-[var(--text)]">Mauvais fix réflexe</b> : ajouter <code class="mono">BookCover</code> dans <code class="mono">features/book/index.ts</code> pour rendre l'erreur silencieuse. Ça <i>résout</i> la règle mais <b>érode</b> le public API — on expose un atome qui devrait rester interne.</p>
+        <p><b class="text-[var(--text)]">Bon fix</b> : créer un composite haut-niveau (<code class="mono">BookDetail</code>) dans la slice, qui assemble les atomes <b>en interne</b>. Exposer le composite. La page consomme un seul item.</p>
+<pre class="language-tsx"><code class="language-tsx">// ✅ BookDetailPage.tsx (après)
+import { BookDetail } from '@/features/book'
+&lt;BookDetail book={book} leadingSlot={...} /&gt;</code></pre>
+      </div>
+    </details>
+
+    <details class="card p-4 mt-3">
+      <summary class="font-semibold flex items-center gap-2"><span class="chevron">›</span> Cas 2 — <code class="mono">no-relative-imports</code> cross-slice</summary>
+      <div class="mt-4 text-sm text-[var(--text-dim)] space-y-3">
+        <p><b class="text-[var(--text)]">Symptôme</b> — un fichier importait un truc d'une autre slice via chemin relatif :</p>
+<pre class="language-ts"><code class="language-ts">// ❌ features/book/ui/BookCard.tsx
+import { NavLink } from '../../navigation/model/navigation.types'</code></pre>
+        <p><b class="text-[var(--text)]">Erreur ESLint</b> :</p>
+<pre class="language-bash"><code class="language-bash">error  Relative imports outside the current slice are not allowed.
+       fsd/no-relative-imports</code></pre>
+        <p><b class="text-[var(--text)]">Pourquoi cette règle</b> : un chemin relatif cross-slice contourne le public API (on peut atterrir directement dans <code class="mono">model/</code> d'une autre slice). Plus subtil : ça casse en silence si la slice cible est déplacée.</p>
+        <p><b class="text-[var(--text)]">Config locale</b> : <code class="mono">allowSameSlice: true</code> permet les imports relatifs <b>à l'intérieur</b> d'une slice (entre segments). <code class="mono">ignoreImportPatterns: ['\\.css$']</code> permet les imports CSS relatifs (cas particulier : pas de public API pour du CSS).</p>
+        <p><b class="text-[var(--text)]">Fix</b> : passer par le public API absolu.</p>
+<pre class="language-ts"><code class="language-ts">// ✅ features/book/ui/BookCard.tsx
+// (mais en vrai, ce cas ne devrait pas exister : book ne devrait pas
+//  dépendre de navigation. cf. cas 3 ci-dessous)</code></pre>
+      </div>
+    </details>
+
+    <details class="card p-4 mt-3">
+      <summary class="font-semibold flex items-center gap-2"><span class="chevron">›</span> Cas 3 — <code class="mono">no-cross-slice-dependency</code></summary>
+      <div class="mt-4 text-sm text-[var(--text-dim)] space-y-3">
+        <p><b class="text-[var(--text)]">Symptôme</b> — une slice tente d'importer une autre slice du même layer :</p>
+<pre class="language-ts"><code class="language-ts">// ❌ features/book/model/useDiscoveryBooks.ts
+import type { NavLink } from '@/features/navigation'</code></pre>
+        <p><b class="text-[var(--text)]">Erreur ESLint</b> :</p>
+<pre class="language-bash"><code class="language-bash">error  Slice 'book' cannot import from slice 'navigation'.
+       fsd/no-cross-slice-dependency</code></pre>
+        <p><b class="text-[var(--text)]">Pourquoi cette règle</b> : deux slices d'un même layer doivent rester <b>orthogonales</b>. Si <code class="mono">book</code> dépend de <code class="mono">navigation</code>, supprimer <code class="mono">navigation</code> casse <code class="mono">book</code>.</p>
+        <p><b class="text-[var(--text)]">Fix possibles</b> :</p>
+        <ul class="list-disc pl-5 space-y-1.5">
+          <li>Si le type est <b>vraiment partagé</b> par les deux slices → le déplacer vers <code class="mono">shared/</code> (layer transversal accessible à tous).</li>
+          <li>Si le type appartient à <code class="mono">navigation</code> et que <code class="mono">book</code> en avait besoin par erreur → revoir la conception, c'est probablement <code class="mono">navigation</code> qui doit appeler <code class="mono">book</code> (ou un composant <code class="mono">pages/</code> qui orchestre les deux).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="card p-4 mt-3">
+      <summary class="font-semibold flex items-center gap-2"><span class="chevron">›</span> Quand un PR échoue — workflow</summary>
+      <div class="mt-4 text-sm text-[var(--text-dim)] space-y-3">
+        <p>Husky/lint-staged exécute <code class="mono">eslint --fix</code> sur les fichiers stagés. Si une règle FSD est violée :</p>
+<pre class="language-bash"><code class="language-bash">error  Direct import from '@/features/book/ui/BookCover' is not allowed.
+       Use the public API (index file) instead.   fsd/no-public-api-sidestep</code></pre>
+        <p>→ Lis l'erreur. Identifie la règle. Si tu te retrouves à devoir exposer un atome dans <code class="mono">index.ts</code> parce qu'une page en a besoin, <b>pause</b> : c'est probablement le signe qu'il manque un composite haut-niveau. Ouvre une discussion plutôt que d'éroder le public API.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+<!-- ============ SECTION 5 — DIFFS ============ -->
+<section id="diffs" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§4 Diffs concrets</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Avant / après — en code.</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">Quatre exemples qui synthétisent l'esprit du refactor.</p>
+  </div>
+
+  <div id="diff-tabs" role="tablist" class="flex flex-wrap gap-2 mb-6">
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="true" data-diff="1">Imports d'une page</button>
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="false" data-diff="2">Hook fetch</button>
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="false" data-diff="3">Composition de page</button>
+    <button class="tab-btn px-4 py-2 rounded-lg border border-[var(--border)] text-sm" role="tab" aria-selected="false" data-diff="4">Hook pur</button>
+  </div>
+
+  <!-- DIFF 1 -->
+  <div class="diff-panel" data-diff="1">
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-1">Exemple 1 — Imports d'une page (<code class="mono">UserLibraryPage.tsx</code>)</h3>
+      <p class="text-sm text-[var(--text-dim)]">6 imports vers des sous-fichiers internes → 1 import via le public API.</p>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="card overflow-hidden">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between">
+          <span class="chip chip-rose">avant</span>
+          <span class="text-xs text-[var(--text-faint)] mono">6 chemins internes</span>
+        </div>
+<pre class="language-tsx"><code class="language-tsx">import { useSampleBooks } from '@/features/book/hooks/useSampleBooks'
+import { useSampleBooksByShelf } from '@/features/book/hooks/useSampleBooksByShelf'
+import {
+  SHELF_LABELS,
+  SHELF_ORDER,
+  shelfToSlug,
+} from '@/features/book/lib/shelf'
+import { BookSection } from '@/features/book/ui/BookSection'
+import { SearchBar } from '@/features/book/ui/SearchBar'</code></pre>
+      </div>
+      <div class="card overflow-hidden glow-emerald">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between">
+          <span class="chip chip-emerald">après</span>
+          <span class="text-xs text-[var(--text-faint)] mono">1 chemin, public API</span>
+        </div>
+<pre class="language-tsx"><code class="language-tsx">import {
+  BookSection,
+  SearchBar,
+  SHELF_LABELS,
+  SHELF_ORDER,
+  shelfToSlug,
+  useUserLibrary,
+  useUserShelves,
+} from '@/features/book'
+
+const { data: shelfBooks } = useUserShelves()
+const { data: allBooks }   = useUserLibrary()</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIFF 2 -->
+  <div class="diff-panel hidden" data-diff="2">
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-1">Exemple 2 — Hook fetch (avant : <code class="mono">useOpenLibraryBooks</code>, après : <code class="mono">useDiscoveryCategoryBooks</code>)</h3>
+      <p class="text-sm text-[var(--text-dim)]">Rename source-agnostic, mapper dédupliqué, cache extrait, shape <code class="mono">{ data, isLoading, error }</code>.</p>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="card overflow-hidden">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between"><span class="chip chip-rose">avant</span><span class="text-xs text-[var(--text-faint)] mono">tout inline, Book[] direct</span></div>
+<pre class="language-ts"><code class="language-ts">export function useOpenLibraryBooks(
+  category: keyof typeof CATEGORIES,
+): Book[] {
+  // mapOpenLibraryToBook redéfini ici (dupliqué)
+  // cache localStorage inline
+  // fetch hardcodé sur 'http://localhost:3001/books'
+  // pas de isLoading/error exposés
+  // ...
+  return books  // Book[] direct
+}</code></pre>
+      </div>
+      <div class="card overflow-hidden glow-emerald">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between"><span class="chip chip-emerald">après</span><span class="text-xs text-[var(--text-faint)] mono">shape async, deps explicites</span></div>
+<pre class="language-ts"><code class="language-ts">import { BOOK_API_BASE } from './client'
+import { mapOpenLibraryToBook } from './mappers/openLibrary'
+import { getCachedBooks, setCachedBooks } from '../lib/discoveryCache'
+
+export function useDiscoveryCategoryBooks(
+  category: DiscoveryCategory,
+): DiscoveryCategoryBooksResult {
+  // mapper réutilisé (dédup)
+  // cache extrait (réutilisable)
+  // URL constante (un seul endroit à changer)
+  // shape { data, isLoading, error } exposée
+  // cancellation cleanup sur unmount
+  // ...
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIFF 3 -->
+  <div class="diff-panel hidden" data-diff="3">
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-1">Exemple 3 — Composition d'une page (<code class="mono">BookDetailPage.tsx</code>)</h3>
+      <p class="text-sm text-[var(--text-dim)]">6 atomes UI assemblés à la main → 1 composite consommé.</p>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="card overflow-hidden">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between"><span class="chip chip-rose">avant</span><span class="text-xs text-[var(--text-faint)] mono">la page sait composer</span></div>
+<pre class="language-tsx"><code class="language-tsx">import { BookCover }      from '@/features/book/ui/BookCover'
+import { BookCTA }        from '@/features/book/ui/BookCTA'
+import { BookMeta }       from '@/features/book/ui/BookMeta'
+import { BookSummary }    from '@/features/book/ui/BookSummary'
+import { BookmarkButton } from '@/features/book/ui/BookmarkButton'
+import { StatBadgeGroup } from '@/features/book/ui/StatBadgeGroup'
+// + 50 lignes de JSX qui les composent</code></pre>
+      </div>
+      <div class="card overflow-hidden glow-emerald">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between"><span class="chip chip-emerald">après</span><span class="text-xs text-[var(--text-faint)] mono">la slice expose un composite</span></div>
+<pre class="language-tsx"><code class="language-tsx">import {
+  BookDetail,
+  BookRelatedSections,
+  useBookDetail,
+} from '@/features/book'
+
+&lt;BookDetail
+  book={book}
+  leadingSlot={&lt;BackButton /&gt;}
+  onReserveConfirm={...}
+  onActiveStateClick={...}
+/&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIFF 4 -->
+  <div class="diff-panel hidden" data-diff="4">
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-1">Exemple 4 — Hook pur (avant : faux hook, après : pure function)</h3>
+      <p class="text-sm text-[var(--text-dim)]">Pas de state, pas d'effet → pas un hook. Le <code class="mono">useMemo</code> redevient une décision du caller.</p>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="card overflow-hidden">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between"><span class="chip chip-rose">avant</span><span class="text-xs text-[var(--text-faint)] mono">hooks/useBookSearch.ts</span></div>
+<pre class="language-ts"><code class="language-ts">export function useBookSearch(
+  books: Book[], query: string,
+): Book[] {
+  return useMemo(() =&gt; {
+    const cleanQuery = query.trim().toLowerCase()
+    if (!cleanQuery) return []
+    return books.filter(b =&gt; b.title.toLowerCase().includes(cleanQuery))
+  }, [books, query])
+}</code></pre>
+      </div>
+      <div class="card overflow-hidden glow-emerald">
+        <div class="px-4 py-2 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between"><span class="chip chip-emerald">après</span><span class="text-xs text-[var(--text-faint)] mono">lib/filterBooksByQuery.ts</span></div>
+<pre class="language-ts"><code class="language-ts">export function filterBooksByQuery(
+  books: Book[], query: string,
+): Book[] {
+  const cleanQuery = query.trim().toLowerCase()
+  if (!cleanQuery) return []
+  return books.filter(b =&gt; b.title.toLowerCase().includes(cleanQuery))
+}
+
+// caller (décide lui-même de mémoïser) :
+const results = useMemo(
+  () =&gt; filterBooksByQuery(books, query),
+  [books, query],
+)</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+<!-- ============ SECTION 6 — ANTI CORRUPTION LAYER (SVG) ============ -->
+<section id="acl" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§5 Anti-corruption layer</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Une seule frontière connaît OpenLibrary.</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">
+      Le format externe ne contamine que <code class="mono">api/mappers/openLibrary.ts</code>. Le reste de l'app ne sait même pas qu'OpenLibrary existe.
+    </p>
+  </div>
+
+  <div class="card force-dark p-6 md:p-10">
+    <svg viewBox="0 0 900 540" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="extBox" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fbbf24" stop-opacity="0.12"/>
+          <stop offset="1" stop-color="#fbbf24" stop-opacity="0.02"/>
+        </linearGradient>
+        <linearGradient id="bndBox" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#38bdf8" stop-opacity="0.15"/>
+          <stop offset="1" stop-color="#38bdf8" stop-opacity="0.03"/>
+        </linearGradient>
+        <linearGradient id="intBox" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#34d399" stop-opacity="0.15"/>
+          <stop offset="1" stop-color="#34d399" stop-opacity="0.03"/>
+        </linearGradient>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7079"/>
+        </marker>
+        <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/>
+        </marker>
+      </defs>
+
+      <!-- Externe -->
+      <rect x="280" y="20" width="340" height="80" rx="12" fill="url(#extBox)" stroke="#fbbf24" stroke-opacity="0.4"/>
+      <text x="450" y="48" text-anchor="middle" fill="#fbbf24" font-family="Inter" font-size="12" font-weight="700" letter-spacing="1.5">EXTERNE</text>
+      <text x="450" y="72" text-anchor="middle" fill="#e7e9ec" font-family="JetBrains Mono" font-size="15" font-weight="600">OpenLibrary API</text>
+      <text x="450" y="90" text-anchor="middle" fill="#9aa0a8" font-family="JetBrains Mono" font-size="11">snake_case · cover_i · author_name · first_publish_year</text>
+
+      <!-- Flèche externe → boundary -->
+      <path d="M 450 100 L 450 145" stroke="#6b7079" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+      <text x="465" y="128" fill="#9aa0a8" font-family="Inter" font-size="11" font-style="italic">format brut</text>
+
+      <!-- Boundary -->
+      <rect x="200" y="150" width="500" height="110" rx="12" fill="url(#bndBox)" stroke="#38bdf8" stroke-opacity="0.5" stroke-width="1.5"/>
+      <text x="450" y="178" text-anchor="middle" fill="#38bdf8" font-family="Inter" font-size="12" font-weight="700" letter-spacing="1.5">FRONTIÈRE — seul endroit qui « parle leur langage »</text>
+      <text x="450" y="206" text-anchor="middle" fill="#e7e9ec" font-family="JetBrains Mono" font-size="14" font-weight="600">features/book/api/mappers/openLibrary.ts</text>
+      <text x="450" y="228" text-anchor="middle" fill="#9aa0a8" font-family="Inter" font-size="11">filtre · renomme · comble en null · retourne Book | null</text>
+      <text x="450" y="248" text-anchor="middle" fill="#9aa0a8" font-family="JetBrains Mono" font-size="11">mapOpenLibraryToBook(doc) → Book | null</text>
+
+      <!-- Flèche boundary → hooks -->
+      <path d="M 450 260 L 450 305" stroke="#34d399" stroke-width="2" marker-end="url(#arrowAccent)"/>
+      <text x="465" y="288" fill="#34d399" font-family="Inter" font-size="11" font-weight="600">Book</text>
+
+      <!-- Hooks api -->
+      <rect x="220" y="310" width="460" height="60" rx="12" fill="url(#intBox)" stroke="#34d399" stroke-opacity="0.4"/>
+      <text x="450" y="336" text-anchor="middle" fill="#34d399" font-family="Inter" font-size="12" font-weight="700" letter-spacing="1.5">INTERNE — api/</text>
+      <text x="450" y="358" text-anchor="middle" fill="#e7e9ec" font-family="JetBrains Mono" font-size="13" font-weight="500">useBookDetail · useBookSearch · useDiscoveryCategoryBooks</text>
+
+      <!-- Flèche -->
+      <path d="M 450 370 L 450 415" stroke="#34d399" stroke-width="2" marker-end="url(#arrowAccent)"/>
+      <text x="465" y="397" fill="#34d399" font-family="Inter" font-size="11" font-weight="600">{ data, isLoading, error }</text>
+
+      <!-- Consommateurs -->
+      <rect x="120" y="420" width="660" height="90" rx="12" fill="url(#intBox)" stroke="#34d399" stroke-opacity="0.4"/>
+      <text x="450" y="446" text-anchor="middle" fill="#34d399" font-family="Inter" font-size="12" font-weight="700" letter-spacing="1.5">CONSOMMATEURS — ignorent qu'OpenLibrary existe</text>
+      <text x="240" y="476" text-anchor="middle" fill="#e7e9ec" font-family="JetBrains Mono" font-size="13" font-weight="500">ui/</text>
+      <text x="240" y="494" text-anchor="middle" fill="#9aa0a8" font-family="Inter" font-size="11">composants visuels</text>
+      <text x="450" y="476" text-anchor="middle" fill="#e7e9ec" font-family="JetBrains Mono" font-size="13" font-weight="500">model/</text>
+      <text x="450" y="494" text-anchor="middle" fill="#9aa0a8" font-family="Inter" font-size="11">business logic</text>
+      <text x="660" y="476" text-anchor="middle" fill="#e7e9ec" font-family="JetBrains Mono" font-size="13" font-weight="500">pages/</text>
+      <text x="660" y="494" text-anchor="middle" fill="#9aa0a8" font-family="Inter" font-size="11">routing</text>
+
+      <!-- Annotation latérale -->
+      <g opacity="0.85">
+        <line x1="710" y1="205" x2="780" y2="205" stroke="#38bdf8" stroke-opacity="0.4" stroke-dasharray="3 3"/>
+        <text x="785" y="200" fill="#38bdf8" font-family="Inter" font-size="11" font-weight="600">demain</text>
+        <text x="785" y="216" fill="#9aa0a8" font-family="Inter" font-size="10">ajoute</text>
+        <text x="785" y="230" fill="#9aa0a8" font-family="Inter" font-size="10">googleBooks.ts</text>
+        <text x="785" y="244" fill="#9aa0a8" font-family="Inter" font-size="10">→ rien</text>
+        <text x="785" y="258" fill="#9aa0a8" font-family="Inter" font-size="10">d'autre</text>
+        <text x="785" y="272" fill="#9aa0a8" font-family="Inter" font-size="10">ne bouge</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-4 mt-6">
+    <div class="card p-5">
+      <div class="chip chip-rose mb-3">avant</div>
+      <div class="font-semibold mb-1 text-sm"><code class="mono">mapOpenLibraryToBook</code> dupliqué</div>
+      <p class="text-xs text-[var(--text-dim)]">Redéfini dans 2 hooks, schéma divergent (champ <code class="mono">isbn</code> en plus côté search). Divergence silencieuse au moindre changement.</p>
+    </div>
+    <div class="card p-5 glow-emerald">
+      <div class="chip chip-emerald mb-3">après</div>
+      <div class="font-semibold mb-1 text-sm">Source de vérité unique</div>
+      <p class="text-xs text-[var(--text-dim)]">Un seul fichier nomme OpenLibrary. <code class="mono">OpenLibraryDoc</code>, <code class="mono">OpenLibraryResponse</code>, <code class="mono">mapOpenLibraryToBook</code> exportés et réutilisés.</p>
+    </div>
+    <div class="card p-5">
+      <div class="chip chip-sky mb-3">demain</div>
+      <div class="font-semibold mb-1 text-sm">Nouvelle source = nouveau mapper</div>
+      <p class="text-xs text-[var(--text-dim)]">Google Books ? Crée <code class="mono">api/mappers/googleBooks.ts</code> avec son propre type + mapper. Rien d'autre ne change.</p>
+    </div>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+<!-- ============ SECTION 7 — QUIZ ============ -->
+<section id="quiz" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§6 Quiz</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Tu sais déjà placer un nouveau hook ?</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">7 questions. Pas de score gardé en mémoire. L'objectif : ancrer la règle, pas te juger.</p>
+  </div>
+
+  <div class="card p-2 md:p-3 mb-4 inline-flex items-center gap-3">
+    <span class="text-sm text-[var(--text-faint)] px-3">Progression</span>
+    <div class="w-48 h-2 bg-[var(--border)] rounded-full overflow-hidden">
+      <div id="quiz-progress" class="h-full bg-gradient-to-r from-emerald-400 to-sky-400 transition-all" style="width: 0%"></div>
+    </div>
+    <span id="quiz-score" class="text-sm font-semibold px-3 mono">0 / 7</span>
+  </div>
+
+  <div id="quiz-container" class="space-y-4"></div>
+
+  <div id="quiz-done" class="hidden card p-6 mt-6 glow-emerald">
+    <div class="flex items-start gap-4">
+      <div class="text-3xl">🎯</div>
+      <div>
+        <div class="font-bold text-lg mb-1">Terminé.</div>
+        <p class="text-sm text-[var(--text-dim)]">
+          Si tu as buté sur une question, relis l'<a href="#axes" class="text-[var(--accent)] underline decoration-dotted">axe</a> correspondant. La règle est volontairement simple — l'objectif est qu'elle soit applicable sans réflexion sur les prochains PR.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+<!-- ============ SECTION 8 — TIMELINE ============ -->
+<section id="timeline" class="relative max-w-7xl mx-auto px-6 py-20">
+  <div class="mb-10">
+    <div class="text-xs uppercase tracking-widest text-[var(--text-faint)] mb-2">§7 Timeline</div>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Lire la branche commit par commit.</h2>
+    <p class="text-[var(--text-dim)] mt-3 max-w-2xl">
+      Chaque commit passe <code class="mono">tsc</code>, <code class="mono">eslint</code> et <code class="mono">vite build</code>. Atomiques par intent : lis-en un à la fois pour comprendre une intention isolée.
+    </p>
+  </div>
+
+  <div id="timeline-list" class="space-y-3"></div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-[var(--border)] mt-20">
+  <div class="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-8 text-sm">
+    <div>
+      <div class="font-bold mb-3">Sources FSD</div>
+      <ul class="space-y-1.5 text-[var(--text-dim)]">
+        <li><a href="https://feature-sliced.design/docs/reference/layers" class="hover:text-[var(--text)]">Layers</a></li>
+        <li><a href="https://feature-sliced.design/docs/reference/slices-segments" class="hover:text-[var(--text)]">Slices & segments</a></li>
+        <li><a href="https://feature-sliced.design/docs/reference/public-api" class="hover:text-[var(--text)]">Public API</a></li>
+        <li><a href="https://feature-sliced.design/docs/guides/examples/page-layout" class="hover:text-[var(--text)]">Page layouts</a></li>
+        <li><a href="https://feature-sliced.design/docs/get-started/tutorial" class="hover:text-[var(--text)]">Tutorial</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="font-bold mb-3">Outils</div>
+      <ul class="space-y-1.5 text-[var(--text-dim)]">
+        <li><a href="https://github.com/effozen/eslint-plugin-fsd-lint" class="hover:text-[var(--text)]">eslint-plugin-fsd-lint</a></li>
+        <li><a href="refactor-fsd-migration.md" class="hover:text-[var(--text)]">Doc source (Markdown)</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="font-bold mb-3">Cette branche</div>
+      <ul class="space-y-1.5 text-[var(--text-dim)]">
+        <li><a class="hover:text-[var(--text)]" href="https://github.com/SIMPLON-DIST-CDA-260316/bibliomaniac-agathe-julien-raphael/tree/chore/refactor-cleanup" target="_blank" rel="noopener noreferrer"><code class="mono">chore/refactor-cleanup</code> ↗</a></li>
+        <li>depuis <a class="hover:text-[var(--text)]" href="https://github.com/SIMPLON-DIST-CDA-260316/bibliomaniac-agathe-julien-raphael/commit/16285e9" target="_blank" rel="noopener noreferrer"><code class="mono">develop@16285e9</code> ↗</a></li>
+        <li>Julien · 2026-05-13</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-[var(--border)] py-6 text-center text-xs text-[var(--text-faint)]">
+    Bibliomaniac — refactor FSD · Pour Agathe, Raphaël (et toute personne qui arrive sur la branche).
+  </div>
+</footer>
+
+<!-- ============ DATA + JS ============ -->
+<script id="mapping-data" type="application/json">
+[
+  {"slice":"book","before":"hooks/useBookDetail.ts","after":"api/useBookDetail.ts","type":"déplacement","why":"data-fetching → segment api/"},
+  {"slice":"book","before":"hooks/useBookSearch.ts (filter local pur)","after":"lib/filterBooksByQuery.ts","type":"déplacement + rename + dehookification","why":"pas de state ni side-effect → fonction pure"},
+  {"slice":"book","before":"hooks/useSearchBooks.ts (fetch distant)","after":"api/useBookSearch.ts","type":"déplacement + rename","why":"entity-first naming, contrat async unifié"},
+  {"slice":"book","before":"hooks/useOpenLibraryBooks.ts","after":"api/useDiscoveryCategoryBooks.ts","type":"déplacement + rename","why":"nom couplé à la source externe → source-agnostic"},
+  {"slice":"book","before":"hooks/useRelatedBooks.ts","after":"model/useRelatedBooks.ts","type":"déplacement","why":"matching series/collection/genre → business logic"},
+  {"slice":"book","before":"hooks/useDiscoveryBooks.ts","after":"model/useDiscoveryBooks.ts","type":"déplacement","why":"composition feed + fallback → business logic"},
+  {"slice":"book","before":"hooks/useSampleBooks.ts","after":"mocks/userLibrary.mock.ts (MOCK_USER_LIBRARY) + api/useUserLibrary.ts","type":"split en deux","why":"séparer fixture statique du contrat data-fetching"},
+  {"slice":"book","before":"hooks/useSampleBooksByShelf.ts","after":"mocks/userShelves.mock.ts (MOCK_USER_SHELVES) + api/useUserShelves.ts","type":"split en deux","why":"même raison — boundary-swap prêt pour vrai fetch"},
+  {"slice":"book","before":"types/bookShelf.ts","after":"model/bookShelf.types.ts","type":"déplacement","why":"types/ est un bad segment name FSD"},
+  {"slice":"book","before":"(rien — nouveau)","after":"api/client.ts","type":"ajout","why":"constante BOOK_API_BASE centralisée"},
+  {"slice":"book","before":"(rien — dupliqué inline)","after":"api/mappers/openLibrary.ts","type":"ajout + dédup","why":"anti-corruption layer : un seul fichier nomme OpenLibrary"},
+  {"slice":"book","before":"(rien — inline)","after":"lib/discoveryCache.ts","type":"extraction","why":"cache localStorage réutilisable (TTL 1h)"},
+  {"slice":"book","before":"BookDetailPage (assemblage manuel 6 atomes)","after":"ui/BookDetail.tsx (composite)","type":"composite","why":"la slice expose un composite, la page ne sait pas composer"},
+  {"slice":"navigation","before":"hooks/useFilteredLinks.ts (useMemo + filter)","after":"lib/filterLinksByAuth.ts","type":"déplacement + dehookification","why":"pas de state → fonction pure"},
+  {"slice":"navigation","before":"types/navigation.ts","after":"model/navigation.types.ts","type":"déplacement","why":"types/ est un bad segment name FSD"},
+  {"slice":"app","before":"src/index.css","after":"src/app/styles/index.css","type":"déplacement","why":"segment FSD canonique pour styles globaux"},
+  {"slice":"app","before":"src/app/providers/router.tsx","after":"src/app/routes/router.tsx","type":"déplacement","why":"config inerte (createBrowserRouter) ≠ Provider React"}
+]
+</script>
+
+<script id="quiz-data" type="application/json">
+[
+  {
+    "q": "Tu écris un hook qui fait un fetch HTTP vers ton backend. Où le places-tu ?",
+    "options": [
+      {"label":"features/<slice>/hooks/","correct":false,"hint":"« hooks » est un bad segment name FSD."},
+      {"label":"features/<slice>/api/","correct":true,"hint":"Data-fetching → api/. Le segment décrit l'intention."},
+      {"label":"features/<slice>/model/","correct":false,"hint":"model/ = business logic, pas data-fetching."},
+      {"label":"features/<slice>/lib/","correct":false,"hint":"lib/ = helpers purs sans state ni effect."}
+    ]
+  },
+  {
+    "q": "Tu définis l'interface TypeScript du type métier Book. Où vit-elle ?",
+    "options": [
+      {"label":"features/book/types/book.ts","correct":false,"hint":"types/ est un bad segment name FSD."},
+      {"label":"features/book/ui/book.types.ts","correct":false,"hint":"ui/ = composants visuels."},
+      {"label":"features/book/model/book.types.ts","correct":true,"hint":"model/ = schémas, interfaces, business logic. Convention <entity>.types.ts."},
+      {"label":"features/book/api/book.ts","correct":false,"hint":"api/ traite des shapes externes (mappers), pas du modèle métier stable."}
+    ]
+  },
+  {
+    "q": "Tu écris filterBooksByQuery(books, q) — fonction de filtre, pas de state, pas d'effet. Hook ou pas hook ?",
+    "options": [
+      {"label":"Hook dans api/","correct":false,"hint":"Pas de fetch."},
+      {"label":"Hook dans model/","correct":false,"hint":"Pas de state → pas besoin d'un hook."},
+      {"label":"Fonction pure dans lib/","correct":true,"hint":"Pas de state ni effet → fonction pure. Caller décide d'appliquer useMemo."},
+      {"label":"Fonction pure dans ui/","correct":false,"hint":"ui/ = composants visuels."}
+    ]
+  },
+  {
+    "q": "Tu construis un composite BookCard consommé par BookGrid et BookCarousel mais jamais par une page. Comment l'exposer ?",
+    "options": [
+      {"label":"Export depuis features/book/index.ts","correct":false,"hint":"Si aucune page n'en a besoin, c'est interne — pas dans le public API."},
+      {"label":"Pas d'export, reste interne à la slice","correct":true,"hint":"Public API minimaliste. Atomes internes restent privés, consommés via composites exposés."},
+      {"label":"Export depuis shared/ui/","correct":false,"hint":"shared/ = transversal cross-slice. Ici BookCard est propre à book."},
+      {"label":"Export depuis app/","correct":false,"hint":"app/ = couche transversale (routes, providers, styles), pas des composants métier."}
+    ]
+  },
+  {
+    "q": "Demain on ajoute Google Books comme source. Combien de fichiers à modifier dans le reste de l'app ?",
+    "options": [
+      {"label":"Tous les composants qui affichent un livre","correct":false,"hint":"Non. Le modèle Book reste figé, les composants ignorent la source."},
+      {"label":"Tous les hooks qui consomment des livres","correct":false,"hint":"Non. Les hooks reçoivent du Book, peu importe la source."},
+      {"label":"Aucun — on crée juste api/mappers/googleBooks.ts","correct":true,"hint":"Anti-corruption layer. Le mapper est le seul endroit qui nomme la source. Rien d'autre ne change."},
+      {"label":"Le type Book lui-même","correct":false,"hint":"Le modèle Book reste stable, c'est tout son intérêt."}
+    ]
+  },
+  {
+    "q": "Tu écris dans une page : import { BookCover } from '@/features/book/ui/BookCover'. ESLint râle. Quelle règle viole l'import ?",
+    "options": [
+      {"label":"fsd/no-cross-slice-dependency","correct":false,"hint":"Cette règle bloque deux slices différentes — ici on est en cross-layer pas cross-slice."},
+      {"label":"fsd/no-public-api-sidestep","correct":true,"hint":"On bypasse l'index.ts de la slice pour atteindre directement un fichier interne."},
+      {"label":"fsd/no-relative-imports","correct":false,"hint":"L'import est absolu (@/...), pas relatif (../...)."},
+      {"label":"fsd/no-ui-in-business-logic","correct":false,"hint":"Cette règle protège model/ et api/ contre les imports de composants UI."}
+    ]
+  },
+  {
+    "q": "Pourquoi la règle fsd/no-public-api-sidestep existe (l'invariant qu'elle protège) ?",
+    "options": [
+      {"label":"Pour améliorer le tree-shaking et réduire la taille du bundle","correct":false,"hint":"Effet secondaire éventuel, pas l'objectif. La règle vise une garantie d'architecture."},
+      {"label":"Pour que le mainteneur d'une slice puisse refactor ses internes sans casser les consumers","correct":true,"hint":"C'est ça. Le public API (index.ts) est le contrat figé. Ce qu'il y a derrière peut bouger librement."},
+      {"label":"Pour respecter une convention TypeScript stricte","correct":false,"hint":"TypeScript n'impose pas cette règle."},
+      {"label":"Pour éviter les imports circulaires","correct":false,"hint":"Les imports circulaires sont un problème distinct, traité par d'autres règles."}
+    ]
+  }
+]
+</script>
+
+<script id="commits-data" type="application/json">
+[
+  {"hash":"c31c7f8","fullHash":"c31c7f8872a43a08a29b042404598d1797b162b4","intent":"primitives","title":"chore(book): add API/lib primitives for refactor","desc":"Pose les fondations : api/client.ts (BOOK_API_BASE), api/mappers/openLibrary.ts (mapper dédupliqué), lib/discoveryCache.ts. Aucun hook n'est encore touché.","color":"sky"},
+  {"hash":"7a4d711","fullHash":"7a4d711fd58c8538b45dae31097f7ca1a6a29b3d","intent":"reclasse","title":"refactor(book,navigation): migrate hooks and types to FSD segments","desc":"Le cœur du refactor. 9 hooks reclassés depuis hooks/ vers api/ / model/ / lib/ / mocks/. 2 types/ supprimés. Renames source-agnostic (useOpenLibraryBooks → useDiscoveryCategoryBooks).","color":"emerald"},
+  {"hash":"b425a4b","fullHash":"b425a4bbdef1421ea0a78012465282b75ab1d121","intent":"docs","title":"docs(book): add FSD hooks refactor reference","desc":"Premier jet du document de référence (ancien nom). Établit le vocabulaire et les règles pour les commits suivants.","color":"violet"},
+  {"hash":"f3cf604","fullHash":"f3cf60421816007da357909a81f58b5d995d51c2","intent":"enforce","title":"chore: add eslint-plugin-fsd-lint and wire FSD import rules","desc":"6 règles FSD activées en flat config. Détecte 47 violations à l'install. Le ménage qui suit (commits 5–7) les résout.","color":"amber"},
+  {"hash":"ed8e9af","fullHash":"ed8e9af2c02d0bcc1c1884051b5e58928862a122","intent":"composite","title":"refactor(book): introduce BookDetail composite widget","desc":"BookDetailPage cessait d'assembler 6 atomes UI. Le composite encapsule le layout. La page ne fait plus que du routing + états error/loading.","color":"emerald"},
+  {"hash":"41910cf","fullHash":"41910cfd640b9ab6c18cb7a26a3499afa46dff54","intent":"public API","title":"refactor: define minimalist FSD public APIs and migrate call sites","desc":"features/book/index.ts (15 exports) + features/navigation/index.ts (2 exports). Toutes les pages migrent vers les imports via public API. 0 violation no-public-api-sidestep restante.","color":"emerald"},
+  {"hash":"a77a7fb","fullHash":"a77a7fb8051d1dc7371a3f1ec3fab86a590280f8","intent":"cleanup","title":"chore: auto-fix import ordering and ignore CSS in no-relative-imports","desc":"Tournée auto-fix d'ordered-imports + ignore .css pour no-relative-imports (les CSS imports relatifs sont OK).","color":"sky"},
+  {"hash":"2ca12c0","fullHash":"2ca12c049b482f4b9fe50587b95bf40c2d435e96","intent":"app/","title":"refactor(app): split CSS and router into FSD segments (styles, routes)","desc":"src/index.css → src/app/styles/index.css. src/app/providers/router.tsx → src/app/routes/router.tsx. Distinction routes (config inerte) vs providers (wrappers React).","color":"violet"}
+]
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+<script>
+// ===== Counters =====
+function animateCounter(el) {
+  const target = parseInt(el.dataset.counter, 10);
+  if (isNaN(target)) return;
+  const duration = 1200;
+  const start = performance.now();
+  function tick(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.floor(eased * target);
+    if (t < 1) requestAnimationFrame(tick);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(tick);
+}
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+
+// ===== Mapping table =====
+const mappingData = JSON.parse(document.getElementById('mapping-data').textContent);
+const tbody = document.getElementById('map-tbody');
+const searchInput = document.getElementById('map-search');
+const filterButtons = document.querySelectorAll('#map-filters button');
+const emptyState = document.getElementById('map-empty');
+let activeSlice = 'all';
+
+function sliceLabel(s) {
+  if (s === 'book') return 'features/book';
+  if (s === 'navigation') return 'features/navigation';
+  if (s === 'app') return 'app/';
+  return s;
+}
+function sliceChip(s) {
+  const colors = { book: 'chip-emerald', navigation: 'chip-sky', app: 'chip-violet' };
+  return '<span class="chip ' + (colors[s] || '') + '">' + sliceLabel(s) + '</span>';
+}
+function typeChip(t) {
+  if (t.includes('split')) return 'chip-amber';
+  if (t.includes('ajout')) return 'chip-emerald';
+  if (t.includes('rename')) return 'chip-sky';
+  if (t.includes('composite')) return 'chip-violet';
+  return '';
+}
+function renderMapping() {
+  const q = searchInput.value.trim().toLowerCase();
+  const filtered = mappingData.filter(row => {
+    if (activeSlice !== 'all' && row.slice !== activeSlice) return false;
+    if (!q) return true;
+    return (row.before + ' ' + row.after + ' ' + row.why + ' ' + row.type).toLowerCase().includes(q);
+  });
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    emptyState.classList.remove('hidden');
+    return;
+  }
+  emptyState.classList.add('hidden');
+  tbody.innerHTML = filtered.map(row => {
+    return '<tr class="border-b border-[var(--border)] card-hover">' +
+      '<td class="px-4 py-3">' + sliceChip(row.slice) + '</td>' +
+      '<td class="px-4 py-3 mono text-xs text-[var(--warn)] strikethrough">' + escapeHtml(row.before) + '</td>' +
+      '<td class="px-4 py-3 mono text-xs text-[var(--accent)]">' + escapeHtml(row.after) + '</td>' +
+      '<td class="px-4 py-3"><span class="chip ' + typeChip(row.type) + '">' + escapeHtml(row.type) + '</span></td>' +
+      '<td class="px-4 py-3 text-[var(--text-dim)] text-xs max-w-md">' + escapeHtml(row.why) + '</td>' +
+    '</tr>';
+  }).join('');
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+searchInput.addEventListener('input', renderMapping);
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterButtons.forEach(b => b.setAttribute('aria-selected', 'false'));
+    btn.setAttribute('aria-selected', 'true');
+    activeSlice = btn.dataset.slice;
+    renderMapping();
+  });
+});
+renderMapping();
+
+// ===== Tabs (axes + diffs) =====
+function setupTabs(containerSelector, panelClass, attr) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
+  const buttons = container.querySelectorAll('button[role="tab"]');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset[attr];
+      buttons.forEach(b => b.setAttribute('aria-selected', b.dataset[attr] === target ? 'true' : 'false'));
+      document.querySelectorAll('.' + panelClass).forEach(p => {
+        if (p.dataset[attr] === target) p.classList.remove('hidden');
+        else p.classList.add('hidden');
+      });
+    });
+  });
+}
+setupTabs('#axis-tabs', 'axis-panel', 'axis');
+setupTabs('#diff-tabs', 'diff-panel', 'diff');
+
+// ===== Nav scroll spy =====
+const navLinks = document.querySelectorAll('#topnav .nav-link');
+const sections = ['vocab','tree','mapping','axes','diffs','acl','quiz','timeline'].map(id => document.getElementById(id));
+const spyObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => s && spyObserver.observe(s));
+
+// ===== Quiz =====
+const quizData = JSON.parse(document.getElementById('quiz-data').textContent);
+const quizContainer = document.getElementById('quiz-container');
+const quizDone = document.getElementById('quiz-done');
+const quizProgress = document.getElementById('quiz-progress');
+const quizScoreEl = document.getElementById('quiz-score');
+let quizAnswered = 0;
+let quizScore = 0;
+
+function renderQuiz() {
+  quizContainer.innerHTML = quizData.map((item, idx) => {
+    return '<div class="card p-6" data-q="' + idx + '">' +
+      '<div class="flex items-start gap-3 mb-4">' +
+        '<span class="chip chip-violet shrink-0">Q' + (idx + 1) + '</span>' +
+        '<div class="font-semibold text-[var(--text)]">' + escapeHtml(item.q) + '</div>' +
+      '</div>' +
+      '<div class="grid md:grid-cols-2 gap-3">' +
+        item.options.map((opt, i) =>
+          '<button class="quiz-option text-left p-4 rounded-lg" data-q="' + idx + '" data-opt="' + i + '">' +
+            '<div class="flex items-start justify-between gap-3">' +
+              '<div class="flex items-start gap-2 flex-1 min-w-0">' +
+                '<svg class="quiz-icon quiz-icon-check mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>' +
+                '<svg class="quiz-icon quiz-icon-cross mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+                '<div class="mono text-sm font-medium">' + escapeHtml(opt.label) + '</div>' +
+              '</div>' +
+              '<div class="flex flex-col gap-1 items-end">' +
+                '<span class="quiz-badge quiz-badge-selected">ta réponse</span>' +
+                '<span class="quiz-badge quiz-badge-correct">bonne réponse</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="text-xs text-[var(--text-faint)] mt-2 hint hidden">' + escapeHtml(opt.hint) + '</div>' +
+          '</button>'
+        ).join('') +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  quizContainer.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const qIdx = parseInt(btn.dataset.q, 10);
+      const optIdx = parseInt(btn.dataset.opt, 10);
+      const qCard = btn.parentElement.closest('[data-q]');
+      if (qCard.dataset.answered === '1') return;
+      qCard.dataset.answered = '1';
+      const correct = quizData[qIdx].options[optIdx].correct;
+      if (correct) quizScore++;
+      qCard.querySelectorAll('.quiz-option').forEach((b, i) => {
+        b.classList.add('disabled');
+        const isCorrect = quizData[qIdx].options[i].correct;
+        if (isCorrect) b.classList.add('correct');
+        else if (i === optIdx) b.classList.add('wrong');
+        if (i === optIdx) b.classList.add('selected');
+        b.querySelector('.hint').classList.remove('hidden');
+      });
+      quizAnswered++;
+      quizScoreEl.textContent = quizScore + ' / ' + quizData.length;
+      quizProgress.style.width = (quizAnswered / quizData.length * 100) + '%';
+      if (quizAnswered === quizData.length) {
+        quizDone.classList.remove('hidden');
+      }
+    });
+  });
+}
+renderQuiz();
+
+// ===== Timeline =====
+const GH_BASE = 'https://github.com/SIMPLON-DIST-CDA-260316/bibliomaniac-agathe-julien-raphael';
+const commits = JSON.parse(document.getElementById('commits-data').textContent);
+const timelineEl = document.getElementById('timeline-list');
+const colorMap = {
+  emerald: 'chip-emerald',
+  sky: 'chip-sky',
+  violet: 'chip-violet',
+  amber: 'chip-amber'
+};
+timelineEl.innerHTML = commits.map((c, i) => {
+  return '<a href="' + GH_BASE + '/commit/' + escapeHtml(c.hash) + '" target="_blank" rel="noopener noreferrer" class="commit-card" data-color="' + escapeHtml(c.color) + '">' +
+    '<div class="commit-number" data-color="' + escapeHtml(c.color) + '">' + (i + 1) + '</div>' +
+    '<div class="flex-1 min-w-0">' +
+      '<div class="flex flex-wrap items-center gap-2 mb-2">' +
+        '<span class="chip ' + (colorMap[c.color] || '') + '">' + escapeHtml(c.intent) + '</span>' +
+        '<code class="mono text-xs text-[var(--text-faint)]">' + escapeHtml(c.hash) + '</code>' +
+        '<span class="text-xs text-[var(--text-faint)] ml-auto mono inline-flex items-center gap-1.5">' + (i + 1) + ' / ' + commits.length +
+          '<svg class="commit-link-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>' +
+        '</span>' +
+      '</div>' +
+      '<div class="font-semibold mb-2 mono text-sm">' + escapeHtml(c.title) + '</div>' +
+      '<p class="text-sm text-[var(--text-dim)]">' + escapeHtml(c.desc) + '</p>' +
+    '</div>' +
+  '</a>';
+}).join('');
+
+// ===== Theme toggle =====
+const themeToggle = document.getElementById('theme-toggle');
+themeToggle.addEventListener('click', () => {
+  const current = document.documentElement.dataset.theme || 'dark';
+  const next = current === 'light' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('fsd-doc-theme', next); } catch (e) {}
+});
+
+// Trigger Prism after dynamic content is in place
+if (window.Prism) Prism.highlightAll();
+</script>
+
+</body>
+</html>
