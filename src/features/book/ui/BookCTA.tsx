@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   BookAlert,
   BookCheck,
@@ -101,6 +101,7 @@ export function BookCTA({
   className,
 }: BookCTAProps) {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
   const { label, icon: Icon, variant, extraClass } = presentationFor(state)
 
   const isUnavailable = state.kind === 'unavailable'
@@ -117,9 +118,20 @@ export function BookCTA({
     onActiveStateClick?.()
   }
 
+  function handleDrawerOpenChange(open: boolean) {
+    setDrawerOpen(open)
+    if (!open) {
+      // Vaul restores focus on Escape but not on DrawerClose / pointer-out
+      // closures. Route every close through the trigger so WAI-ARIA dialog
+      // semantics hold (focus returns to the element that opened the dialog).
+      requestAnimationFrame(() => triggerRef.current?.focus())
+    }
+  }
+
   return (
     <>
       <Button
+        ref={triggerRef}
         type="button"
         variant={variant}
         size="lg"
@@ -134,7 +146,7 @@ export function BookCTA({
       {isAvailable && (
         <BookReserveConfirmDrawer
           open={drawerOpen}
-          onOpenChange={setDrawerOpen}
+          onOpenChange={handleDrawerOpenChange}
           bookTitle={bookTitle}
           onConfirm={onReserveConfirm}
         />
