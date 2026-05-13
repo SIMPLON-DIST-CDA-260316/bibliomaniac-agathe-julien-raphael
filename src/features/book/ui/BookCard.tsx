@@ -1,32 +1,63 @@
+import type { KeyboardEvent } from 'react'
 import type { Book } from '../types/book'
 
 interface BookCardProps {
   book: Book
   onClick?: () => void
+  showAuthor?: boolean
 }
 
-export function BookCard({ book, onClick }: BookCardProps) {
+export function BookCard({ book, onClick, showAuthor = true }: BookCardProps) {
+  const interactive = onClick != null
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (!interactive) return
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onClick?.()
+    }
+  }
+
+  const ariaLabel =
+    book.ariaLabel ??
+    (book.author ? `${book.title} par ${book.author}` : book.title)
+
   return (
-    <div className="group flex cursor-pointer flex-col gap-3" onClick={onClick}>
-      {/* Image de couverture */}
+    <div
+      className={
+        interactive
+          ? 'group focus-visible:ring-primary flex cursor-pointer flex-col gap-3 focus:outline-none focus-visible:ring-2'
+          : 'group flex flex-col gap-3'
+      }
+      onClick={onClick}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onKeyDown={interactive ? handleKeyDown : undefined}
+      aria-label={interactive ? ariaLabel : undefined}
+    >
       <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-gray-200">
         <img
           src={book.coverImage}
           alt={book.title}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        {/* Overlay au survol */}
         <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
       </div>
 
-      {/* Titre et auteur */}
       <div className="px-1 pb-2">
         <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
           {book.title}
         </h3>
-        <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
-          {book.author}
-        </p>
+        {book.tomeNumber != null && (
+          <p className="mt-0.5 line-clamp-1 text-[10px] text-gray-500 sm:text-xs lg:text-sm">
+            Tome {book.tomeNumber}
+          </p>
+        )}
+        {showAuthor && (
+          <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
+            {book.author}
+          </p>
+        )}
       </div>
     </div>
   )
