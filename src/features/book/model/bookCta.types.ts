@@ -14,9 +14,3 @@ export type BookCTAState =
   | { kind: 'overdue' }
 
 export type BookCTAKind = BookCTAState['kind']
-
-/**
- * Threshold (in days) below which a 'borrowed' variant switches
- * to warning visual treatment. Pure UI concern.
- */
-export const BOOK_CTA_ALERT_THRESHOLD_DAYS = 3

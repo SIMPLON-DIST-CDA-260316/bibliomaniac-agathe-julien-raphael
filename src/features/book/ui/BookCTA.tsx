@@ -12,11 +12,11 @@ import {
 import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils'
 
-import {
-  BOOK_CTA_ALERT_THRESHOLD_DAYS,
-  type BookCTAState,
-} from '@/features/book/model/bookCta.types'
+import type { BookCTAState } from '@/features/book/model/bookCta.types'
 import { BookReserveConfirmDrawer } from '@/features/book/ui/cta-drawers/BookReserveConfirmDrawer'
+
+/** Threshold (in days) below which a 'borrowed' variant switches to warning treatment. */
+const ALERT_THRESHOLD_DAYS = 3
 
 // Local enum mirrors the variants declared in `src/shared/ui/button.tsx` CVA.
 // Kept duplicated (instead of `VariantProps<typeof buttonVariants>`) to avoid
@@ -64,7 +64,7 @@ function presentationFor(state: BookCTAState): VariantPresentation {
     case 'ready':
       return { label: 'À retirer', icon: BookUp, variant: 'emphasis' }
     case 'borrowed': {
-      const alert = state.daysLeft <= BOOK_CTA_ALERT_THRESHOLD_DAYS
+      const alert = state.daysLeft <= ALERT_THRESHOLD_DAYS
       return {
         label: borrowedLabel(state.daysLeft),
         icon: ClockFading,
