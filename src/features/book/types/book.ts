@@ -3,4 +3,6 @@ export interface Book {
   title: string
   author: string
   coverImage: string
+  tomeNumber?: number
+  ariaLabel?: string
 }
