@@ -38,7 +38,12 @@ export default defineConfig([
       'fsd/no-public-api-sidestep': ['error', { alias: fsdAlias }],
       'fsd/no-relative-imports': [
         'error',
-        { alias: fsdAlias, allowSameSlice: true, allowTypeImports: false },
+        {
+          alias: fsdAlias,
+          allowSameSlice: true,
+          allowTypeImports: false,
+          ignoreImportPatterns: ['\\.css$'],
+        },
       ],
       'fsd/no-ui-in-business-logic': ['error', { alias: fsdAlias }],
       'fsd/ordered-imports': ['warn', { alias: fsdAlias }],

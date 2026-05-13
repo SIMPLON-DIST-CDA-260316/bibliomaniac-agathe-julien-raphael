@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
-import type { Book } from '../model/book.types'
 import { Search } from 'lucide-react'
+import { Link } from 'react-router'
+import type { Book } from '../model/book.types'
 import { filterBooksByQuery } from '../lib/filterBooksByQuery'
 import { Popover, PopoverAnchor, PopoverContent } from '@/shared/ui/popover'
-import { Link } from 'react-router'
 
 interface SearchBarProps {
   books: Book[]

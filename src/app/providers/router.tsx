@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router'
+import MainLayout from '@/app/layouts/MainLayout'
 import Home from '@/pages/Home'
 import { BookDetailPage } from '@/pages/BookDetailPage'
-import MainLayout from '@/app/layouts/MainLayout'
 import Login from '@/pages/Login.tsx'
 import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'

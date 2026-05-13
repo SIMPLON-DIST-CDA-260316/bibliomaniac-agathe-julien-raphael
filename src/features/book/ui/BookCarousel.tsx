@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { cn } from '@/shared/lib/utils.ts'
-import { Button } from '@/shared/ui/button.tsx'
 import useEmblaCarousel from 'embla-carousel-react'
 import type { Book } from '../model/book.types'
 import { BookCard } from './BookCard.tsx'
+import { cn } from '@/shared/lib/utils.ts'
+import { Button } from '@/shared/ui/button.tsx'
 
 interface BookCarouselProps {
   books: Book[]

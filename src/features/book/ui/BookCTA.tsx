@@ -9,11 +9,11 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-import { Button } from '@/shared/ui/button'
-import { cn } from '@/shared/lib/utils'
-
 import type { BookCTAState } from '@/features/book/model/bookCta.types'
 import { BookReserveConfirmDrawer } from '@/features/book/ui/cta-drawers/BookReserveConfirmDrawer'
+
+import { Button } from '@/shared/ui/button'
+import { cn } from '@/shared/lib/utils'
 
 /** Threshold (in days) below which a 'borrowed' variant switches to warning treatment. */
 const ALERT_THRESHOLD_DAYS = 3

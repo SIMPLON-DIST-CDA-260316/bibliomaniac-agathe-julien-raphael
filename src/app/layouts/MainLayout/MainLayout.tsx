@@ -1,7 +1,7 @@
 import { Outlet, ScrollRestoration } from 'react-router'
+import { useState } from 'react'
 
 import Navbar from './Navbar.tsx'
-import { useState } from 'react'
 
 export default function MainLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
