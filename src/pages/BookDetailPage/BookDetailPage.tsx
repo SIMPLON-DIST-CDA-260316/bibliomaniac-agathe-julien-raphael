@@ -8,6 +8,7 @@ import { BookSummary } from '@/features/book/ui/BookSummary'
 import { BookmarkButton } from '@/features/book/ui/BookmarkButton'
 import { StatBadgeGroup } from '@/features/book/ui/StatBadgeGroup'
 import { useBookDetail } from '@/features/book/hooks/useBookDetail'
+import { BookRelatedSections } from '@/features/book/ui/BookRelatedSections'
 import { BackButton } from '@/shared/ui/back-button'
 import { Button } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -29,61 +30,62 @@ export function BookDetailPage() {
   if (error || !book) return <BookDetailNotFoundState />
 
   return (
-    <div className="mx-auto max-w-md px-4">
-      <div className="flex h-[calc(100svh-var(--navbar-height))] flex-col gap-5 py-6">
-        <div className="relative h-[clamp(180px,35svh,360px)] shrink-0">
-          <div className="absolute top-0 left-0 z-10">
-            <BackButton />
+    <>
+      <div className="mx-auto max-w-md px-4">
+        <div className="flex h-[calc(100svh-var(--navbar-height))] flex-col gap-5 py-6">
+          <div className="relative h-[clamp(180px,35svh,360px)] shrink-0">
+            <div className="absolute top-0 left-0 z-10">
+              <BackButton />
+            </div>
+            <BookCover
+              coverUrl={book.coverUrl}
+              title={book.title}
+              className="h-full w-auto"
+            />
           </div>
-          <BookCover
-            coverUrl={book.coverUrl}
-            title={book.title}
-            className="h-full w-auto"
+
+          <div className="flex shrink-0 items-start justify-between gap-2">
+            <BookMeta
+              title={book.title}
+              author={book.author}
+              authorId={book.authorId}
+              genre={book.genre}
+              language={book.language}
+              publishedDate={book.publishedDate}
+            />
+            <BookmarkButton />
+          </div>
+
+          <StatBadgeGroup
+            copies={book.copies}
+            pageCount={book.pageCount}
+            rating={book.rating}
+          />
+
+          <div className="min-h-0 flex-1">
+            <BookSummary summary={book.summary} />
+          </div>
+
+          <BookCTA
+            state={{ kind: 'available' }}
+            bookTitle={book.title}
+            onReserveConfirm={() => {
+              // TODO #33 — wire to reservation mutation
+              console.log('[BookCTA] reserve confirmed for', book.id)
+            }}
+            onActiveStateClick={() => {
+              // TODO #33 — wire to navigation
+              console.log('[BookCTA] active state click', book.id)
+            }}
+            className="shrink-0"
           />
         </div>
-
-        <div className="flex shrink-0 items-start justify-between gap-2">
-          <BookMeta
-            title={book.title}
-            author={book.author}
-            authorId={book.authorId}
-            genre={book.genre}
-            language={book.language}
-            publishedDate={book.publishedDate}
-          />
-          <BookmarkButton />
-        </div>
-
-        <StatBadgeGroup
-          copies={book.copies}
-          pageCount={book.pageCount}
-          rating={book.rating}
-        />
-
-        <div className="min-h-0 flex-1">
-          <BookSummary summary={book.summary} />
-        </div>
-
-        <BookCTA
-          state={{ kind: 'available' }}
-          bookTitle={book.title}
-          onReserveConfirm={() => {
-            // TODO #33 — wire to reservation mutation
-            console.log('[BookCTA] reserve confirmed for', book.id)
-          }}
-          onActiveStateClick={() => {
-            // TODO #33 — wire to navigation
-            console.log('[BookCTA] active state click', book.id)
-          }}
-          className="shrink-0"
-        />
       </div>
 
-      {/* TODO US7 (#16): replace placeholders with related-books carousel */}
-      <div className="bg-primary/20 h-48 rounded-xl" />
-      <div className="bg-accent/20 h-48 rounded-xl" />
-      <div className="bg-primary/10 h-48 rounded-xl" />
-    </div>
+      <div className="mx-auto max-w-screen-xl px-4">
+        <BookRelatedSections book={book} />
+      </div>
+    </>
   )
 }
 
