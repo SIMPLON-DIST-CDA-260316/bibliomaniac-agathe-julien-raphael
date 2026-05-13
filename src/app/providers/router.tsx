@@ -7,6 +7,7 @@ import Login from '@/pages/Login.tsx'
 import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
+import { DiscoveryPage } from '@/pages/DiscoveryPage'
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: '/library/:shelfSlug',
         element: <UserShelfPage />,
+      },
+      {
+        path: '/discover/:categorySlug',
+        element: <DiscoveryPage />,
       },
       {
         path: '/profile',
