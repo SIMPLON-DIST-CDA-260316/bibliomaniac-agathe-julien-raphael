@@ -1,3 +1,4 @@
+import { useSampleBooks } from '@/features/book/hooks/useSampleBooks'
 import { useSampleBooksByShelf } from '@/features/book/hooks/useSampleBooksByShelf'
 import {
   SHELF_LABELS,
@@ -5,15 +6,21 @@ import {
   shelfToSlug,
 } from '@/features/book/lib/shelf'
 import { BookSection } from '@/features/book/ui/BookSection'
+import { SearchBar } from '@/features/book/ui/SearchBar'
 
 export function UserLibraryPage() {
   const shelfBooks = useSampleBooksByShelf()
+  const allBooks = useSampleBooks()
   return (
     <>
       <section className="mx-auto px-4 pt-4 pb-24">
         <h1 className="text-primary py-3 text-2xl font-bold">
           Ma Bibliothèque
         </h1>
+        <SearchBar
+          books={allBooks}
+          placeholder="Rechercher dans ma bibliothèque ..."
+        />
         {SHELF_ORDER.map((shelf) => (
           <BookSection
             key={shelf}
