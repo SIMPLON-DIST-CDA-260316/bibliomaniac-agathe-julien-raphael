@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router'
-
 import Home from '@/pages/Home'
 import { BookDetailPage } from '@/pages/BookDetailPage'
 import MainLayout from '@/app/layouts/MainLayout'
@@ -9,6 +8,7 @@ import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
 import { DiscoveryPage } from '@/pages/DiscoveryPage'
 import { BookCTASandbox } from '@/pages/dev/BookCTASandbox'
+import { UserLibrarySearchPage } from '@/pages/UserLibrarySearchPage'
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +30,10 @@ export const router = createBrowserRouter([
       {
         path: '/library',
         element: <UserLibraryPage />,
+      },
+      {
+        path: '/library/search',
+        element: <UserLibrarySearchPage />,
       },
       {
         path: '/library/:shelfSlug',
