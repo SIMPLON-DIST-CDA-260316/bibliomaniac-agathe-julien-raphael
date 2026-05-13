@@ -6,18 +6,23 @@ import { cn } from '@/shared/lib/utils'
 /**
  * Vaul applies `aria-hidden="true"` on the app root when a Drawer opens but
  * leaves it focusable, so Tab navigation still walks the page behind. This
- * hook sets the native `inert` attribute on #root while the Drawer content
- * is mounted, which blocks Tab and pointer interaction outside the Drawer.
+ * hook sets the native `inert` attribute on #root while `open === true`,
+ * which blocks Tab and pointer interaction outside the Drawer.
+ *
+ * Pass the same boolean you pass to `<Drawer open={...}>` so the cleanup
+ * tracks the controlled state — relying on mount/unmount alone is fragile
+ * across HMR reloads and vaul's exit animation.
  */
-function useInertAppRootWhileMounted() {
+export function useInertWhileDrawerOpen(open: boolean) {
   React.useEffect(() => {
+    if (!open) return
     const root = document.getElementById('root')
     if (!root) return
     root.setAttribute('inert', '')
     return () => {
       root.removeAttribute('inert')
     }
-  }, [])
+  }, [open])
 }
 
 function Drawer({
@@ -65,8 +70,6 @@ function DrawerContent({
   children,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content>) {
-  useInertAppRootWhileMounted()
-
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />

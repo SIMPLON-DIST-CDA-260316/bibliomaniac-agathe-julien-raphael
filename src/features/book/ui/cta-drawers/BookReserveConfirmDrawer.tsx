@@ -6,6 +6,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  useInertWhileDrawerOpen,
 } from '@/shared/ui/drawer'
 import { Button } from '@/shared/ui/button'
 
@@ -24,6 +25,8 @@ export function BookReserveConfirmDrawer({
   bookTitle,
   onConfirm,
 }: BookReserveConfirmDrawerProps) {
+  useInertWhileDrawerOpen(open)
+
   function handleConfirm() {
     onOpenChange(false)
     onConfirm()
