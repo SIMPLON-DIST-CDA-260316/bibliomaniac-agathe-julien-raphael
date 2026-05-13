@@ -13,11 +13,19 @@ export interface RelatedSection {
   cardProps: { showAuthor: boolean }
 }
 
-const SECTION_TITLES: Record<RelatedSectionKind, string> = {
-  series: 'Dans la même série',
-  author: 'Du même auteur',
-  collection: 'Dans la même collection',
-  genre: 'Dans le même genre',
+function sectionTitle(kind: RelatedSectionKind, currentBook: RichBook): string {
+  switch (kind) {
+    case 'series':
+      return currentBook.seriesTitle
+        ? `Dans la série ${currentBook.seriesTitle}`
+        : 'Dans la même série'
+    case 'author':
+      return 'Du même auteur'
+    case 'collection':
+      return 'Dans la même collection'
+    case 'genre':
+      return 'Dans le même genre'
+  }
 }
 
 const SECTION_SHOW_AUTHOR: Record<RelatedSectionKind, boolean> = {
@@ -38,33 +46,29 @@ const SECTION_CAP = 20
 
 function buildAriaLabel(
   kind: RelatedSectionKind,
-  title: string,
+  richTitle: string,
   author: string,
-  tomeNumber: number | null,
 ): string {
-  if (kind === 'series' && tomeNumber != null) {
-    return `${title}, tome ${tomeNumber}, par ${author}`
-  }
   if (kind === 'author') {
-    return title
+    return richTitle
   }
-  return `${title} par ${author}`
+  return author ? `${richTitle} par ${author}` : richTitle
 }
 
 function toMinimal(rich: RichBook, kind: RelatedSectionKind): MinimalBook {
   const author = rich.author ?? ''
   const coverImage = rich.coverUrl ?? ''
-  const minimal: MinimalBook = {
+  const displayTitle =
+    kind === 'series' && rich.tomeNumber != null
+      ? `Tome ${rich.tomeNumber}`
+      : rich.title
+  return {
     id: rich.id,
-    title: rich.title,
+    title: displayTitle,
     author,
     coverImage,
+    ariaLabel: buildAriaLabel(kind, rich.title, author),
   }
-  if (kind === 'series' && rich.tomeNumber != null) {
-    minimal.tomeNumber = rich.tomeNumber
-  }
-  minimal.ariaLabel = buildAriaLabel(kind, rich.title, author, rich.tomeNumber)
-  return minimal
 }
 
 function matches(
@@ -100,7 +104,7 @@ export function useRelatedBooks(currentBook: RichBook): RelatedSection[] {
       const capped = matched.slice(0, SECTION_CAP)
       sections.push({
         kind,
-        title: SECTION_TITLES[kind],
+        title: sectionTitle(kind, currentBook),
         books: capped.map((b) => toMinimal(b, kind)),
         cardProps: { showAuthor: SECTION_SHOW_AUTHOR[kind] },
       })
