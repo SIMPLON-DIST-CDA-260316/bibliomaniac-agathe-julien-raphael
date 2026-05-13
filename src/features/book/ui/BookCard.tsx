@@ -1,13 +1,19 @@
 import type { KeyboardEvent } from 'react'
-import type { Book } from '../types/book'
+import type { Book } from '../model/book.types'
 
-interface BookCardProps {
+export interface BookCardProps {
   book: Book
   onClick?: () => void
   showAuthor?: boolean
+  compactTitle?: boolean
 }
 
-export function BookCard({ book, onClick, showAuthor = true }: BookCardProps) {
+export function BookCard({
+  book,
+  onClick,
+  showAuthor = true,
+  compactTitle = false,
+}: BookCardProps) {
   const interactive = onClick != null
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -18,9 +24,13 @@ export function BookCard({ book, onClick, showAuthor = true }: BookCardProps) {
     }
   }
 
+  const displayTitle =
+    compactTitle && book.tomeNumber != null
+      ? `Tome ${book.tomeNumber}`
+      : book.title
+
   const ariaLabel =
-    book.ariaLabel ??
-    (book.author ? `${book.title} par ${book.author}` : book.title)
+    showAuthor && book.author ? `${book.title} par ${book.author}` : book.title
 
   return (
     <div
@@ -37,7 +47,7 @@ export function BookCard({ book, onClick, showAuthor = true }: BookCardProps) {
     >
       <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-gray-200">
         <img
-          src={book.coverImage}
+          src={book.coverUrl ?? ''}
           alt={book.title}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
@@ -46,14 +56,9 @@ export function BookCard({ book, onClick, showAuthor = true }: BookCardProps) {
 
       <div className="px-1 pb-2">
         <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
-          {book.title}
+          {displayTitle}
         </h3>
-        {book.tomeNumber != null && (
-          <p className="mt-0.5 line-clamp-1 text-[10px] text-gray-500 sm:text-xs lg:text-sm">
-            Tome {book.tomeNumber}
-          </p>
-        )}
-        {showAuthor && (
+        {showAuthor && book.author && (
           <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
             {book.author}
           </p>
