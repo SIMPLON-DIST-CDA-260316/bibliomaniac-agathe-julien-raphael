@@ -1,11 +1,11 @@
-import { useSampleBooksByShelf } from '@/features/book/hooks/useSampleBooksByShelf'
+import { useUserShelves } from '@/features/book/api/useUserShelves'
 import { SHELF_LABELS, slugToShelf } from '@/features/book/lib/shelf'
 import { BookGrid } from '@/features/book/ui/BookGrid'
 import { Navigate, useParams } from 'react-router'
 
 export function UserShelfPage() {
   const { shelfSlug } = useParams<{ shelfSlug: string }>()
-  const shelfBooks = useSampleBooksByShelf()
+  const { data: shelfBooks } = useUserShelves()
   const shelf = shelfSlug ? slugToShelf(shelfSlug) : undefined
   if (!shelf) return <Navigate to="/library" replace />
   return (

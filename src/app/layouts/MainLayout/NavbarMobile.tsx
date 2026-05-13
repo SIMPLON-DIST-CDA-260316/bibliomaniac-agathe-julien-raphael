@@ -1,6 +1,7 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router'
-import { useFilteredLinks } from '@/features/navigation/hooks/useFilteredLinks'
-import type { NavLink as NavLinkType } from '@/features/navigation/types/navigation'
+import { filterLinksByAuth } from '@/features/navigation/lib/filterLinksByAuth'
+import type { NavLink as NavLinkType } from '@/features/navigation/model/navigation.types'
 
 export default function NavbarMobile({
   links,
@@ -9,7 +10,10 @@ export default function NavbarMobile({
   links: NavLinkType[]
   isLoggedIn: boolean
 }) {
-  const filteredLinks = useFilteredLinks(links, isLoggedIn)
+  const filteredLinks = useMemo(
+    () => filterLinksByAuth(links, isLoggedIn),
+    [links, isLoggedIn],
+  )
 
   return (
     <nav className="border-primary/20 fixed right-0 bottom-0 left-0 z-50 border-t bg-[#FFEBD6] px-2 py-2 md:hidden">

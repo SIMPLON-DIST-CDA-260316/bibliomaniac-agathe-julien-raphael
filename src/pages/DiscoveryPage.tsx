@@ -3,12 +3,12 @@ import {
   DISCOVERY_LABELS,
   slugToDiscovery,
 } from '@/features/book/lib/categories'
-import { useDiscoveryBooks } from '@/features/book/hooks/useDiscoveryBooks'
+import { useDiscoveryBooks } from '@/features/book/model/useDiscoveryBooks'
 import { BookGrid } from '@/features/book/ui/BookGrid'
 
 export function DiscoveryPage() {
   const { categorySlug } = useParams<{ categorySlug: string }>()
-  const discoveryBooks = useDiscoveryBooks()
+  const { data: discoveryBooks } = useDiscoveryBooks()
   const category = categorySlug ? slugToDiscovery(categorySlug) : undefined
 
   if (!category) return <Navigate to="/" replace />

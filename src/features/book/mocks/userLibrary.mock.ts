@@ -1,7 +1,6 @@
-import { useMemo } from 'react'
 import type { Book } from '../model/book.types'
 
-const SAMPLE_BOOKS: Book[] = [
+export const MOCK_USER_LIBRARY: Book[] = [
   {
     id: '1',
     title: 'Le Seigneur des Anneaux',
@@ -123,7 +122,3 @@ const SAMPLE_BOOKS: Book[] = [
     collectionLabel: null,
   },
 ]
-
-export function useSampleBooks(): Book[] {
-  return useMemo(() => SAMPLE_BOOKS, [])
-}

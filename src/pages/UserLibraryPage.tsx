@@ -1,5 +1,5 @@
-import { useSampleBooks } from '@/features/book/hooks/useSampleBooks'
-import { useSampleBooksByShelf } from '@/features/book/hooks/useSampleBooksByShelf'
+import { useUserLibrary } from '@/features/book/api/useUserLibrary'
+import { useUserShelves } from '@/features/book/api/useUserShelves'
 import {
   SHELF_LABELS,
   SHELF_ORDER,
@@ -9,8 +9,8 @@ import { BookSection } from '@/features/book/ui/BookSection'
 import { SearchBar } from '@/features/book/ui/SearchBar'
 
 export function UserLibraryPage() {
-  const shelfBooks = useSampleBooksByShelf()
-  const allBooks = useSampleBooks()
+  const { data: shelfBooks } = useUserShelves()
+  const { data: allBooks } = useUserLibrary()
   return (
     <>
       <section className="mx-auto px-4 pt-4 pb-24">

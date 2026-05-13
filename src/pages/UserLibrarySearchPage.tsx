@@ -1,5 +1,6 @@
-import { useBookSearch } from '@/features/book/hooks/useBookSearch'
-import { useSampleBooks } from '@/features/book/hooks/useSampleBooks'
+import { useMemo } from 'react'
+import { useUserLibrary } from '@/features/book/api/useUserLibrary'
+import { filterBooksByQuery } from '@/features/book/lib/filterBooksByQuery'
 import { BookGrid } from '@/features/book/ui/BookGrid'
 import { BackButton } from '@/shared/ui/back-button'
 import { useSearchParams } from 'react-router'
@@ -7,8 +8,11 @@ import { useSearchParams } from 'react-router'
 export function UserLibrarySearchPage() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
-  const books = useSampleBooks()
-  const results = useBookSearch(books, query)
+  const { data: books } = useUserLibrary()
+  const results = useMemo(
+    () => filterBooksByQuery(books, query),
+    [books, query],
+  )
   return (
     <section className="mx-auto px-4 pt-4 pb-24">
       <div className="flex items-center gap-3 py-3">

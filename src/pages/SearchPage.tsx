@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router'
-import { useSearchBooks } from '@/features/book/hooks/useSearchBooks'
+import { useBookSearch } from '@/features/book/api/useBookSearch'
 import { BookGrid } from '@/features/book/ui/BookGrid'
 import { Spinner } from '@/shared/ui/spinner.tsx'
 import { BackButton } from '@/shared/ui/back-button.tsx'
@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 export function SearchPage() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('q') || ''
-  const { books, loading, error, search } = useSearchBooks()
+  const { data: books, isLoading, error, search } = useBookSearch()
 
   useEffect(() => {
     if (query) {
@@ -31,7 +31,7 @@ export function SearchPage() {
         </p>
       )}
 
-      {loading && (
+      {isLoading && (
         <div className="flex items-center justify-center py-12">
           <Spinner />
         </div>
@@ -43,7 +43,7 @@ export function SearchPage() {
         </div>
       )}
 
-      {books.length > 0 && !loading && (
+      {books.length > 0 && !isLoading && (
         <div>
           <p className="text-muted-foreground mb-4">
             {books.length} livre(s) trouvé(s)
@@ -52,7 +52,7 @@ export function SearchPage() {
         </div>
       )}
 
-      {books.length === 0 && !loading && !error && query && (
+      {books.length === 0 && !isLoading && !error && query && (
         <p className="text-muted-foreground py-8 text-center">
           Aucun livre trouvé pour "{query}". Essayez une autre recherche.
         </p>

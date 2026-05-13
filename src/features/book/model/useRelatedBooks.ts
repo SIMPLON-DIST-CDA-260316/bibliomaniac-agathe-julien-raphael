@@ -4,8 +4,8 @@ import {
   RELATED_SECTIONS,
   RELATED_SECTION_CAP,
 } from '../config/relatedSections'
-import type { Book } from '../model/book.types'
-import type { RelatedSection } from '../model/relatedBooks.types'
+import type { Book } from './book.types'
+import type { RelatedSection } from './relatedBooks.types'
 import { MOCK_BOOKS_BY_ID } from '../mocks/books.mock'
 
 export function useRelatedBooks(currentBook: Book): RelatedSection[] {

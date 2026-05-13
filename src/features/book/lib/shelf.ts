@@ -1,4 +1,4 @@
-import type { BookShelf, BookShelfSlug } from '../types/bookShelf'
+import type { BookShelf, BookShelfSlug } from '../model/bookShelf.types'
 
 export const SHELF_LABELS: Record<BookShelf, string> = {
   readingNow: 'En cours',

@@ -1,5 +1,5 @@
+import type { Book } from '../model/book.types'
 import { MOCK_BOOKS_BY_ID } from '../mocks/books.mock'
-import type { Book } from '@/features/book'
 
 export interface BookDetailResult {
   data: Book | null
@@ -8,11 +8,9 @@ export interface BookDetailResult {
 }
 
 /**
- * Retrieves a book by id.
- *
- * Currently backed by an in-memory mock; the result shape mirrors a
- * real data-fetching hook so callers won't need to change when wired
- * to the API.
+ * Retrieves a book by id. Currently backed by an in-memory mock; the result
+ * shape mirrors a real data-fetching hook so callers won't need to change
+ * when wired to the API.
  */
 export function useBookDetail(id: string | undefined): BookDetailResult {
   if (!id) {

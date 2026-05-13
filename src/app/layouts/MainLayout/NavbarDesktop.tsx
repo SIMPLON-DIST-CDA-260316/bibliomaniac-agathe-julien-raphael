@@ -1,6 +1,7 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router'
-import { useFilteredLinks } from '@/features/navigation/hooks/useFilteredLinks'
-import type { NavLink as NavLinkType } from '@/features/navigation/types/navigation'
+import { filterLinksByAuth } from '@/features/navigation/lib/filterLinksByAuth'
+import type { NavLink as NavLinkType } from '@/features/navigation/model/navigation.types'
 
 export default function NavbarDesktop({
   links,
@@ -9,7 +10,10 @@ export default function NavbarDesktop({
   links: NavLinkType[]
   isLoggedIn: boolean
 }) {
-  const filteredLinks = useFilteredLinks(links, isLoggedIn)
+  const filteredLinks = useMemo(
+    () => filterLinksByAuth(links, isLoggedIn),
+    [links, isLoggedIn],
+  )
 
   return (
     <nav className="border-primary/20 hidden w-full border-b bg-[#FFEBD6] px-6 py-4 md:block">

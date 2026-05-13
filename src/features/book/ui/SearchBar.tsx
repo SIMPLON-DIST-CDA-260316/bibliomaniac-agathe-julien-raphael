@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import type { Book } from '../types/book'
+import { useMemo, useState } from 'react'
+import type { Book } from '../model/book.types'
 import { Search } from 'lucide-react'
-import { useBookSearch } from '../hooks/useBookSearch'
+import { filterBooksByQuery } from '../lib/filterBooksByQuery'
 import { Popover, PopoverAnchor, PopoverContent } from '@/shared/ui/popover'
 import { Link } from 'react-router'
 
@@ -13,7 +13,10 @@ interface SearchBarProps {
 export function SearchBar({ books, placeholder }: SearchBarProps) {
   const [query, setQuery] = useState('')
   const isOpen = query.trim().length > 0
-  const results = useBookSearch(books, query)
+  const results = useMemo(
+    () => filterBooksByQuery(books, query),
+    [books, query],
+  )
   return (
     <Popover
       open={isOpen}

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 
 import type { Book } from '../model/book.types'
-import { useRelatedBooks } from '../hooks/useRelatedBooks'
+import { useRelatedBooks } from '../model/useRelatedBooks'
 import { BookCarousel } from './BookCarousel'
 
 interface BookRelatedSectionsProps {
