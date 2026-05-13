@@ -10,10 +10,11 @@ interface BookCarouselProps {
   books: Book[]
   className?: string
   onBookClick?: (book: Book) => void
+  cardProps?: { showAuthor?: boolean }
 }
 
 const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
-  ({ books, className, onBookClick }, ref) => {
+  ({ books, className, onBookClick, cardProps }, ref) => {
     const [emblaRef, emblaApi] = useEmblaCarousel({
       align: 'start',
       loop: false,
@@ -71,7 +72,11 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
                 className="flex-[0_0_calc(33.333%-0.5rem)] sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]"
               >
                 {/* Carte du livre */}
-                <BookCard book={book} onClick={() => onBookClick?.(book)} />
+                <BookCard
+                  book={book}
+                  onClick={onBookClick ? () => onBookClick(book) : undefined}
+                  showAuthor={cardProps?.showAuthor}
+                />
               </div>
             ))}
           </div>
