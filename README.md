@@ -9,10 +9,11 @@
 
 ## 🔗 Liens
 
-- **Application déployée :** <!-- TODO: https://... -->
-- **Maquettes Figma :
-  ** [Biblionet](https://www.figma.com/design/7RWuX61fj65aoS3PYMFm5U/Biblionet?node-id=0-1&p=f&t=BBf0EqrpcApm1lYP-0)
-- **Prototype cliquable :** <!-- TODO: https://figma.com/proto/... -->
+- **Application déployée :** _(à venir)_
+- **Maquettes Figma :**
+  - [Biblionet — Copy (maquette de travail)](https://www.figma.com/design/VwfTGOrHoNmOD6LkchKVlv/Biblionet--Copy-?m=auto&t=tc6IsPy79cSPB11I-6) — copie éditable de Biblionet, augmentée par notre équipe. **Référence d'implémentation de cette codebase.**
+  - [Biblionet (source, lecture seule)](https://www.figma.com/design/7RWuX61fj65aoS3PYMFm5U/Biblionet?m=auto&t=tc6IsPy79cSPB11I-6) — prototype J1 produit par un autre groupe, que nous avons implémenté.
+  - [Bibliomaniac — prototype J1](https://www.figma.com/design/CKURoX0LSGmfm2ionc9e5X/Bibliomaniac?m=auto&t=tc6IsPy79cSPB11I-6) — prototype J1 produit par notre équipe (Agathe, Julien, Raphaël). Non implémenté ici ; un autre groupe l'a récupéré pour son projet.
 - **GitHub Project :** <!-- TODO: https://github.com/orgs/.../projects/... -->
 
 ## 👥 Équipe
@@ -32,59 +33,67 @@
 
 ## 🛠️ Stack technique
 
-- **Framework :** React + <!-- TODO: Vite / Next.js -->
+- **Framework :** React 19 + Vite 8
 - **Langage :** TypeScript
-- **Styling :** Tailwind CSS
-- **API :** Google Books API
-- **Qualité :** ESLint + Prettier <!-- + Lefthook -->
-- **Déploiement :** Vercel
+- **Styling :** Tailwind CSS v4
+- **Routing :** React Router v7
+- **UI :** Radix UI, shadcn/ui, Embla Carousel
+- **API :** Open Library (proxy Express local, port `3001`)
+- **Qualité :** ESLint + Prettier + Husky + Commitlint + lint-staged
+- **Déploiement :** Vercel _(à venir)_
 
 ## 📦 Prérequis
 
-- Node.js >= <!-- TODO: version -->
-- <!-- TODO: gestionnaire de paquets : npm / pnpm / yarn -->
-- Un compte Google Books API (clé API)
+- Node.js >= 20
+- npm (le dépôt fournit un `package-lock.json`)
 
 ## 🚀 Installation
 
 ```bash
 # Cloner le dépôt
-git clone https://github.com/<!-- TODO: org/repo -->.git
+git clone https://github.com/SIMPLON-DIST-CDA-260316/bibliomaniac-agathe-julien-raphael.git
 cd bibliomaniac-agathe-julien-raphael
 
 # Installer les dépendances
-<!-- TODO: npm install -->
-
-# Copier le fichier d'environnement
-cp .env.example .env.local
+npm install
 ```
 
 ## ⚙️ Variables d'environnement
 
-Renseigner les variables suivantes dans `.env.local` :
+Aucune variable d'environnement requise pour le moment : le front interroge le proxy Express local (`server.mjs`), qui requête Open Library sans clé d'API.
 
-```env
-<!-- TODO: VITE_GOOGLE_BOOKS_API_KEY=your_api_key_here -->
-```
+Un fichier `.env.example` est présent pour servir de gabarit lorsque des variables seront introduites — copier alors `cp .env.example .env.local` puis renseigner les valeurs.
 
 ## 💻 Lancement en local
 
 ```bash
-# Démarrer le serveur de développement
-<!-- TODO: npm run dev -->
+# Démarre simultanément le proxy API (port 3001) et le serveur Vite (port 5173)
+npm run dev
 ```
 
-L'application sera disponible sur <!-- TODO: http://localhost:5173 -->
+- Front Vite : http://localhost:5173
+- Proxy API : http://localhost:3001/books?q=science+fiction&limit=10
+
+Pour ne lancer que le proxy ou que le front :
+
+```bash
+npm run server   # uniquement le proxy Express
+npx vite         # uniquement le front Vite
+```
 
 ## 📜 Scripts disponibles
 
-| Script                   | Description                         |
-| ------------------------ | ----------------------------------- |
-| `<!-- TODO: dev -->`     | Lance le serveur de développement   |
-| `<!-- TODO: build -->`   | Build de production                 |
-| `<!-- TODO: preview -->` | Prévisualise le build de production |
-| `<!-- TODO: lint -->`    | Vérifie le code avec ESLint         |
-| `<!-- TODO: format -->`  | Formate le code avec Prettier       |
+| Script               | Description                                                  |
+| -------------------- | ------------------------------------------------------------ |
+| `npm run dev`        | Lance le proxy Express et le serveur Vite en parallèle       |
+| `npm run server`     | Lance uniquement le proxy Express (port 3001)                |
+| `npm run build`      | Build de production (`tsc -b && vite build`)                 |
+| `npm run preview`    | Prévisualise le build de production                          |
+| `npm run lint`       | Vérifie le formatage Prettier et exécute ESLint              |
+| `npm run lint:fix`   | Alias de `format` : applique Prettier puis `eslint --fix`    |
+| `npm run format`     | Formate le code (`prettier --write` + `eslint --fix`)        |
+| `npm run type-check` | Vérifie les types TypeScript sans émettre de build           |
+| `npm run validate`   | Combine `lint` + `type-check` (utile en pré-PR)              |
 
 ## 🏗️ Structure du projet
 
@@ -132,13 +141,7 @@ git commit -m "chore(deps): mettre à jour tailwindcss"
 
 ## 🚢 Déploiement
 
-Le projet est déployé automatiquement sur Vercel à chaque push sur `main`.
-
-<!-- TODO: instructions de déploiement manuel si nécessaire -->
-
-```bash
-<!-- TODO: vercel --prod -->
-```
+> ⏳ **À venir.** Le projet n'est pas encore déployé. Cible prévue : Vercel (déploiement automatique sur push `main`). Les instructions seront ajoutées ici une fois la cible configurée.
 
 ## 📄 Licence
 
