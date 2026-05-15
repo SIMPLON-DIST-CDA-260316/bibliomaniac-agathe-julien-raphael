@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/shared/lib/utils.ts'
 import { Button } from '@/shared/ui/button.tsx'
 import useEmblaCarousel from 'embla-carousel-react'
-import type { Book } from '../model/book.types'
+import type { Book } from '@/features/book/model/book.types.ts'
 import { BookCard } from './BookCard.tsx'
 
 interface BookCarouselProps {
@@ -14,7 +14,7 @@ interface BookCarouselProps {
 }
 
 const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
-  ({ books, className, onBookClick, cardProps }, ref) => {
+  ({ books, className, cardProps }, ref) => {
     const [emblaRef, emblaApi] = useEmblaCarousel({
       align: 'start',
       loop: false,
@@ -74,7 +74,6 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
                 {/* Carte du livre */}
                 <BookCard
                   book={book}
-                  onClick={onBookClick ? () => onBookClick(book) : undefined}
                   showAuthor={cardProps?.showAuthor}
                   compactTitle={cardProps?.compactTitle}
                 />

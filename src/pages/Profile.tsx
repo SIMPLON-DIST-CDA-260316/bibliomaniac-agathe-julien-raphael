@@ -22,6 +22,7 @@ export default function Profile() {
 
   const handleLogout = () => {
     localStorage.removeItem('username')
+    localStorage.removeItem('isLoggedIn')
     setIsLoggedIn(false)
     void navigate('/login')
   }

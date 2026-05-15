@@ -1,5 +1,7 @@
-import type { KeyboardEvent } from 'react'
-import type { Book } from '../model/book.types'
+import React from 'react'
+import { Link } from 'react-router'
+
+import type { Book } from '@/features/book/model/book.types.ts'
 
 export interface BookCardProps {
   book: Book
@@ -16,7 +18,7 @@ export function BookCard({
 }: BookCardProps) {
   const interactive = onClick != null
 
-  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLElement>) {
     if (!interactive) return
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -33,13 +35,13 @@ export function BookCard({
     showAuthor && book.author ? `${book.title} par ${book.author}` : book.title
 
   return (
-    <div
+    <Link
+      to={`/books/${book.id}`}
       className={
         interactive
           ? 'group focus-visible:ring-primary flex cursor-pointer flex-col gap-3 focus:outline-none focus-visible:ring-2'
           : 'group flex flex-col gap-3'
       }
-      onClick={onClick}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
       onKeyDown={interactive ? handleKeyDown : undefined}
@@ -70,6 +72,6 @@ export function BookCard({
           </p>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
