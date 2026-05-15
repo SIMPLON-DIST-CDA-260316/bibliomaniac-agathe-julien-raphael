@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Book } from '@/features/book'
+import { API_BASE } from '@/shared/lib/api.ts'
 
 interface OpenLibraryBook {
   title: string
@@ -125,7 +126,7 @@ export function useOpenLibraryBooks(category: keyof typeof CATEGORIES): Book[] {
           limit: limit.toString(),
         })
 
-        const response = await fetch(`http://localhost:3001/books?${params}`)
+        const response = await fetch(`${API_BASE}/api/books?${params}`)
 
         if (!response.ok) {
           console.error(`API Error: ${response.statusText}`)
