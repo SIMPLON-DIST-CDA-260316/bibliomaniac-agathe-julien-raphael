@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
 
+import {
+  RELATED_SECTION_CAP,
+  RELATED_SECTIONS,
+} from '../config/relatedSections'
 import type { Book } from '../model/book.types'
 import type { RelatedSection } from '../model/relatedBooks.types'
 
@@ -21,7 +25,6 @@ interface SearchResponse {
 }
 
 const PROXY_BASE = 'http://localhost:3001/books'
-const SECTION_LIMIT = 20
 const FETCH_LIMIT = 40
 
 function mapDocToBook(doc: OpenLibraryDoc): Book | null {
@@ -60,15 +63,6 @@ async function fetchOLSection(query: string): Promise<Book[]> {
     .filter((b): b is Book => b !== null)
 }
 
-function buildGenreQuery(genre: string): string | null {
-  const tokens = genre
-    .split(/[-/,|]+/)
-    .map((t) => t.trim())
-    .filter(Boolean)
-  if (tokens.length === 0) return null
-  return tokens.map((t) => `subject:"${t}"`).join(' OR ')
-}
-
 export interface RelatedBooksResult {
   sections: RelatedSection[]
   isLoading: boolean
@@ -88,45 +82,29 @@ export function useRelatedBooks(currentBook: Book): RelatedBooksResult {
   useEffect(() => {
     let cancelled = false
 
-    const authorQuery = currentBook.author
-      ? `author:"${currentBook.author}"`
-      : null
-    const genreQuery = currentBook.genre
-      ? buildGenreQuery(currentBook.genre)
-      : null
+    const queries = RELATED_SECTIONS.map((s) => s.buildQuery(currentBook))
 
-    void Promise.all([
-      authorQuery ? fetchOLSection(authorQuery) : Promise.resolve([]),
-      genreQuery ? fetchOLSection(genreQuery) : Promise.resolve([]),
-    ]).then(([authorBooks, genreBooks]) => {
+    void Promise.all(
+      queries.map((q) => (q ? fetchOLSection(q) : Promise.resolve([]))),
+    ).then((results) => {
       if (cancelled) return
 
+      const seen = new Set<string>([currentBook.id])
       const next: RelatedSection[] = []
 
-      const authorFiltered = authorBooks
-        .filter((b) => b.id !== currentBook.id)
-        .slice(0, SECTION_LIMIT)
-      if (authorFiltered.length > 0) {
+      RELATED_SECTIONS.forEach((descriptor, i) => {
+        const books = results[i]
+          .filter((b) => !seen.has(b.id))
+          .slice(0, RELATED_SECTION_CAP)
+        if (books.length === 0) return
+        books.forEach((b) => seen.add(b.id))
         next.push({
-          kind: 'author',
-          title: 'Du même auteur',
-          books: authorFiltered,
-          cardProps: { showAuthor: false },
+          kind: descriptor.kind,
+          title: descriptor.title,
+          books,
+          cardProps: descriptor.cardProps,
         })
-      }
-
-      const authorIds = new Set(authorFiltered.map((b) => b.id))
-      const genreFiltered = genreBooks
-        .filter((b) => b.id !== currentBook.id && !authorIds.has(b.id))
-        .slice(0, SECTION_LIMIT)
-      if (genreFiltered.length > 0) {
-        next.push({
-          kind: 'genre',
-          title: 'Dans le même genre',
-          books: genreFiltered,
-          cardProps: { showAuthor: true },
-        })
-      }
+      })
 
       setData({ sections: next, bookId: currentBook.id })
     })
@@ -134,7 +112,7 @@ export function useRelatedBooks(currentBook: Book): RelatedBooksResult {
     return () => {
       cancelled = true
     }
-  }, [currentBook.id, currentBook.author, currentBook.genre])
+  }, [currentBook])
 
   const isLoading = data.bookId !== currentBook.id
   const sections = isLoading ? [] : data.sections
