@@ -1,5 +1,5 @@
-<!doctype html>
 <html lang="fr" data-theme="light">
+  <!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -680,13 +680,10 @@
           <span class="num">§5</span><span>Stack & archi</span>
         </button>
         <button class="nav-item" data-slide="6">
-          <span class="num">§6</span><span>Points forts tech</span>
+          <span class="num">§6</span><span>Arbitrages & limites</span>
         </button>
         <button class="nav-item" data-slide="7">
-          <span class="num">§7</span><span>Arbitrages & limites</span>
-        </button>
-        <button class="nav-item" data-slide="8">
-          <span class="num">§8</span><span>Bilan & suite</span>
+          <span class="num">§7</span><span>Bilan & suite</span>
         </button>
 
         <div class="mt-auto pt-4 space-y-2 text-xs" style="color: var(--text-muted)">
@@ -696,7 +693,7 @@
             <span>naviguer</span>
           </div>
           <div class="flex items-center gap-2">
-            <kbd>1</kbd>…<kbd>9</kbd>
+            <kbd>1</kbd>…<kbd>8</kbd>
             <span>saut direct</span>
           </div>
           <div class="flex items-center gap-2">
@@ -795,11 +792,11 @@
             <div class="flex flex-wrap gap-3 text-sm">
               <a
                 class="ext pill pill-strong"
-                href="#"
+                href="https://bibliomaniac-agathe-julien-raphael.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 id="vercel-link"
-                >App Vercel <span style="opacity: 0.7">(à venir)</span></a
+                >App Vercel</a
               >
               <a
                 class="ext pill"
@@ -847,39 +844,50 @@
                 <div class="flex items-center gap-2 mb-3">
                   <span class="badge-cat" style="--cat-color: var(--success)">Livré</span>
                 </div>
-                <p>
-                  App React/TS responsive : recherche livres, fiche détaillée, bibliothèque
-                  utilisateur, auth, carrousels livres liés. Déployée Vercel.
-                </p>
+                <ul class="list-disc list-inside text-sm space-y-1.5">
+                  <li>App React 19 / TypeScript responsive</li>
+                  <li>Recherche livres + fiche détaillée</li>
+                  <li>Bibliothèque utilisateur + étagères</li>
+                  <li>Carrousels « livres liés »</li>
+                  <li>Auth UI (login / register)</li>
+                  <li>Déployée sur Vercel</li>
+                </ul>
               </article>
               <article class="card p-6">
                 <div class="flex items-center gap-2 mb-3">
                   <span class="badge-cat" style="--cat-color: var(--cat-front)">Process</span>
                 </div>
-                <p>
-                  Figma → GitHub Project → branches feature → PR conventionnelles →
-                  Husky/Commitlint → Vercel. 20+ PR mergées en 10 jours.
-                </p>
+                <ul class="list-disc list-inside text-sm space-y-1.5">
+                  <li>Figma → GitHub Project → branches feature</li>
+                  <li>PR conventionnelles, revues croisées</li>
+                  <li>Husky + Commitlint pre-commit</li>
+                  <li>Déploiement continu Vercel</li>
+                  <li>20+ PR mergées en 10 jours</li>
+                </ul>
               </article>
               <article class="card p-6">
                 <div class="flex items-center gap-2 mb-3">
                   <span class="badge-cat" style="--cat-color: var(--cat-api)">Arbitrage clé</span>
                 </div>
-                <p>
-                  API <strong>Open Library</strong> via proxy Express local (port 3001) plutôt
-                  que Google Books — meilleure couverture FR + modèle works/editions adapté aux
-                  livres liés.
-                </p>
+                <ul class="list-disc list-inside text-sm space-y-1.5">
+                  <li><strong>Open Library</strong> plutôt que Google Books</li>
+                  <li>Pas de clé d'API à gérer</li>
+                  <li>Meilleure couverture FR</li>
+                  <li>Modèle <span class="mono">works/editions</span> adapté aux livres liés</li>
+                  <li>Proxy Express local en dev, fonction serverless Vercel en prod</li>
+                </ul>
               </article>
               <article class="card p-6">
                 <div class="flex items-center gap-2 mb-3">
                   <span class="badge-cat" style="--cat-color: var(--warn)">Hors scope</span>
                 </div>
-                <p>
-                  Persistance (bookmarks, lu/non-lu, réservations, cloche) non implémentée
-                  — pas de backend prêt → mocks + login différé, documentés en issues
-                  <span class="mono">phase:logic</span>.
-                </p>
+                <ul class="list-disc list-inside text-sm space-y-1.5">
+                  <li>Persistance : bookmarks, lu/non-lu, réservations</li>
+                  <li>Notification cloche</li>
+                  <li>Auth réelle (JWT / session)</li>
+                  <li>Mocks + login différé en attendant un backend</li>
+                  <li>Dette documentée en issues <span class="mono">phase:logic</span></li>
+                </ul>
               </article>
             </div>
           </div>
@@ -932,7 +940,7 @@
                         rel="noopener noreferrer"
                         >Biblionet Copy</a
                       >
-                      augmentée pour l'implémentation.
+                      — maquette d'un autre groupe récupérée et augmentée pour l'implémentation.
                     </li>
                   </ul>
                 </div>
@@ -973,7 +981,7 @@
                   <ul class="list-disc list-inside space-y-1">
                     <li>Composants Radix / shadcn / Embla.</li>
                     <li>
-                      Architecture
+                      Architecture <strong>FSD</strong> (Feature-Sliced Design) —
                       <span class="mono">features/ · pages/ · shared/</span>.
                     </li>
                     <li>Mobile-first, adaptation desktop assumée (carrousels, navbar).</li>
@@ -1216,42 +1224,6 @@
               </article>
             </div>
 
-            <details class="card p-5">
-              <summary>
-                <strong>Comment c'est articulé</strong>
-                <span class="text-xs ml-2" style="color: var(--text-muted)">
-                  — pipeline complémentaire
-                </span>
-              </summary>
-              <p class="text-sm my-3" style="color: var(--text-muted)">
-                Setup, puis domaines parallèles, puis intégrations croisées.
-              </p>
-              <div class="flex flex-wrap gap-2 items-center">
-                <span class="pipeline-step" style="--owner-color: var(--p-raphael)">
-                  <span class="pipeline-dot"></span> Setup & structure (R)
-                </span>
-                <span class="text-xs mono" style="color: var(--text-muted)">→</span>
-                <span class="pipeline-step" style="--owner-color: var(--p-agathe)">
-                  <span class="pipeline-dot"></span> Bibliothèque user (A)
-                </span>
-                <span class="text-xs mono" style="color: var(--text-muted)">→</span>
-                <span class="pipeline-step" style="--owner-color: var(--p-julien)">
-                  <span class="pipeline-dot"></span> Fiche livre (J)
-                </span>
-                <span class="text-xs mono" style="color: var(--text-muted)">→</span>
-                <span class="pipeline-step" style="--owner-color: var(--p-raphael)">
-                  <span class="pipeline-dot"></span> Auth + recherche (R)
-                </span>
-                <span class="text-xs mono" style="color: var(--text-muted)">→</span>
-                <span class="pipeline-step" style="--owner-color: var(--p-julien)">
-                  <span class="pipeline-dot"></span> Carrousels liés OL (J)
-                </span>
-                <span class="text-xs mono" style="color: var(--text-muted)">→</span>
-                <span class="pipeline-step" style="--owner-color: var(--p-agathe)">
-                  <span class="pipeline-dot"></span> Polish desktop (A)
-                </span>
-              </div>
-            </details>
           </div>
         </section>
 
@@ -1393,7 +1365,9 @@
                 </div>
                 <p class="text-sm" style="color: var(--text-muted)">
                   Carrousels « même auteur / même série / même genre » sur fiche livre. Fetch
-                  Open Library par sujet. Composants Embla réutilisables.
+                  Open Library par sujet. Réutilise <span class="mono">BookCarousel</span> +
+                  <span class="mono">BookSection</span> (posés à l'init par Raphaël) et
+                  <span class="mono">BookCard</span> (extrait par Agathe).
                 </p>
                 <div class="us-meta">
                   <div class="us-meta-cell">
@@ -1402,7 +1376,7 @@
                   </div>
                   <div class="us-meta-cell">
                     <div class="label">Composants clés</div>
-                    <div class="val">BookRelatedSections<br />BookSection<br />BookCarousel</div>
+                    <div class="val">BookRelatedSections (J)<br />BookSection · BookCarousel (R)<br />BookCard (A)</div>
                   </div>
                   <div class="us-meta-cell">
                     <div class="label">Hooks / fetch</div>
@@ -1448,7 +1422,10 @@
               <span class="sec-num">§5</span>
               <h2 id="title-5">Stack & architecture</h2>
             </div>
-            <p class="lead">Front Vite + proxy Express + Open Library.</p>
+            <p class="lead">
+              Front Vite + Open Library. Proxy Express en dev (port 3001), fonction serverless
+              Vercel en prod.
+            </p>
 
             <div class="grid md:grid-cols-2 gap-4 mb-4">
               <article class="card p-5">
@@ -1500,7 +1477,10 @@
                 </div>
                 <div class="flex flex-wrap gap-2">
                   <span class="stack-chip" style="--cat-color: var(--cat-api)">
-                    <strong>Express</strong><span class="ver">5 · proxy</span>
+                    <strong>Express</strong><span class="ver">5 · proxy dev</span>
+                  </span>
+                  <span class="stack-chip" style="--cat-color: var(--cat-api)">
+                    <strong>Vercel Functions</strong><span class="ver">proxy prod</span>
                   </span>
                   <span class="stack-chip" style="--cat-color: var(--cat-api)">
                     <strong>Open Library</strong>
@@ -1580,108 +1560,12 @@
           </div>
         </section>
 
-        <!-- Slide 6 : Highlights -->
+        <!-- Slide 6 : Arbitrages -->
         <section class="slide" data-slide="6" aria-labelledby="title-6">
           <div class="slide-inner">
             <div class="flex items-baseline gap-3 mb-2">
               <span class="sec-num">§6</span>
-              <h2 id="title-6">Points forts techniques</h2>
-            </div>
-            <p class="lead">
-              Six choix structurants. Premier ouvert pour le point clé — cliquer les autres pour
-              les explorer.
-            </p>
-
-            <div class="space-y-3">
-              <details class="card p-4" open>
-                <summary class="font-semibold">
-                  <span class="badge-cat mr-2" style="--cat-color: var(--cat-ui)">a11y</span>
-                  Infra Drawer accessible réutilisable
-                </summary>
-                <p class="mt-3 text-sm" style="color: var(--text-muted)">
-                  Drawer Radix/Vaul intégré avec focus trap automatique + attribut
-                  <span class="mono">inert</span> sur le reste du DOM. Hook
-                  <span class="mono">useInertWhileDrawerOpen</span> posé en PR #53 (US2
-                  réservation), réutilisable pour bookmark / sélection liste. Une seule infra
-                  a11y, plusieurs use-cases.
-                </p>
-              </details>
-
-              <details class="card p-4">
-                <summary class="font-semibold">
-                  <span class="badge-cat mr-2" style="--cat-color: var(--cat-front)">TypeScript</span>
-                  Types discriminés pour CTA contextuel
-                </summary>
-                <p class="mt-3 text-sm" style="color: var(--text-muted)">
-                  <span class="mono">BookCTA</span> a 6 variantes selon l'état du livre
-                  (disponible, réservé par moi, réservé par autre, emprunté par moi, emprunté
-                  par autre, indisponible). Type discriminé sur clé
-                  <span class="mono">status</span> → exhaustivité vérifiée par le compilateur,
-                  pas de branche oubliée à l'exécution.
-                </p>
-              </details>
-
-              <details class="card p-4">
-                <summary class="font-semibold">
-                  <span class="badge-cat mr-2" style="--cat-color: var(--cat-front)">refactor</span>
-                  Slugs en URL pour étagères
-                </summary>
-                <p class="mt-3 text-sm" style="color: var(--text-muted)">
-                  PR #51 : passage de clés internes à des slugs URL-safe pour
-                  <span class="mono">/library/shelf/:slug</span>. Séparation types ↔ helpers ↔
-                  data. Plus simple à partager, plus lisible, indépendant de l'ID interne.
-                </p>
-              </details>
-
-              <details class="card p-4">
-                <summary class="font-semibold">
-                  <span class="badge-cat mr-2" style="--cat-color: var(--cat-ui)">DX</span>
-                  Sandbox dev pour itération UI rapide
-                </summary>
-                <p class="mt-3 text-sm" style="color: var(--text-muted)">
-                  <span class="mono">src/pages/dev/BookCTASandbox.tsx</span> rend toutes les
-                  variantes CTA côte-à-côte. Débuggage / validation visuels sans cliquer dans
-                  l'app. Pattern réutilisable pour autres composants à variants.
-                </p>
-              </details>
-
-              <details class="card p-4">
-                <summary class="font-semibold">
-                  <span class="badge-cat mr-2" style="--cat-color: var(--cat-front)">structure</span>
-                  Architecture features / pages / shared
-                </summary>
-                <p class="mt-3 text-sm" style="color: var(--text-muted)">
-                  Séparation domaine (<span class="mono">features/book</span>,
-                  <span class="mono">features/library</span>) vs routage
-                  (<span class="mono">pages/</span>) vs primitives partagées
-                  (<span class="mono">shared/ui</span>). Chaque feature porte ses composants UI,
-                  types, hooks.
-                </p>
-              </details>
-
-              <details class="card p-4">
-                <summary class="font-semibold">
-                  <span class="badge-cat mr-2" style="--cat-color: var(--cat-quality)">qualité</span>
-                  Conventional Commits + Husky verrouillés
-                </summary>
-                <p class="mt-3 text-sm" style="color: var(--text-muted)">
-                  Pre-commit hook : Prettier + ESLint sur fichiers modifiés (lint-staged).
-                  Commit-msg hook : Commitlint valide
-                  <span class="mono">type(scope): sujet</span>. Aucun bypass
-                  (<span class="mono">--no-verify</span>) dans l'historique. Log git lisible
-                  bout-en-bout.
-                </p>
-              </details>
-            </div>
-          </div>
-        </section>
-
-        <!-- Slide 7 : Arbitrages -->
-        <section class="slide" data-slide="7" aria-labelledby="title-7">
-          <div class="slide-inner">
-            <div class="flex items-baseline gap-3 mb-2">
-              <span class="sec-num">§7</span>
-              <h2 id="title-7">Arbitrages & limites assumées</h2>
+              <h2 id="title-6">Arbitrages & limites assumées</h2>
             </div>
             <p class="lead">Ce qu'on a choisi de ne pas faire — et pourquoi.</p>
 
@@ -1695,6 +1579,8 @@
                   Brief demandait Google Books. Choix d'Open Library : sans clé d'API, couverture
                   FR meilleure, modèle works/editions plus naturel pour livres liés. Dépendance
                   <span class="mono">@googleapis/books</span> conservée pour fallback éventuel.
+                  Bonus : Google Books renvoyait des <span class="mono">503</span> en cours de
+                  sprint, Open Library est resté stable.
                 </p>
               </article>
 
@@ -1737,12 +1623,12 @@
           </div>
         </section>
 
-        <!-- Slide 8 : Bilan -->
-        <section class="slide" data-slide="8" aria-labelledby="title-8">
+        <!-- Slide 7 : Bilan -->
+        <section class="slide" data-slide="7" aria-labelledby="title-7">
           <div class="slide-inner">
             <div class="flex items-baseline gap-3 mb-2">
-              <span class="sec-num">§8</span>
-              <h2 id="title-8">Bilan & suite</h2>
+              <span class="sec-num">§7</span>
+              <h2 id="title-7">Bilan & suite</h2>
             </div>
             <p class="lead">Ce qui a marché, ce qu'on referait, ce qui reste à faire.</p>
 
@@ -1787,11 +1673,11 @@
               <div class="flex flex-wrap gap-3 justify-center">
                 <a
                   class="ext pill pill-strong"
-                  href="#"
+                  href="https://bibliomaniac-agathe-julien-raphael.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   id="vercel-link-2"
-                  >App Vercel <span style="opacity: 0.7">(à venir)</span></a
+                  >App Vercel</a
                 >
                 <a
                   class="ext pill"
@@ -1815,7 +1701,7 @@
         <!-- Deck controls -->
         <div class="deck-controls" role="navigation" aria-label="Contrôles slides">
           <button id="prev-btn" class="deck-btn" aria-label="Slide précédente">← prev</button>
-          <span class="deck-count"><span id="slide-num">1</span> / 9</span>
+          <span class="deck-count"><span id="slide-num">1</span> / 8</span>
           <button id="next-btn" class="deck-btn" aria-label="Slide suivante">next →</button>
         </div>
         <div class="progress-bar" role="progressbar" aria-label="Progression slides">
