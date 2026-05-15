@@ -2,21 +2,35 @@ import { useMemo } from 'react'
 
 import { type Book } from '../model/book.types'
 import { type BookShelf } from '../types/bookShelf'
-import { useSampleBooks } from './useSampleBooks'
+import { useOpenLibraryBooks } from './useOpenLibraryBooks'
 
 export function useSampleBooksByShelf(): Record<BookShelf, Book[]> {
-  const books = useSampleBooks()
+  const borrowedBooks = useOpenLibraryBooks('borrowed')
+  const favoritesBooks = useOpenLibraryBooks('favorites')
+  const readingNowBooks = useOpenLibraryBooks('reading_now')
+  const haveReadBooks = useOpenLibraryBooks('have_read')
+  const reviewedBooks = useOpenLibraryBooks('reviewed')
+  const recentlyViewedBook = useOpenLibraryBooks('recently_viewed')
+  const toReadBooks = useOpenLibraryBooks('to_read')
 
   return useMemo(
     () => ({
-      favorites: books,
-      borrowed: books,
-      toRead: books,
-      readingNow: books,
-      haveRead: books,
-      reviewed: books,
-      recentlyViewed: books,
+      favorites: favoritesBooks,
+      borrowed: borrowedBooks,
+      toRead: toReadBooks,
+      readingNow: readingNowBooks,
+      haveRead: haveReadBooks,
+      reviewed: reviewedBooks,
+      recentlyViewed: recentlyViewedBook,
     }),
-    [books],
+    [
+      favoritesBooks,
+      borrowedBooks,
+      toReadBooks,
+      readingNowBooks,
+      haveReadBooks,
+      reviewedBooks,
+      recentlyViewedBook,
+    ],
   )
 }

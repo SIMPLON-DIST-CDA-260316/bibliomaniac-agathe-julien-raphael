@@ -23,6 +23,12 @@ const CATEGORIES = {
   recommended_for_you: { query: 'fantasy', limit: 50 },
   global_recommendations: { query: 'bestsellers', limit: 50 },
   new_releases: { query: 'recently published', limit: 50 },
+  favorites: { query: 'aventure', limit: 50 },
+  reading_now: { query: 'anticipation', limit: 50 },
+  to_read: { query: 'polar', limit: 50 },
+  have_read: { query: 'autobiographie', limit: 50 },
+  recently_viewed: { query: 'bestsellers', limit: 50 },
+  reviewed: { query: 'drama', limit: 50 },
 }
 
 function mapOpenLibraryToBook(book: OpenLibraryBook): Book | null {
