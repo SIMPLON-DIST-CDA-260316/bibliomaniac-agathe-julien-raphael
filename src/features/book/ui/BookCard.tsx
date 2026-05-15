@@ -1,12 +1,17 @@
+import { cn } from '@/shared/lib/utils.ts'
 import type { Book } from '../types/book'
 
 interface BookCardProps {
   book: Book
   onClick?: () => void
-  coverOnly?: boolean
+  coverOnlyOnMobile?: boolean
 }
 
-export function BookCard({ book, coverOnly = false, onClick }: BookCardProps) {
+export function BookCard({
+  book,
+  coverOnlyOnMobile = false,
+  onClick,
+}: BookCardProps) {
   return (
     <div className="group flex cursor-pointer flex-col gap-3" onClick={onClick}>
       {/* Image de couverture */}
@@ -21,16 +26,14 @@ export function BookCard({ book, coverOnly = false, onClick }: BookCardProps) {
       </div>
 
       {/* Titre et auteur  */}
-      {!coverOnly ? (
-        <div className="px-1 pb-2">
-          <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
-            {book.title}
-          </h3>
-          <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
-            {book.author}
-          </p>
-        </div>
-      ) : null}
+      <div className={cn('px-1 pb-2', coverOnlyOnMobile && 'max-sm:hidden')}>
+        <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
+          {book.title}
+        </h3>
+        <p className="mt-1 line-clamp-1 text-[10px] text-gray-600 sm:text-xs md:line-clamp-none lg:text-sm">
+          {book.author}
+        </p>
+      </div>
     </div>
   )
 }

@@ -68,7 +68,7 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
           <div
             className={cn(
               'flex gap-4 pl-2 md:pl-4',
-              withWoodenShelf && 'gap-8 pl-13',
+              withWoodenShelf && 'max-sm:gap-8 max-sm:pl-13',
             )}
           >
             {books.map((book) => (
@@ -76,13 +76,13 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
                 key={book.id}
                 className={cn(
                   'flex-[0_0_calc(33.333%-0.5rem)] sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]',
-                  withWoodenShelf && 'flex-[0_0_calc(19.333%-0.5rem)]',
+                  withWoodenShelf && 'max-sm:flex-[0_0_calc(19.333%-0.5rem)]',
                 )}
               >
                 {/* Carte du livre */}
                 <BookCard
                   book={book}
-                  coverOnly={withWoodenShelf}
+                  coverOnlyOnMobile={withWoodenShelf}
                   onClick={() => onBookClick?.(book)}
                 />
               </div>

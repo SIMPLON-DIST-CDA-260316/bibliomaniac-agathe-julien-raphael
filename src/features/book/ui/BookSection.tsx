@@ -1,7 +1,6 @@
 import { Link } from 'react-router'
 import { BookCarousel } from '@/features/book/ui/BookCarousel.tsx'
 import type { Book } from '../types/book.ts'
-import shelfImage from '@/assets/wooden-img.png'
 import { cn } from '@/shared/lib/utils.ts'
 
 interface BookSectionProps {
@@ -21,23 +20,14 @@ export function BookSection({
     <div
       className={cn(
         'w-full overflow-hidden',
-        withWoodenShelf && 'relative z-1 pb-5',
+        withWoodenShelf &&
+          'max-sm:relative max-sm:z-1 max-sm:bg-[url(@/assets/wooden-img.png)] max-sm:bg-cover max-sm:bg-center max-sm:bg-no-repeat max-sm:pb-5',
       )}
-      style={
-        withWoodenShelf
-          ? {
-              backgroundImage: `url(${shelfImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }
-          : {}
-      }
     >
       <div
         className={cn(
           'mb-2 flex items-center justify-between',
-          withWoodenShelf && '-mt-1 px-8',
+          withWoodenShelf && 'max-sm:-mt-1 max-sm:px-8',
         )}
       >
         <h2 className="text-primary text-lg font-bold md:text-xl xl:text-2xl 2xl:text-3xl">
@@ -52,7 +42,7 @@ export function BookSection({
       </div>
       <BookCarousel
         books={books}
-        className={cn('w-full', withWoodenShelf && 'mt-5')}
+        className={cn('w-full', withWoodenShelf && 'max-sm:mt-5')}
         withWoodenShelf={withWoodenShelf}
       />
     </div>
