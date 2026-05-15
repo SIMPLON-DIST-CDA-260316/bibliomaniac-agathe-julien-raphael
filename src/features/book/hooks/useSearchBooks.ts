@@ -23,7 +23,7 @@ function mapOpenLibraryToBook(book: OpenLibraryBook): Book | null {
   const coverUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
 
   return {
-    id: book.key,
+    id: book.key.replace('/works/', ''),
     title: book.title || 'Sans titre',
     author: book.author_name?.[0] || null,
     authorId: null,

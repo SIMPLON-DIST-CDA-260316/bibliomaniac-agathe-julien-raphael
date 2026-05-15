@@ -30,7 +30,7 @@ const FETCH_LIMIT = 40
 function mapDocToBook(doc: OpenLibraryDoc): Book | null {
   if (!doc.cover_i) return null
   return {
-    id: doc.key,
+    id: doc.key.replace('/works/', ''),
     title: doc.title || 'Sans titre',
     author: doc.author_name?.[0] ?? null,
     authorId: doc.author_key?.[0] ?? null,
