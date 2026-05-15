@@ -1,0 +1,57 @@
+name: Deploy Sprint Review to GitHub Pages
+
+# Deploys the single file docs/sprint-review-2026-05-15.html as the GitHub Pages
+# site root (index.html). Lets the team share a clean shareable URL during the
+# Sprint Review (and after) without exposing the rest of the repo.
+#
+# Manual step (one-time, done from the repo settings):
+#   Settings → Pages → Source → "GitHub Actions"
+# Once enabled, every push to develop or main that touches the slide deck file
+# republishes the page automatically.
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - docs/sprint-review-2026-05-15.html
+      - .github/workflows/deploy-sprint-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare site directory
+        run: |
+          mkdir -p _site
+          cp docs/sprint-review-2026-05-15.html _site/index.html
+          cat > _site/.nojekyll <<'EOF'
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
