@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import type { Book } from '@/features/book'
+import { API_BASE } from '@/shared/lib/api.ts'
 
 interface OpenLibraryBook {
   title: string
@@ -66,7 +67,7 @@ export function useSearchBooks() {
         limit: (limit * 2).toString(), // Demander 2x pour compenser le filtrage
       })
 
-      const response = await fetch(`http://localhost:3001/books?${params}`)
+      const response = await fetch(`${API_BASE}/api/books?${params}`)
 
       if (!response.ok) {
         setError(`Erreur lors de la recherche: ${response.statusText}`)

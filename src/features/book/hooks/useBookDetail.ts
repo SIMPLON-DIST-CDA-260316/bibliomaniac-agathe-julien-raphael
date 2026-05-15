@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { API_BASE } from '@/shared/lib/api.ts'
 
 import { MOCK_BOOKS_BY_ID } from '../mocks/books.mock'
 import type { Book } from '@/features/book'
@@ -20,7 +21,7 @@ interface OpenLibraryWorkResponse {
   author_key: string | null
 }
 
-const PROXY_BASE = 'http://localhost:3001/books'
+const PROXY_BASE = `${API_BASE}/api/books`
 const OL_ID_PATTERN = /^OL\w+W$/
 
 function mapWorkToBook(work: OpenLibraryWorkResponse): Book {

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { API_BASE } from '@/shared/lib/api.ts'
 
 import {
   RELATED_SECTION_CAP,
   RELATED_SECTIONS,
 } from '../config/relatedSections'
-import type { Book } from '../model/book.types'
+import type { Book } from '@/features/book/model/book.types.ts'
 import type { RelatedSection } from '../model/relatedBooks.types'
 
 interface OpenLibraryDoc {
@@ -24,7 +25,7 @@ interface SearchResponse {
   docs: OpenLibraryDoc[]
 }
 
-const PROXY_BASE = 'http://localhost:3001/books'
+const PROXY_BASE = `${API_BASE}/api/books`
 const FETCH_LIMIT = 40
 
 function mapDocToBook(doc: OpenLibraryDoc): Book | null {
