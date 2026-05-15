@@ -34,7 +34,7 @@ function mapOpenLibraryToBook(book: OpenLibraryBook): Book | null {
   const coverUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
 
   return {
-    id: book.key,
+    id: book.key.replace('/works/', ''),
     title: book.title || 'Sans titre',
     author: book.author_name?.[0] || null,
     authorId: null,
@@ -60,7 +60,7 @@ function getCachedBooks(category: string): Book[] | null {
   if (typeof window === 'undefined') return null
 
   try {
-    const cached = localStorage.getItem(`books_${category}`)
+    const cached = localStorage.getItem(`books_v2_${category}`)
     if (!cached) return null
 
     const parsed: unknown = JSON.parse(cached)
@@ -75,7 +75,7 @@ function getCachedBooks(category: string): Book[] | null {
       const { data, timestamp } = parsed as CachedBooksData
 
       if (Date.now() - timestamp > CACHE_DURATION) {
-        localStorage.removeItem(`books_${category}`)
+        localStorage.removeItem(`books_v2_${category}`)
         return null
       }
 
@@ -96,7 +96,7 @@ function setCachedBooks(category: string, books: Book[]): void {
       data: books,
       timestamp: Date.now(),
     }
-    localStorage.setItem(`books_${category}`, JSON.stringify(data))
+    localStorage.setItem(`books_v2_${category}`, JSON.stringify(data))
   } catch {
     // Silently ignore localStorage errors
   }
