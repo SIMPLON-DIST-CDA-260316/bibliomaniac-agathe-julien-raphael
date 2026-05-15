@@ -1,4 +1,4 @@
-import { Home, Library, Search, User } from 'lucide-react'
+import { Home, Library, User } from 'lucide-react'
 
 import NavbarDesktop from './NavbarDesktop'
 import NavbarMobile from './NavbarMobile'
@@ -10,12 +10,6 @@ const links: NavLink[] = [
     label: 'Accueil',
     icon: Home,
     end: true,
-    requiresAuth: [true, false],
-  },
-  {
-    to: '/search',
-    label: 'Recherche',
-    icon: Search,
     requiresAuth: [true, false],
   },
   {

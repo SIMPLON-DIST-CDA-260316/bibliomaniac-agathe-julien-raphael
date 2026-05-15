@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router'
-
 import Home from '@/pages/Home'
 import { BookDetailPage } from '@/pages/BookDetailPage'
 import MainLayout from '@/app/layouts/MainLayout'
@@ -8,7 +7,10 @@ import Register from '@/pages/Register.tsx'
 import { UserLibraryPage } from '@/pages/UserLibraryPage'
 import { UserShelfPage } from '@/pages/UserShelfPage'
 import { DiscoveryPage } from '@/pages/DiscoveryPage'
+import { SearchPage } from '@/pages/SearchPage'
+import Profile from '@/pages/Profile.tsx'
 import { BookCTASandbox } from '@/pages/dev/BookCTASandbox'
+import { UserLibrarySearchPage } from '@/pages/UserLibrarySearchPage'
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/search',
-        element: <h1>Search</h1>,
+        element: <SearchPage />,
       },
       {
         path: '/book/:id',
@@ -30,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: '/library',
         element: <UserLibraryPage />,
+      },
+      {
+        path: '/library/search',
+        element: <UserLibrarySearchPage />,
       },
       {
         path: '/library/:shelfSlug',
@@ -41,7 +47,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <h1>Profile</h1>,
+        element: <Profile />,
       },
       {
         path: '/login',

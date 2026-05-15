@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/shared/lib/utils.ts'
 import { Button } from '@/shared/ui/button.tsx'
 import useEmblaCarousel from 'embla-carousel-react'
-import type { Book } from '../types/book.ts'
+import type { Book } from '@/features/book/model/book.types.ts'
 import { BookCard } from './BookCard.tsx'
 
 interface BookCarouselProps {
@@ -11,10 +11,12 @@ interface BookCarouselProps {
   className?: string
   onBookClick?: (book: Book) => void
   withWoodenShelf?: boolean
+  cardProps?: { showAuthor?: boolean; compactTitle?: boolean }
 }
 
 const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
-  ({ books, className, onBookClick, withWoodenShelf = false }, ref) => {
+  ({ books, className, onBookClick, withWoodenShelf = false, cardProps }, ref) => {
+
     const [emblaRef, emblaApi] = useEmblaCarousel({
       align: 'start',
       loop: false,
@@ -83,7 +85,8 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
                 <BookCard
                   book={book}
                   coverOnlyOnMobile={withWoodenShelf}
-                  onClick={() => onBookClick?.(book)}
+                  showAuthor={cardProps?.showAuthor}
+                  compactTitle={cardProps?.compactTitle}
                 />
               </div>
             ))}

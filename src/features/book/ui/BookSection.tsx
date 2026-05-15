@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import { BookCarousel } from '@/features/book/ui/BookCarousel.tsx'
-import type { Book } from '../types/book.ts'
+import type { Book } from '../model/book.types'
 import { cn } from '@/shared/lib/utils.ts'
 
 interface BookSectionProps {

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { type Book } from '../types/book'
+import { type Book } from '../model/book.types'
 import { type BookShelf } from '../types/bookShelf'
 import { useSampleBooks } from './useSampleBooks'
 
