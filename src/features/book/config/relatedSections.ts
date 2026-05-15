@@ -4,46 +4,35 @@ import type {
   RelatedSectionKind,
 } from '../model/relatedBooks.types'
 
-interface SectionDescriptor {
+export interface SectionDescriptor {
   kind: RelatedSectionKind
+  title: string
   cardProps: RelatedSectionCardProps
-  getTitle: (current: Book) => string
-  matches: (candidate: Book, current: Book) => boolean
+  buildQuery: (book: Book) => string | null
 }
 
 export const RELATED_SECTION_CAP = 20
 
+function buildGenreSolrQuery(genre: string): string | null {
+  const tokens = genre
+    .split(/[-/,|]+/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+  if (tokens.length === 0) return null
+  return tokens.map((t) => `subject:"${t}"`).join(' OR ')
+}
+
 export const RELATED_SECTIONS: SectionDescriptor[] = [
   {
-    kind: 'series',
-    cardProps: { showAuthor: true, compactTitle: true },
-    getTitle: (current) =>
-      current.seriesTitle
-        ? `Dans la série ${current.seriesTitle}`
-        : 'Dans la même série',
-    matches: (candidate, current) =>
-      current.seriesId != null && candidate.seriesId === current.seriesId,
-  },
-  {
     kind: 'author',
+    title: 'Du même auteur',
     cardProps: { showAuthor: false },
-    getTitle: () => 'Du même auteur',
-    matches: (candidate, current) =>
-      current.authorId != null && candidate.authorId === current.authorId,
-  },
-  {
-    kind: 'collection',
-    cardProps: { showAuthor: true },
-    getTitle: () => 'Dans la même collection',
-    matches: (candidate, current) =>
-      current.collectionId != null &&
-      candidate.collectionId === current.collectionId,
+    buildQuery: (book) => (book.author ? `author:"${book.author}"` : null),
   },
   {
     kind: 'genre',
+    title: 'Dans le même genre',
     cardProps: { showAuthor: true },
-    getTitle: () => 'Dans le même genre',
-    matches: (candidate, current) =>
-      current.genre != null && candidate.genre === current.genre,
+    buildQuery: (book) => (book.genre ? buildGenreSolrQuery(book.genre) : null),
   },
 ]

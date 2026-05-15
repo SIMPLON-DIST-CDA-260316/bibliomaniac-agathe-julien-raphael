@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router'
 
 import type { Book } from '../model/book.types'
 import { useRelatedBooks } from '../hooks/useRelatedBooks'
+import { Skeleton } from '@/shared/ui/skeleton'
 import { BookCarousel } from './BookCarousel'
 
 interface BookRelatedSectionsProps {
@@ -10,7 +11,9 @@ interface BookRelatedSectionsProps {
 
 export function BookRelatedSections({ book }: BookRelatedSectionsProps) {
   const navigate = useNavigate()
-  const sections = useRelatedBooks(book)
+  const { sections, isLoading } = useRelatedBooks(book)
+
+  if (isLoading) return <BookRelatedSectionsLoading />
 
   if (sections.length === 0) return null
 
@@ -29,6 +32,30 @@ export function BookRelatedSections({ book }: BookRelatedSectionsProps) {
             onBookClick={(b) => void navigate(`/book/${b.id}`)}
             cardProps={section.cardProps}
           />
+        </section>
+      ))}
+    </div>
+  )
+}
+
+function BookRelatedSectionsLoading() {
+  return (
+    <div
+      className="space-y-8 py-6"
+      role="status"
+      aria-label="Chargement des suggestions"
+    >
+      {[0, 1].map((i) => (
+        <section key={i}>
+          <Skeleton className="mb-3 h-6 w-48" />
+          <div className="flex gap-4 overflow-hidden">
+            {Array.from({ length: 6 }).map((_, j) => (
+              <Skeleton
+                key={j}
+                className="aspect-[2/3] flex-[0_0_calc(33.333%-0.5rem)] rounded-lg sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]"
+              />
+            ))}
+          </div>
         </section>
       ))}
     </div>
