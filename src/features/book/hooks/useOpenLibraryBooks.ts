@@ -46,6 +46,11 @@ function mapOpenLibraryToBook(book: OpenLibraryBook): Book | null {
     rating: null,
     copies: null,
     summary: null,
+    seriesId: null,
+    seriesTitle: null,
+    tomeNumber: null,
+    collectionId: null,
+    collectionLabel: null,
   }
 }
 

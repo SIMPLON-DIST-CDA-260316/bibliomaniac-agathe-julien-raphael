@@ -23,7 +23,6 @@ export default function Home() {
     setSearchQuery(e.target.value)
   }
 
-
   return (
     <main className="bg-background flex min-h-screen flex-col items-center px-0 pb-24 sm:pb-0">
       <section className="mx-auto flex w-full max-w-none flex-col gap-4 rounded-b-3xl px-4 pt-8 pb-6 shadow-none md:px-8 lg:px-24">
@@ -34,7 +33,6 @@ export default function Home() {
           </span>
           <p className="text-muted-foreground mb-4 text-base md:text-lg xl:text-xl 2xl:text-2xl">
             Qu'allez vous lire aujourd'hui
-
           </p>
 
           <form onSubmit={handleSearchSubmit} className="relative mb-2">

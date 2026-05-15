@@ -21,6 +21,7 @@ export default function Login() {
   const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
     localStorage.setItem('username', form.username)
+    localStorage.setItem('isLoggedIn', 'true')
     setIsLoggedIn(true)
     void navigate('/')
   }
