@@ -10,11 +10,13 @@ interface BookCarouselProps {
   books: Book[]
   className?: string
   onBookClick?: (book: Book) => void
+  withWoodenShelf?: boolean
   cardProps?: { showAuthor?: boolean; compactTitle?: boolean }
 }
 
 const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
-  ({ books, className, cardProps }, ref) => {
+  ({ books, className, onBookClick, withWoodenShelf = false, cardProps }, ref) => {
+
     const [emblaRef, emblaApi] = useEmblaCarousel({
       align: 'start',
       loop: false,
@@ -65,15 +67,24 @@ const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
         )}
       >
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-4 pl-2 md:pl-4">
+          <div
+            className={cn(
+              'flex gap-4 pl-2 md:pl-4',
+              withWoodenShelf && 'max-sm:gap-8 max-sm:pl-13',
+            )}
+          >
             {books.map((book) => (
               <div
                 key={book.id}
-                className="flex-[0_0_calc(33.333%-0.5rem)] sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]"
+                className={cn(
+                  'flex-[0_0_calc(33.333%-0.5rem)] sm:flex-[0_0_calc(20%-0.7rem)] lg:flex-[0_0_calc(11.111%-0.2rem)]',
+                  withWoodenShelf && 'max-sm:flex-[0_0_calc(19.333%-0.5rem)]',
+                )}
               >
                 {/* Carte du livre */}
                 <BookCard
                   book={book}
+                  coverOnlyOnMobile={withWoodenShelf}
                   showAuthor={cardProps?.showAuthor}
                   compactTitle={cardProps?.compactTitle}
                 />
