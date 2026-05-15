@@ -9,14 +9,12 @@ import { BookCard } from './BookCard.tsx'
 interface BookCarouselProps {
   books: Book[]
   className?: string
-  onBookClick?: (book: Book) => void
   withWoodenShelf?: boolean
   cardProps?: { showAuthor?: boolean; compactTitle?: boolean }
 }
 
 const BookCarousel = React.forwardRef<HTMLDivElement, BookCarouselProps>(
-  ({ books, className, onBookClick, withWoodenShelf = false, cardProps }, ref) => {
-
+  ({ books, className, withWoodenShelf = false, cardProps }, ref) => {
     const [emblaRef, emblaApi] = useEmblaCarousel({
       align: 'start',
       loop: false,

@@ -1,9 +1,6 @@
-
 import { cn } from '@/shared/lib/utils.ts'
-import type { Book } from '../types/book'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router'
-
 import type { Book } from '@/features/book/model/book.types.ts'
 
 export interface BookCardProps {
@@ -22,6 +19,7 @@ export function BookCard({
   compactTitle = false,
 }: BookCardProps) {
   const interactive = onClick != null
+  const [canUseImage, setCanUseImage] = useState(Boolean(book.coverUrl))
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLElement>) {
     if (!interactive) return
@@ -38,6 +36,7 @@ export function BookCard({
 
   const ariaLabel =
     showAuthor && book.author ? `${book.title} par ${book.author}` : book.title
+  console.log(book.title, book.coverUrl)
 
   return (
     <Link
@@ -53,15 +52,16 @@ export function BookCard({
       aria-label={interactive ? ariaLabel : undefined}
     >
       <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-gray-200">
-        {book.coverUrl ? (
+        {book.coverUrl && canUseImage ? (
           <img
             src={book.coverUrl}
             alt={book.title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={() => setCanUseImage(false)}
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-gray-300 text-gray-500">
-            <span className="text-xs">Pas de couverture</span>
+            <span className="text-xs">Pas d'image</span>
           </div>
         )}
         <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />

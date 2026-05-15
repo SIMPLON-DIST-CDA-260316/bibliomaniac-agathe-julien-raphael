@@ -17,10 +17,12 @@ export function UserLibraryPage() {
         <h1 className="text-primary px-4 pb-4 text-2xl font-bold sm:px-0 md:text-3xl xl:text-4xl 2xl:text-5xl">
           Ma Bibliothèque
         </h1>
-        <SearchBar
-          books={allBooks}
-          placeholder="Rechercher dans ma bibliothèque ..."
-        />
+        <div className="max-sm:px-4">
+          <SearchBar
+            books={allBooks}
+            placeholder="Rechercher dans ma bibliothèque ..."
+          />
+        </div>
         {SHELF_ORDER.map((shelf) => (
           <BookSection
             key={shelf}
