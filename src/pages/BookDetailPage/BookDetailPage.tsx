@@ -8,6 +8,7 @@ import { BookSummary } from '@/features/book/ui/BookSummary'
 import { BookmarkButton } from '@/features/book/ui/BookmarkButton'
 import { StatBadgeGroup } from '@/features/book/ui/StatBadgeGroup'
 import { useBookDetail } from '@/features/book/hooks/useBookDetail'
+import { resolveBookCtaState } from '@/features/book/mocks/bookCtaMock'
 import { BookRelatedSections } from '@/features/book/ui/BookRelatedSections'
 import { BackButton } from '@/shared/ui/back-button'
 import { Button } from '@/shared/ui/button'
@@ -67,7 +68,7 @@ export function BookDetailPage() {
           </div>
 
           <BookCTA
-            state={{ kind: 'available' }}
+            state={resolveBookCtaState(book)}
             bookTitle={book.title}
             onReserveConfirm={() => {
               // TODO #33 — wire to reservation mutation
