@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 
 import type { Book } from '../model/book.types'
-import { useRelatedBooksFromOL } from '../hooks/useRelatedBooksFromOL'
+import { useRelatedBooks } from '../hooks/useRelatedBooks'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { BookCarousel } from './BookCarousel'
 
@@ -11,7 +11,7 @@ interface BookRelatedSectionsProps {
 
 export function BookRelatedSections({ book }: BookRelatedSectionsProps) {
   const navigate = useNavigate()
-  const { sections, isLoading } = useRelatedBooksFromOL(book)
+  const { sections, isLoading } = useRelatedBooks(book)
 
   if (isLoading) return <BookRelatedSectionsLoading />
 
