@@ -1,6 +1,3 @@
-
-import { cn } from '@/shared/lib/utils.ts'
-import type { Book } from '../types/book'
 import React from 'react'
 import { Link } from 'react-router'
 
@@ -9,14 +6,12 @@ import type { Book } from '@/features/book/model/book.types.ts'
 export interface BookCardProps {
   book: Book
   onClick?: () => void
-  coverOnlyOnMobile?: boolean
   showAuthor?: boolean
   compactTitle?: boolean
 }
 
 export function BookCard({
   book,
-  coverOnlyOnMobile = false,
   onClick,
   showAuthor = true,
   compactTitle = false,
@@ -67,7 +62,7 @@ export function BookCard({
         <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
       </div>
 
-      <div className={cn('px-1 pb-2', coverOnlyOnMobile && 'max-sm:hidden')}>
+      <div className="px-1 pb-2">
         <h3 className="group-hover:text-primary line-clamp-2 text-xs font-semibold transition-colors sm:text-sm md:line-clamp-none lg:text-base">
           {displayTitle}
         </h3>
