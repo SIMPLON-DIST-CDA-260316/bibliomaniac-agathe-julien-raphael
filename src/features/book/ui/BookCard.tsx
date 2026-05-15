@@ -36,7 +36,7 @@ export function BookCard({
 
   return (
     <Link
-      to={`/books/${book.id}`}
+      to={`/book/${book.id}`}
       className={
         interactive
           ? 'group focus-visible:ring-primary flex cursor-pointer flex-col gap-3 focus:outline-none focus-visible:ring-2'
